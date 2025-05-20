@@ -18,7 +18,7 @@ module extend (
             // J-type (ex: JAL)
             2'b11: immext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
 
-            default: immext = 32'bx; // indefinido
+            default: immext = 32'bx;
         endcase
     end
 
