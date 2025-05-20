@@ -1,21 +1,24 @@
+`timescale 1ns/1ps
+
 module alu (
-    input  logic [31:0] a, b,
-    input  logic [3:0] alucontrol,
-    output logic [31:0] result,
-    output logic zero
+    input  logic [31:0] i_a, i_b,
+    input  logic [3:0]  i_alu_ctrl,
+    output logic [31:0] o_result,
+    output logic        o_zero
 );
 
     always_comb begin
-        case (alucontrol)
-            4'b0000: result = a & b;       // AND
-            4'b0001: result = a | b;       // OR
-            4'b0010: result = a + b;       // ADD
-            4'b0110: result = a - b;       // SUB
-            4'b0111: result = (a < b) ? 1 : 0; // SLT
-            4'b1100: result = ~(a | b);    // NOR
-            default: result = 32'hDEADBEEF;
+        case (i_alu_ctrl)
+            4'b0000: o_result = i_a & i_b;                 // AND
+            4'b0001: o_result = i_a | i_b;                 // OR
+            4'b0010: o_result = i_a + i_b;                 // ADD
+            4'b0110: o_result = i_a - i_b;                 // SUB
+            4'b0111: o_result = (i_a < i_b) ? 32'd1 : 32'd0; // SLT
+            4'b1100: o_result = ~(i_a | i_b);              // NOR
+            default: o_result = 32'hDEADBEEF;              // Default
         endcase
-        zero = (result == 0);
+
+        o_zero = (o_result == 32'd0);
     end
 
 endmodule
