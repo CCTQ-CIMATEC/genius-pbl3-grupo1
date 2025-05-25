@@ -1,7 +1,7 @@
 /**
   Testbench for RISC-V Instruction Memory Module
   
-  File: tb_instr_mem.sv
+  File: tb_instrucmem.sv
   
   Objective:
   Verify correct operation of instruction memory module including:
@@ -43,10 +43,10 @@
 //  instruction Memory Testbench
 //-----------------------------------------------------------------------------
 `timescale 1ns / 1ps
-module tb_instruction_memory;
+module tb_instrucmem;
 
     parameter P_DATA_WIDTH = 32;
-    parameter P_ADDR_WIDTH = 10;  // Changed to match module's parameter
+    parameter P_ADDR_WIDTH = 10;  
    
     logic [P_ADDR_WIDTH-1:0] i_pc;
     logic [P_DATA_WIDTH-1:0] o_instr;
