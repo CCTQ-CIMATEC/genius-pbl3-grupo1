@@ -1,19 +1,20 @@
 /**
-    PBL3 - RISC-V Single Cycle Processor
-    Top-level module for RISC-V processor for testbench
+    PBL3 - RISC-V Single Cycle Processor  
+    Top-Level Module (Testbench Integration)
+
     File name: top.sv
 
     Objective:
-        Implement a testbench for the RISC-V single cycle processor that:
-        - Connects the processor to instruction and data memories
-        - Provides clock and reset signals
-        - Monitors memory write operations
+        Integration core for complete RISC-V processor implementation.
+        Connects processor core with instruction and data memories.
+        Provides testbench observation points for system verification.
 
     Specification:
-        - Instantiates the RISC-V single cycle processor core
-        - Contains separate instruction and data memories (1KB each)
-        - Word-addressable memory interfaces
-        - Passes through all processor signals for observation
+        - Single-cycle RISC-V RV32I implementation
+        - Harvard architecture (separate instruction/data memories)
+        - 32-bit word-addressable memory interfaces
+        - Active-high asynchronous reset
+        - Testbench monitoring outputs
 
     Functional Diagram:
 
@@ -27,23 +28,57 @@
                     |         |          |      |
                     |         v          v      |
                     |  +--------+  +--------+   |
-                    |  | IMEM    |  | DMEM   |  |
+                    |  | IMEM   |  | DMEM   |   |
                     |  +--------+  +--------+   |
                     |                           |---> o_WriteData
                     |                           |---> o_DataAdr
                     |                           |---> o_MemWrite
                     +---------------------------+
 
-    Inputs:
-        i_clk      - System clock
-        i_rst      - Asynchronous reset active high
+    Signal Description:
+        i_clk       - Global clock (50MHz typical)
+        i_rst_p     - Active-high reset (asynchronous)
+        o_WriteData - Data bus to memory (32-bit)
+        o_DataAdr   - Memory address bus (32-bit)
+        o_MemWrite  - Memory write strobe (active high)
 
-    Outputs:
-        o_WriteData - 32-bit data to be written to data memory
-        o_DataAdr   - 32-bit data memory address
-        o_MemWrite  - Data memory write enable signal
-*/
+    Memory Configuration:
+        Instruction Memory (IMEM):
+        - 1KB ROM (256x32-bit)
+        - Read-only, asynchronous access
+        - Pre-loaded with program code
 
+        Data Memory (DMEM):
+        - 1KB RAM (256x32-bit)
+        - Synchronous writes
+        - Asynchronous reads
+        - Byte-addressable internally
+
+    Processor Data Paths:
+        1. Instruction Fetch:
+           PC -> IMEM -> Processor
+        
+        2. Memory Access:
+           Processor -> DMEM (load/store)
+           DMEM -> Processor (read data)
+
+    Testbench Monitoring:
+        - All memory write operations observable
+        - Full address/data bus visibility
+        - Memory control signal monitoring
+
+    Design Characteristics:
+        - Single-cycle per instruction
+        - No pipeline hazards
+        - Fixed latency memory access
+        - Pure combinational between registers
+
+    Expansion Capabilities:
+        - Memory-mapped I/O ports
+        - Interrupt controller interface
+        - Multi-cycle multiplier/divider
+        - Cache interfaces
+**/
 //----------------------------------------------------------------------------- 
 //  Top-level module for RISC-V processor for Testbench
 //-----------------------------------------------------------------------------
@@ -85,49 +120,6 @@ module top (
         .i_clk    (i_clk),
         .i_we     (o_MemWrite),
         .i_addr   (o_DataAdr),          // Convert byte address to word address
-        .i_wdata  (o_WriteData),
-        .o_rdata  (l_ReadData)
-    );
-
-endmodule
-
-
-
-
-module top (
-    input  logic        i_clk,
-    input  logic        i_rst,
-    output logic [31:0] o_WriteData,
-    output logic [31:0] o_DataAdr,
-    output logic        o_MemWrite
-);
-
-    // Internal signals
-    logic [31:0] l_PC, l_Instr, l_ReadData;
-
-    // Instantiate processor
-    riscvsingle rvsingle (
-        .clk       (i_clk),
-        .reset     (i_rst),
-        .PC        (l_PC),
-        .Instr     (l_Instr),
-        .MemWrite  (o_MemWrite),
-        .ALUResult (o_DataAdr),
-        .WriteData (o_WriteData),
-        .ReadData  (l_ReadData)
-    );
-
-    // Instruction Memory (1KB, word-addressable)
-    instruction_memory imem (
-        .i_pc     (l_PC),        // Convert byte address to word address
-        .o_instr  (l_Instr)
-    );
-
-    // Data Memory (1KB, word-addressable)
-    data_memory dmem (
-        .i_clk    (i_clk),
-        .i_we     (o_MemWrite),
-        .i_addr   (o_DataAdr),   // Convert byte address to word address
         .i_wdata  (o_WriteData),
         .o_rdata  (l_ReadData)
     );
