@@ -94,7 +94,7 @@ module top (
     output logic        o_MemWrite      // Data memory write enable signal
 );
 
-    // Internal signals
+    // Local signals
     logic [31:0] l_PC, l_Instr, l_ReadData;
 
     // Instantiate processor

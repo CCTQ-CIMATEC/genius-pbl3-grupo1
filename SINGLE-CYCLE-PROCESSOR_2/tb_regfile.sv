@@ -53,8 +53,8 @@
 module tb_regfile;
 
     // Parameters
-    parameter DATA_WIDTH = 32;
-    parameter ADDR_WIDTH = 5;
+    parameter P_DATA_WIDTH = 32;
+    parameter P_ADDR_WIDTH = 5;
     
     // Clock and Reset
     logic i_clk;
@@ -64,19 +64,19 @@ module tb_regfile;
     logic i_reg_write;
     
     // Address Inputs
-    logic [ADDR_WIDTH-1:0] i_rs1_addr;
-    logic [ADDR_WIDTH-1:0] i_rs2_addr;
-    logic [ADDR_WIDTH-1:0] i_rd_addr;
+    logic [P_ADDR_WIDTH-1:0] i_rs1_addr;
+    logic [P_ADDR_WIDTH-1:0] i_rs2_addr;
+    logic [P_ADDR_WIDTH-1:0] i_rd_addr;
     
     // Data Ports
-    logic [DATA_WIDTH-1:0] i_rd_data;
-    logic [DATA_WIDTH-1:0] o_rs1_data;
-    logic [DATA_WIDTH-1:0] o_rs2_data;
+    logic [P_DATA_WIDTH-1:0] i_rd_data;
+    logic [P_DATA_WIDTH-1:0] o_rs1_data;
+    logic [P_DATA_WIDTH-1:0] o_rs2_data;
     
     // Instantiate the register file
     register_file #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .ADDR_WIDTH(ADDR_WIDTH)
+        .DATA_WIDTH(P_DATA_WIDTH),
+        .ADDR_WIDTH(P_ADDR_WIDTH)
     ) uut (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),

@@ -45,14 +45,14 @@
 module mux2_tb;
 
     // Parameters and signals
-    parameter DATA_WIDTH = 32;
-    logic [DATA_WIDTH-1:0] i_d0, i_d1;
-    logic                  i_sel;
-    logic [DATA_WIDTH-1:0] o_y;
+    parameter P_DATA_WIDTH = 32;
+    logic [P_DATA_WIDTH-1:0]   i_d0, i_d1;
+    logic                      i_sel;
+    logic p_[p_DATA_WIDTH-1:0] o_y;
 
     // Instantiate Unit Under Test (UUT)
     mux2 #(
-        .P_WIDTH(DATA_WIDTH)
+        .P_WIDTH(P_DATA_WIDTH)
     ) uut (
         .i_a(i_d0),    // Note: Changed to match module's port names
         .i_b(i_d1),

@@ -1,7 +1,7 @@
 /**
   Testbench for 3-to-1 Multiplexer Module
   
-  File: mux3_tb.sv
+  File: tb_mux3.sv
   
   Objective:
   Verify correct functionality of the parameterized 3-to-1 multiplexer including:
@@ -45,15 +45,15 @@
 //  Multiplexer 3x1 Testbench File Testbench
 //-----------------------------------------------------------------------------
 `timescale 1ns/1ps
-module mux3_tb;
+module tb_mux3;
 
-    parameter DATA_WIDTH = 32;
-    logic [DATA_WIDTH-1:0] i_d0, i_d1, i_d2;
-    logic [1:0]            i_sel;
-    logic [DATA_WIDTH-1:0] o_y;
+    parameter P_DATA_WIDTH = 32;
+    logic [P_DATA_WIDTH-1:0] i_d0, i_d1, i_d2;
+    logic [1:0]              i_sel;
+    logic [P_DATA_WIDTH-1:0] o_y;
 
     // Instantiate the mux2
-    mux3 #(DATA_WIDTH) uut (
+    mux3 #(P_DATA_WIDTH) uut (
         .i_d0(i_d0),
         .i_d1(i_d1),
         .i_d2(i_d2),
