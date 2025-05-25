@@ -19,11 +19,11 @@
 
     Functional Diagram:
 
-                       +----------------------+
-        i_pc[AW-1:0]-->|                      |
-                       |  INSTRUCTION MEMORY  |
-                       |                      |--> o_instr[31:0]
-                       +----------------------+
+                        +----------------------+
+        i_pc[AW-1:0]--->|                      |
+                        |  INSTRUCTION MEMORY  |
+                        |                      |---> o_instr[31:0]
+                        +----------------------+
 
     Parameters:
         P_DATA_WIDTH - Instruction width in bits (fixed at 32 for RISC-V)

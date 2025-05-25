@@ -1,7 +1,7 @@
 /**
   Testbench for RISC-V Register File Module
   
-  File: tb_register_file.sv
+  File: tb_regfile.sv
   
   Objective:
   Verify correct operation of the RISC-V register file including:
@@ -50,7 +50,7 @@
 //  Register File Testbench
 //-----------------------------------------------------------------------------
 `timescale 1ns/1ps
-module tb_register_file;
+module tb_regfile;
 
     // Parameters
     parameter DATA_WIDTH = 32;

@@ -75,7 +75,7 @@ module top (
     );
 
     // Instruction Memory (1KB, word-addressable)
-    instruction_memory imem (
+    instrucmem imem (
         .i_pc     (l_PC),               // 10-bit PC counter address
         .o_instr  (l_Instr)             // 32-bit data instruction
     );
