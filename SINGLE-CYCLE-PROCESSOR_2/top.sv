@@ -81,7 +81,7 @@ module top (
     );
 
     // Data Memory (1KB, word-addressable)
-    data_memory dmem (
+    datamemory dmem (
         .i_clk    (i_clk),
         .i_we     (o_MemWrite),
         .i_addr   (o_DataAdr),          // Convert byte address to word address
