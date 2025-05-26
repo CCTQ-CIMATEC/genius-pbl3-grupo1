@@ -59,7 +59,7 @@
 module alu (
     input  logic [31:0] i_a,          // Operand A
     input  logic [31:0] i_b,          // Operand B
-    input  logic [2:0]  i_alucontrol, // 3-bit ALU control signal
+    input  logic [3:0]  i_alucontrol, // 3-bit ALU control signal
     output logic [31:0] o_result,     // ALU result
     output logic        o_zero        // Zero flag (1 when result is zero)
 );
