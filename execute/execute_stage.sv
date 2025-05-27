@@ -13,17 +13,17 @@
         - Supports forwarding inputs from later pipeline stages
         - Generates control signals for next stages
     Functional Diagram:
-                    +------------------------+
-                    |                        |
-    rs1_data ------>|                        |
-    rs2_data ------>|                        |----> alu_result
-    imm_data ------>|    EXECUTE STAGE       |----> branch_taken
+                     +------------------------+
+                     |                        |
+    rs1_data ------> |                        |
+    rs2_data ------> |                        |----> alu_result
+    imm_data ------> |      EXECUTE STAGE     |----> branch_taken
     pc_current ----->|                        |----> target_addr
     alucontrol ----->|                        |----> zero_flag
     alusrc --------->|                        |
     branch --------->|                        |
-    jump ---------->|                        |
-                    +------------------------+
+    jump ----------> |                        |
+                     +------------------------+
 **/
 //----------------------------------------------------------------------------- 
 //  Execute Stage Module
