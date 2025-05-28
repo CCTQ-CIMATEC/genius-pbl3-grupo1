@@ -56,17 +56,18 @@ module controller(
     input logic [6:0] i_op,             // 7-bit opcode field from instruction
     input logic [2:0] i_funct3,         // 3-bit funct3 field from instruction
     input logic       i_funct7b5,       // funct7 bit 5 (for R-type instructions)
-    input logic       i_zero,           // Zero flag from ALU (for branch instructions)
+//  input logic       i_zero,           // Zero flag from ALU (for branch instructions)
     
     // Outputs
     output logic [2:0] o_alucrtl,       // 3-bit ALU control signal
     output logic [1:0] o_resultsrc,     // Result multiplexer select (for writeback)
     output logic [1:0] o_immsrc,        // Immediate format select
     output logic       o_memwrite,      // Data memory write enable
-    output logic       o_pcsrc,         // PC source select (branch/jump)
+    //output logic       o_pcsrc,         // PC source select (branch/jump)
     output logic       o_alusrc,        // ALU source select (reg/immediate)
     output logic       o_regwrite,      // Register file write enable
-    output logic       o_jump           // Jump instruction flag
+    output logic       o_jump,          // Jump instruction flag
+    output logic       o_branch      
 );
     
     // Local signals/variables
@@ -100,6 +101,6 @@ module controller(
     assign i_opb5 = i_op[5];
 
     // PC source logic: branch & zero (for beq) OR jump (for jal)
-    assign o_pcsrc = l_branch & i_zero | o_jump;
+    // assign o_pcsrc = l_branch & i_zero | o_jump; somente no EXECUTE
 
 endmodule
