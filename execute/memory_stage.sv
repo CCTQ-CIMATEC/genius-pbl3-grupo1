@@ -29,27 +29,29 @@
  *                       +-------------------------+
  */
 
-module memory (
-    input  logic        i_memwrite,       // Memory write enable
-    input  logic [31:0] i_result_m,       // ALU result (memory address)
-    input  logic [31:0] i_rs2_data_m,     // Data to write to memory
-    input  logic        i_resultsrc_m,    // Select signal for result source
-    input  logic [31:0] i_pc4_m,          // PC + 4
-    output logic [31:0] o_read_data_w,    // Data read from memory
-    output logic [31:0] o_result_w        // Final result for write-back
+        module memory_stage #(
+            parameter P_DATA_WIDTH = 32,
+            parameter P_ADDR_WIDTH = 8
+)(
+            input  logic                      i_clk,                 // clock
+            input  logic                      i_mem_we_m,            // memory write enable signal
+            input  logic [P_DATA_WIDTH-1:0]   i_alu_result_m,        // address calculated by the ALU (coming from the EX stage)
+            input  logic [P_DATA_WIDTH-1:0]   i_write_data_m,        // data to be written to memory
+            output logic [P_DATA_WIDTH-1:0]   o_read_data_m          // data read from memory (to be used in the WB stage)
+
 );
-    // Data memory: 256 words of 32-bit
-    logic [31:0] data_mem [0:255];
 
-    // Write to memory
-    always_ff @(posedge i_memwrite) begin
-        data_mem[i_result_m[7:0]] <= i_rs2_data_m;
-    end
+            // data memory instance
+            datamemory #(
+                .P_ADDR_WIDTH(P_ADDR_WIDTH),
+                .P_DATA_WIDTH(P_DATA_WIDTH)
+            ) u_datamemory (
+                .i_clk   (i_clk),
+                .i_we    (i_mem_we_m),
+                .i_addr  (i_alu_result_m[P_ADDR_WIDTH-1:0]),  
+                .i_wdata (i_write_data_m),
+                .o_rdata (o_read_data_m)
+            );
 
-    // Read from memory
-    assign o_read_data_w = data_mem[i_result_m[7:0]];
+        endmodule
 
-    // Select between memory data and PC+4
-    assign o_result_w = i_resultsrc_m ? o_read_data_w : i_pc4_m;
-
-endmodule
