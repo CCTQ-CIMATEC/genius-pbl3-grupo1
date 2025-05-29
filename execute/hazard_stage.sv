@@ -2,9 +2,10 @@ module hazard_stage (
     input logic i_clk,
     input logic i_reset,
     
+    // instruction from IF/ID pipeline register
+    input logic [31:0] if_id_instr,     // instruction from fetch/decode
+    
     // signals from the decode stage
-    input logic [4:0] i_rs1_addr_d,     // source register 1 address (decode)
-    input logic [4:0] i_rs2_addr_d,     // source register 2 address (decode)
     input logic i_branch_d,             // branch instruction (decode)
     input logic i_jump_d,               // jump instruction (decode)
     
@@ -42,6 +43,43 @@ module hazard_stage (
     localparam [1:0] FORWARD_M = 2'b01;  // forward from memory
     localparam [1:0] FORWARD_W = 2'b10;  // forward from writeback
 
+    // === instruction field extraction ===
+    // extract register addresses from the instruction
+    logic [4:0] rs1_addr_d, rs2_addr_d, rd_addr_d;
+    logic [6:0] opcode;
+    logic [2:0] funct3;
+    logic [6:0] funct7;
+    
+    // extract instruction fields
+    always_comb begin
+        opcode = if_id_instr[6:0];
+        rd_addr_d = if_id_instr[11:7];
+        funct3 = if_id_instr[14:12];
+        rs1_addr_d = if_id_instr[19:15];
+        rs2_addr_d = if_id_instr[24:20];
+        funct7 = if_id_instr[31:25];
+    end
+    
+    // === memory read detection ===
+    // detect load instructions (memory read operations)
+    logic is_load_instr;
+    
+    always_comb begin
+        is_load_instr = 1'b0;
+        
+        // check for load instructions (opcode = 0000011)
+        if (opcode == 7'b0000011) begin
+            case (funct3)
+                3'b000: is_load_instr = 1'b1; // LB (load byte)
+                3'b001: is_load_instr = 1'b1; // LH (load halfword)
+                3'b010: is_load_instr = 1'b1; // LW (load word)
+                3'b100: is_load_instr = 1'b1; // LBU (load byte unsigned)
+                3'b101: is_load_instr = 1'b1; // LHU (load halfword unsigned)
+                default: is_load_instr = 1'b0;
+            endcase
+        end
+    end
+
     // data hazard detection (raw)
     logic load_use_hazard;
     logic data_hazard_e;
@@ -56,8 +94,9 @@ module hazard_stage (
     always_comb begin
         load_use_hazard = 1'b0;
         
-        if (i_memread_e && i_rd_addr_e != 5'b0) begin
-            if ((i_rd_addr_e == i_rs1_addr_d) || (i_rd_addr_e == i_rs2_addr_d)) begin
+        // check if execute stage has a load instruction that writes to a register
+        if ((i_memread_e || is_load_instr) && i_rd_addr_e != 5'b0) begin
+            if ((i_rd_addr_e == rs1_addr_d) || (i_rd_addr_e == rs2_addr_d)) begin
                 load_use_hazard = 1'b1;
             end
         end
@@ -71,14 +110,14 @@ module hazard_stage (
         
         // hazard with execute stage
         if (i_regwrite_e && i_rd_addr_e != 5'b0) begin
-            if ((i_rd_addr_e == i_rs1_addr_d) || (i_rd_addr_e == i_rs2_addr_d)) begin
+            if ((i_rd_addr_e == rs1_addr_d) || (i_rd_addr_e == rs2_addr_d)) begin
                 data_hazard_e = 1'b1;
             end
         end
         
         // hazard with memory stage
         if (i_regwrite_m && i_rd_addr_m != 5'b0) begin
-            if ((i_rd_addr_m == i_rs1_addr_d) || (i_rd_addr_m == i_rs2_addr_d)) begin
+            if ((i_rd_addr_m == rs1_addr_d) || (i_rd_addr_m == rs2_addr_d)) begin
                 data_hazard_m = 1'b1;
             end
         end
@@ -122,12 +161,12 @@ module hazard_stage (
     always_comb begin
         o_forward_a_e = NO_FORWARD;
         
-        // forwarding from memory stage
-        if (i_regwrite_m && i_rd_addr_m != 5'b0 && i_rd_addr_m == i_rs1_addr_d) begin
+        // forwarding from memory stage (higher priority)
+        if (i_regwrite_m && i_rd_addr_m != 5'b0 && i_rd_addr_m == rs1_addr_d) begin
             o_forward_a_e = FORWARD_M;
         end
         // forwarding from writeback stage (lower priority)
-        else if (i_regwrite_w && i_rd_addr_w != 5'b0 && i_rd_addr_w == i_rs1_addr_d) begin
+        else if (i_regwrite_w && i_rd_addr_w != 5'b0 && i_rd_addr_w == rs1_addr_d) begin
             o_forward_a_e = FORWARD_W;
         end
     end
@@ -136,12 +175,12 @@ module hazard_stage (
     always_comb begin
         o_forward_b_e = NO_FORWARD;
         
-        // forwarding from memory stage
-        if (i_regwrite_m && i_rd_addr_m != 5'b0 && i_rd_addr_m == i_rs2_addr_d) begin
+        // forwarding from memory stage (higher priority)
+        if (i_regwrite_m && i_rd_addr_m != 5'b0 && i_rd_addr_m == rs2_addr_d) begin
             o_forward_b_e = FORWARD_M;
         end
         // forwarding from writeback stage (lower priority)
-        else if (i_regwrite_w && i_rd_addr_w != 5'b0 && i_rd_addr_w == i_rs2_addr_d) begin
+        else if (i_regwrite_w && i_rd_addr_w != 5'b0 && i_rd_addr_w == rs2_addr_d) begin
             o_forward_b_e = FORWARD_W;
         end
     end
