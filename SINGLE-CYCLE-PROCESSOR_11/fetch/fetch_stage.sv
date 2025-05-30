@@ -98,32 +98,32 @@
 `timescale 1ns/1ps
 module fetch_stage #(
     parameter P_DATA_WIDTH = 32,  // Default 32-bit for RISC-V
-    parameter P_ADDR_WIDTH = 10   // Match instrucmem address width
+    parameter PC_WIDTH = 10   // Match instrucmem address width
 )(
     // Clock and Reset
     input  logic                     i_clk,
     input  logic                     i_rst_n,
     
     // Control Signals[]
-    input  logic                     i_stall_f             
+    input  logic                     i_stall_f,             
     input  logic                     i_stall_d,
     input  logic                     i_flush_d,
 
     // pc relatex
     input  logic                     i_pcsrc_e,
-    input  logic [P_ADDR_WIDTH-1:0]  i_pctarget_e, 
+    input  logic [PC_WIDTH:0]        i_pctarget_e, 
 
     // Outputs
-    output logic [P_ADDR_WIDTH-1:0]  o_pc_d,
-    output logic [P_ADDR_WIDTH-1:0]  o_pc4_d,
+    output logic [PC_WIDTH:0]  o_pc_d,
+    output logic [PC_WIDTH:0]  o_pc4_d,
     output logic [P_DATA_WIDTH-1:0]  o_instr_d
 );
 
-    logic [P_DATA_WIDTH-1:0]  o_instr_f;
-    logic [P_ADDR_WIDTH-1:0] l_pc_f, l_pc4_f, l_pcnext_f; 
+    logic [P_DATA_WIDTH-1:0]  l_instr_f;
+    logic [PC_WIDTH:0] l_pc_f, l_pc4_f, l_pcnext_f; 
     
     // PC source mux (select: PC+4 or target)
-    mux2 #(.P_WIDTH(8)) u_pcmux (
+    mux2 #(.P_WIDTH(PC_WIDTH)) u_pcmux (
         .i_a   (l_pc4_f),
         .i_b   (i_pctarget_e),
         .i_sel (i_pcsrc_e),        // Controlled by branch decision
@@ -131,15 +131,16 @@ module fetch_stage #(
     );
 
     // PC register (state element)
-    flopr #(.P_WIDTH(10)) u_pcreg (
+    flopr #(.P_WIDTH(PC_WIDTH)) u_pcreg (
         .i_clk   (i_clk),
         .i_rst_n (i_rst_n),
+        .i_en    (!i_stall_f),
         .i_d     (l_pcnext_f),
         .o_q     (l_pc_f)
     );
 
     // PC incrementer (PC + 4)
-    adder #(.P_WIDTH(8)) u_pcadd4 (
+    adder #(.P_WIDTH(PC_WIDTH)) u_pcadd4 (
         .i_a (l_pc_f),
         .i_b (4),            
         .o_y (l_pc4_f)
@@ -148,22 +149,22 @@ module fetch_stage #(
     // Instruction Memory Interface
     instrucmem #(
         .P_DATA_WIDTH(P_DATA_WIDTH),        
-        .P_ADDR_WIDTH(P_ADDR_WIDTH)
+        .P_ADDR_WIDTH(PC_WIDTH)
     ) u_instrucmem (
         .i_pc(l_pc_f),
-        .o_instr(o_instr_f)
+        .o_instr(l_instr_f)
     );
 
     //IF/ID
     always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (!i_rst_n) begin
+        if (!i_rst_n | i_flush_d) begin
             o_pc_d      <= 0;
             o_pc4_d     <= 0;
             o_instr_d   <= 0;
-        end else begin
+        end else if(!i_stall_d) begin
             o_pc_d      <= l_pc_f;
             o_pc4_d     <= l_pc4_f;
-            o_instr_d   <= o_instr_f;
+            o_instr_d   <= l_instr_f;
         end
     end
 

@@ -32,7 +32,8 @@
 
 module decode_stage #(
     parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 5
+    parameter ADDR_WIDTH = 5,
+    parameter PC_WIDTH = 10
 ) (
     // Clock and Reset
     input logic i_clk,
@@ -40,8 +41,8 @@ module decode_stage #(
     
     // Input from IF/ID pipeline register
     input logic [DATA_WIDTH-1:0] i_instr_d,     
-    input logic [DATA_WIDTH-1:0] i_pc_d,        
-    input logic [DATA_WIDTH-1:0] i_pc4_d,       
+    input logic [PC_WIDTH-1:0] i_pc_d,        
+    input logic [PC_WIDTH:0] i_pc4_d,       
     
     // Writeback inputs (from WB stage)
     input logic                     i_reg_write_w, 
@@ -63,7 +64,7 @@ module decode_stage #(
     // Data outputs
     output logic [DATA_WIDTH-1:0] o_rs1_data_e,
     output logic [DATA_WIDTH-1:0] o_rs2_data_e,
-    output logic [DATA_WIDTH-1:0] o_pc_e,
+    output logic [PC_WIDTH-1:0] o_pc_e,
     
     // Instruction fields
     output logic [ADDR_WIDTH-1:0] o_rs1_addr_e,
@@ -72,7 +73,7 @@ module decode_stage #(
     
     // Extended immediate and PC+4
     output logic [DATA_WIDTH-1:0] o_immext_e,
-    output logic [DATA_WIDTH-1:0] o_pc4_e
+    output logic [PC_WIDTH:0] o_pc4_e,
     
     // PC source output (for fetch stage)
     output logic o_pcsrc_e
@@ -164,14 +165,14 @@ module decode_stage #(
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};
             o_rs2_data_e <= {DATA_WIDTH{1'b0}};
-            o_pc_e       <= {DATA_WIDTH{1'b0}};
+            o_pc_e       <= {PC_WIDTH{1'b0}};
             
             o_rs1_addr_e <= {ADDR_WIDTH{1'b0}};
             o_rs2_addr_e <= {ADDR_WIDTH{1'b0}};
             o_rd_addr_e  <= {ADDR_WIDTH{1'b0}};
             
             o_immext_e  <=  {DATA_WIDTH{1'b0}};
-            o_pc4_e     <=  {DATA_WIDTH{1'b0}};
+            o_pc4_e     <=  {PC_WIDTH{1'b0}};
         end else begin
             // Latch control signals from decode stage
             o_regwrite_e    <= l_regwrite_d;

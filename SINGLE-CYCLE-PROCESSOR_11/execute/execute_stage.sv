@@ -32,8 +32,14 @@
 
 module execute_stage #(
     parameter DATA_WIDTH=32, 
-    parameter ADDR_WIDTH = 8
+    parameter ADDR_WIDTH = 10
 )(
+
+    input logic                   i_clk,
+    input logic                   i_rst_n,
+
+    input logic                   i_flush_e,
+
     // Data inputs from ID/EX pipeline register
     input  logic [DATA_WIDTH-1:0] i_rs1_data_e,    // Register source 1 data
     input  logic [DATA_WIDTH-1:0] i_rs2_data_e,    // Register source 2 data
@@ -72,7 +78,7 @@ module execute_stage #(
     output logic        o_memwrite_m,    // Memory write enable to MEM
     output logic [1:0]  o_resultsrc_m,   // Result source to MEM
     output logic [4:0]  o_rd_addr_m,     // RD address to MEM
-    output logic [DATA_WIDTH-1:0] o_pc4_m          // PC+4 to MEM
+    output logic [ADDR_WIDTH-1:0] o_pc4_m          // PC+4 to MEM
 );
 
     // Internal signals
@@ -82,7 +88,7 @@ module execute_stage #(
     logic [DATA_WIDTH-1:0] l_rs2_forwarded;          // RS2 after forwarding
     logic [3:0]            l_alu_control_extended;   // Extended ALU control signal
     logic [DATA_WIDTH-1:0] l_alu_result_e;
-    logic [DATA_WIDTH-1:0] l_write_data_e
+    logic [DATA_WIDTH-1:0] l_write_data_e;
 
     // Forwarding Logic for Operand A (RS1) using mux3
     mux3 u_fmux1(
@@ -127,7 +133,7 @@ module execute_stage #(
     //-------------------------------------------------------------------------
     // Branch/Jump Target Address Calculation
     //-------------------------------------------------------------------------
-    assign o_target_addr = i_pc_e + i_immext_e;
+    assign o_pctarget_e = i_pc_e + i_immext_e;
 
     //-------------------------------------------------------------------------
     // Pass RS2 data for store operations
@@ -137,14 +143,10 @@ module execute_stage #(
     //-------------------------------------------------------------------------
     // Pass-through control signals to EX/MEM pipeline register
     //-------------------------------------------------------------------------
-    assign o_regwrite_m  = i_regwrite_e;
-    assign o_memwrite_m  = i_memwrite_e;
-    assign o_resultsrc_m = i_resultsrc_e;
-    assign o_rd_addr_m   = i_rd_addr_e;
-    assign o_pc4_m       = i_pc4_e;
+
 
     always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (!i_rst_n) begin
+        if (!i_rst_n | i_flush_e) begin
             o_regwrite_m    <= 0;
             o_resultsrc_m   <= 0;
             o_memwrite_m    <= 0;

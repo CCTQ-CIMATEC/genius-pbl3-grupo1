@@ -61,6 +61,7 @@ module flopr #(
 )(
     input  logic               i_clk,    // Clock input
     input  logic               i_rst_n,  // Active-low asynchronous reset
+    input  logic               i_en,     // Enable
     input  logic [P_WIDTH-1:0] i_d,      // Data input
     output logic [P_WIDTH-1:0] o_q       // Data output (registered)
 );
@@ -70,7 +71,7 @@ module flopr #(
         // Reset condition (active low)
         if (!i_rst_n)
             o_q <= '0;  // Clear all bits when reset is active
-        else
+        else if(i_en)
             o_q <= i_d; // On clock edge, pass input to output
     end
 

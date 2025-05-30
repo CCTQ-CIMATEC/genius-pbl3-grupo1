@@ -48,15 +48,15 @@ module memory_stage #(
     output logic [P_DATA_WIDTH-1:0]   o_read_data_w,         // data read from memory (to be used in the WB stage)
     output logic                      o_regwrite_w,         //TODO -> OLHA TEU REGFILE CORNO
     output logic [1:0]                o_resultsrc_w,
-    output logic [P_DATA_WIDTH-1:0]   o_rd_addr_w,
+    output logic [4:0]                o_rd_addr_w,
     output logic [P_ADDR_WIDTH-1:0]   o_pc4_w,
-    output logic [P_DATA_WIDTH-1:0]   o_alu_result_w,
+    output logic [P_DATA_WIDTH-1:0]   o_alu_result_w
 );
 
     logic [P_DATA_WIDTH-1:0] l_read_data_m;
 
     // data memory instance
-    datamemory #(
+    data_memory #(
         .P_ADDR_WIDTH(P_ADDR_WIDTH),
         .P_DATA_WIDTH(P_DATA_WIDTH)
     ) u_datamemory (
@@ -71,7 +71,6 @@ module memory_stage #(
         if (!i_rst_n) begin
             o_regwrite_w  <= 0;
             o_resultsrc_w <= 0;
-            o_read_data_w <= 0;
             o_read_data_w <= 0;
             o_rd_addr_w <= 0;
             o_pc4_w     <= 0;

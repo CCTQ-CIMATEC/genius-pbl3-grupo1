@@ -72,7 +72,6 @@ module controller(
     
     // Local signals/variables
     logic [1:0] r_aluop;                // ALU operation type from main decoder
-    logic       l_branch;               // Branch instruction flag
     logic       i_opb5;                 // Opcode bit 5 (used for ALU decoding)
 
     // Main decoder instance
@@ -80,7 +79,7 @@ module controller(
         .i_op           (i_op),         // Instruction opcode
         .o_resultsrc    (o_resultsrc),  // Result source
         .o_memwrite     (o_memwrite),   // Memory write enable
-        .o_branch       (l_branch),     // Branch instruction
+        .o_branch       (o_branch),     // Branch instruction
         .o_alusrc       (o_alusrc),     // ALU source select
         .o_regwrite     (o_regwrite),   // Register write enable
         .o_jump         (o_jump),       // Jump instruction
