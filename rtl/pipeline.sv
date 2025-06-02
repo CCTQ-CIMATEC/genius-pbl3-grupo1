@@ -119,6 +119,7 @@ module pipeline #(
     ) u_decode_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
+        .i_flush_e      (flush_e),
         .i_instr_d      (if_id_instr),
         .i_pc_d         (if_id_pc),
         .i_pc4_d        (if_id_pc4),
@@ -153,7 +154,7 @@ module pipeline #(
     ) u_execute_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
-        .i_flush_e      (flush_e),
+        //.i_flush_e      (flush_e),
         .i_rs1_data_e   (id_ex_rs1_data),
         .i_rs2_data_e   (id_ex_rs2_data),
         .i_immext_e     (id_ex_immext),

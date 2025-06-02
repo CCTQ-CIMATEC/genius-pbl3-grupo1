@@ -39,6 +39,8 @@ module decode_stage #(
     input logic i_clk,
     input logic i_rst_n,
     
+    input logic i_flush_e,
+
     // Input from IF/ID pipeline register
     input logic [DATA_WIDTH-1:0] i_instr_d,     
     input logic [PC_WIDTH-1:0] i_pc_d,        
@@ -117,12 +119,10 @@ module decode_stage #(
         .i_op           (l_opcode),
         .i_funct3       (l_funct3),
         .i_funct7b5     (l_funct7b5),
-//      .i_zero         (i_zero_e),
         .o_alucrtl      (l_aluctrl_d),
         .o_resultsrc    (l_resultsrc_d),
         .o_immsrc       (l_immsrc_d),
         .o_memwrite     (l_memwrite_d),
-//      .o_pcsrc(o_pcsrc), -> 
         .o_alusrc       (l_alusrc_d),
         .o_regwrite     (l_regwrite_d),
         .o_jump         (l_jump_d),
@@ -154,7 +154,7 @@ module decode_stage #(
     
     // ID/EX pipeline register - integrated into decode_stage
     always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (!i_rst_n) begin
+        if (!i_rst_n | i_flush_e) begin
             o_regwrite_e    <= 1'b0;
             o_resultsrc_e   <= 2'b00;
             o_memwrite_e    <= 1'b0;

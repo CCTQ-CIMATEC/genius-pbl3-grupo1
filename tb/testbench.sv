@@ -67,7 +67,7 @@
            - Terminates on success/failure
 
     Memory Initialization:
-        Path: /home/david/Documents/PBL03/PBL3_equipe1/SINGLE-CYCLE-PROCESSOR/test0.txt
+        Path: YOUR_PATH/test0.txt
         Target: dut.imem.l_rom (hierarchical path)
         Format: Verilog hex memory file
 
@@ -134,7 +134,7 @@ module testbench();
     initial begin
         // Load instructions into instruction memory from a file
         // The hierarchical path points to the ROM array inside the instruction memory
-        $readmemh("/home/david/Documents/PBL03/PBL3_equipe1/SINGLE-CYCLE-PROCESSOR_11/test0.txt", dut.imem.l_rom);
+        $readmemh("YOUR PATH HERE, DONT FORGET IT/test0.txt", dut.imem.l_rom);
         // Reset sequence:
         // Assert reset (1), wait 1 time unit, deassert reset (0), wait 12 time units, 
         // then assert reset again (1)

@@ -38,7 +38,7 @@ module execute_stage #(
     input logic                   i_clk,
     input logic                   i_rst_n,
 
-    input logic                   i_flush_e,
+    //input logic                   i_flush_e,
 
     // Data inputs from ID/EX pipeline register
     input  logic [DATA_WIDTH-1:0] i_rs1_data_e,    // Register source 1 data
@@ -146,7 +146,7 @@ module execute_stage #(
 
 
     always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (!i_rst_n | i_flush_e) begin
+        if (!i_rst_n) begin
             o_regwrite_m    <= 0;
             o_resultsrc_m   <= 0;
             o_memwrite_m    <= 0;

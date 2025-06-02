@@ -104,7 +104,7 @@ module maindec(
             7'b0100011: l_controls = 11'b0_01_1_1_00_0_00_0; 
             
             // R-type instructions (ADD, SUB, etc.)
-            7'b0110011: l_controls = 11'b1_xx_0_0_00_0_10_0; 
+            7'b0110011: l_controls = 11'b1_00_0_0_00_0_10_0; 
             
             // Branch Equal (BEQ) - B-type
             7'b1100011: l_controls = 11'b0_10_0_0_00_1_01_0; 
@@ -116,7 +116,7 @@ module maindec(
             7'b1101111: l_controls = 11'b1_11_0_0_10_0_00_1; 
             
             // Default case (undefined opcode)
-            default:    l_controls = 11'bx_xx_x_x_xx_x_xx_x; 
+            default:    l_controls = 11'b0_00_0_0_00_0_00_0; 
         endcase
     end
 

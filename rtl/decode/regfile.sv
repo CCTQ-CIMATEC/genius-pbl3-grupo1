@@ -69,7 +69,7 @@
             - If i_reg_write=1 and i_rd_addr!=0: Selected register updates
         - Read ports:
             - Always show current register value (x0 hardwired to 0)
-            - Bypass newly written data on same cycle
+            - Bypass newly written data on same cycle (internal forwarding)
 
     Typical Usage:
         - Core register storage in RISC-V processor
@@ -80,7 +80,7 @@
         - Actual storage implemented as standard flip-flop array
         - ADDR_WIDTH must be 5 for standard RISC-V (32 registers)
         - Register x0 implementation saves power by preventing actual writes
-        - Write-first behavior requires careful timing analysis
+        - Write-first behavior prevents pipeline hazards through internal forwarding
 **/
 
 //-----------------------------------------------------------------------------
@@ -124,10 +124,31 @@ module regfile #(
         end
     end
     
-    // Read Ports (combinational)
+    // Read Ports with Internal Forwarding (write-first behavior)
     // - Register x0 is always hardwired to zero in RISC-V
-    // - Bypasses newly written data (write-first behavior)
-    assign o_rs1_data = (i_rs1_addr == '0) ? '0 : register_r[i_rs1_addr];
-    assign o_rs2_data = (i_rs2_addr == '0) ? '0 : register_r[i_rs2_addr];
+    // - Bypasses newly written data on same cycle (internal forwarding)
+    always_comb begin
+        // Read port 1 with internal forwarding
+        if (i_rs1_addr == '0) begin
+            o_rs1_data = '0;  // x0 hardwired to zero
+        end
+        else if (i_reg_write && (i_rd_addr == i_rs1_addr) && (i_rd_addr != '0)) begin
+            o_rs1_data = i_rd_data;  // Forward write data (prevents hazard)
+        end
+        else begin
+            o_rs1_data = register_r[i_rs1_addr];  // Normal read
+        end
+        
+        // Read port 2 with internal forwarding  
+        if (i_rs2_addr == '0) begin
+            o_rs2_data = '0;  // x0 hardwired to zero
+        end
+        else if (i_reg_write && (i_rd_addr == i_rs2_addr) && (i_rd_addr != '0)) begin
+            o_rs2_data = i_rd_data;  // Forward write data (prevents hazard)
+        end
+        else begin
+            o_rs2_data = register_r[i_rs2_addr];  // Normal read
+        end
+    end
 
 endmodule
