@@ -95,8 +95,7 @@ module pipeline #(
     // Fetch Stage
     //-------------------------------------------------------------------------
     fetch_stage #(
-        .P_DATA_WIDTH(P_DATA_WIDTH),
-        .P_ADDR_WIDTH(P_ADDR_WIDTH)
+        .P_DATA_WIDTH(P_DATA_WIDTH)
     ) u_fetch_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),

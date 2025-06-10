@@ -1,30 +1,30 @@
 //------------------------------------------------------------------------------
-// Basic test for adder
+// Store test for RISCV
 //------------------------------------------------------------------------------
-// This UVM test sets up the environment and sequence for the adder verification.
+// This UVM test sets up the environment and sequence for the RISCV verification.
 //
-// Author: Nelson Alves nelsonafn@gmail.com
-// Date  : October 2023
+// Author: Gustavo Santiago
+// Date  : June 2025
 //------------------------------------------------------------------------------
 
-`ifndef ADDER_BASIC_TEST 
-`define ADDER_BASIC_TEST
+`ifndef RISCV_STORE_TEST 
+`define RISCV_STORE_TEST
 
-class adder_basic_test extends uvm_test;
+class RISCV_store_test extends uvm_test;
  
   /*
    * Declare component utilities for the test-case
    */
-  `uvm_component_utils(adder_basic_test)
+  `uvm_component_utils(RISCV_store_test)
  
-  adder_environment env;
-  adder_basic_seq   seq;
+  RISCV_environment env;
+  RISCV_store_seq   seq;
  
   /*
    * Constructor: new
    * Initializes the test with a given name and parent component.
    */
-  function new(string name = "adder_basic_test", uvm_component parent = null);
+  function new(string name = "RISCV_store_test", uvm_component parent = null);
     super.new(name, parent);
   endfunction : new
  
@@ -34,8 +34,8 @@ class adder_basic_test extends uvm_test;
    */
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    env = adder_environment::type_id::create("env", this);
-    seq = adder_basic_seq::type_id::create("seq");
+    env = RISCV_environment::type_id::create("env", this);
+    seq = RISCV_store_seq::type_id::create("seq");
   endfunction : build_phase
  
   /*
@@ -44,11 +44,11 @@ class adder_basic_test extends uvm_test;
    */
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
-    seq.start(env.adder_agnt.sequencer);
+    seq.start(env.RISCV_agnt.sequencer);
     phase.drop_objection(this);
   endtask : run_phase
  
-endclass : adder_basic_test
+endclass : RISCV_store_test
 
 `endif
 

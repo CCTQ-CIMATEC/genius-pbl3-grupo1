@@ -65,10 +65,10 @@
 module mux2 #(
     parameter P_WIDTH = 32  // Default data width is 32 bits
 )(
-    input  logic [P_WIDTH-1:0] i_a,   // First input
-    input  logic [P_WIDTH-1:0] i_b,   // Second input
+    input  logic [P_WIDTH:0] i_a,   // First input
+    input  logic [P_WIDTH:0] i_b,   // Second input
     input  logic               i_sel, // Selection signal
-    output logic [P_WIDTH-1:0] o_y    // Output
+    output logic [P_WIDTH:0] o_y    // Output
 );
 
     // Combinational logic

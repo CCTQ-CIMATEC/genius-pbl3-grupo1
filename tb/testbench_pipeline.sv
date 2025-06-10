@@ -171,7 +171,7 @@ module testbench_pipeline();
         // Load instructions into instruction memory from a file
         // NOTE: Adjust the path to match your instruction memory location
         // The hierarchical path needs to point to the instruction memory in the fetch stage
-        $readmemh("/home/david/Documents/PBL03/PBL3_equipe1/SINGLE-CYCLE-PROCESSOR_11/test0.txt", 
+        $readmemh("/home/david/Documents/PBL03/PBL3_equipe1/rtl/test0.txt", 
                   dut.u_fetch_stage.u_instrucmem.l_rom);
         
         // Reset sequence for pipelined processor:

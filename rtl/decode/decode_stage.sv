@@ -44,7 +44,7 @@ module decode_stage #(
     // Input from IF/ID pipeline register
     input logic [DATA_WIDTH-1:0] i_instr_d,     
     input logic [PC_WIDTH-1:0] i_pc_d,        
-    input logic [PC_WIDTH:0] i_pc4_d,       
+    input logic [PC_WIDTH-1:0] i_pc4_d,       
     
     // Writeback inputs (from WB stage)
     input logic                     i_reg_write_w, 
