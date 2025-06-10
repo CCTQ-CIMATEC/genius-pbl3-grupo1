@@ -1,27 +1,27 @@
 //------------------------------------------------------------------------------
-// Package for aggregating adder tests
+// Package for aggregating RISCV tests
 //------------------------------------------------------------------------------
-// This package includes all the tests for the adder simulation.
+// This package includes all the tests for the RISCV simulation.
 //
-// Author: Nelson Alves nelsonafn@gmail.com
-// Date  : October 2023
+// Author: Gustavo Santiago
+// Date  : June 2025
 //------------------------------------------------------------------------------
 
-`ifndef ADDER_TEST_LIST 
-`define ADDER_TEST_LIST
+`ifndef RISCV_TEST_LIST 
+`define RISCV_TEST_LIST
 
-package adder_test_list;
+package RISCV_test_list;
 
   import uvm_pkg::*;
   `include "uvm_macros.svh"
 
-  import adder_env_pkg::*;
-  import adder_seq_list::*;
+  import RISCV_env_pkg::*;
+  import RISCV_seq_list::*;
 
   /*
    * Including basic test definition
    */
-  `include "adder_basic_test.sv"
+  `include "RISCV_store_test.sv"
 
 endpackage 
 

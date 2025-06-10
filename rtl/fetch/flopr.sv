@@ -62,8 +62,8 @@ module flopr #(
     input  logic               i_clk,    // Clock input
     input  logic               i_rst_n,  // Active-low asynchronous reset
     input  logic               i_en,     // Enable
-    input  logic [P_WIDTH-1:0] i_d,      // Data input
-    output logic [P_WIDTH-1:0] o_q       // Data output (registered)
+    input  logic [P_WIDTH:0] i_d,      // Data input
+    output logic [P_WIDTH:0] o_q       // Data output (registered)
 );
 
     // Sequential logic block triggered on clock rising edge or reset falling edge

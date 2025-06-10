@@ -97,7 +97,7 @@
 `timescale 1ns/1ps
 module fetch_stage #(
     parameter P_DATA_WIDTH = 32,  // Default 32-bit for RISC-V
-    parameter PC_WIDTH = 10   // Match instrucmem address width
+    parameter PC_WIDTH = 9   // Match instrucmem address width
 )(
     // Clock and Reset
     input  logic                     i_clk,
@@ -121,6 +121,13 @@ module fetch_stage #(
     logic [P_DATA_WIDTH-1:0]  l_instr_f;
     logic [PC_WIDTH:0] l_pc_f, l_pc4_f, l_pcnext_f; 
     
+    // PC incrementer (PC + 4)
+    adder #(.P_WIDTH(PC_WIDTH)) u_pcadd4 (
+        .i_a (l_pc_f),
+        .i_b (10'd4),            
+        .o_y (l_pc4_f)
+    );
+    
     // PC source mux (select: PC+4 or target)
     mux2 #(.P_WIDTH(PC_WIDTH)) u_pcmux (
         .i_a   (l_pc4_f),
@@ -138,12 +145,7 @@ module fetch_stage #(
         .o_q     (l_pc_f)
     );
 
-    // PC incrementer (PC + 4)
-    adder #(.P_WIDTH(PC_WIDTH)) u_pcadd4 (
-        .i_a (l_pc_f),
-        .i_b (4),            
-        .o_y (l_pc4_f)
-    );
+    
 
     // Instruction Memory Interface
     instrucmem #(
