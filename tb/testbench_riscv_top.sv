@@ -1,17 +1,18 @@
 /**
  * PBL3 - RISC-V Pipelined Processor  
- * Testbench Module (Pipeline Version)
+ * Testbench Module (Top-Level Version)
  *
- * File name: testbench_pipeline.sv
+ * File name: testbench_riscv_top.sv
  *
  * Objective:
- *     Verification environment for RISC-V 5-stage pipelined processor with standardized signal prefixes.
+ *     Verification environment for RISC-V 5-stage pipelined processor with external memories.
  *     Provides stimulus generation, memory initialization, and result checking with pipeline-aware timing.
  *
  *     Enhanced testbench featuring:
  *     - Prefix-based signal type identification (i_/l_/r_)
  *     - Pipeline delay consideration (5 cycles for full execution)
  *     - Type-consistent monitoring points
+ *     - External memory interface monitoring
  *     - Strict naming convention enforcement
  *
  * Specification:
@@ -22,31 +23,11 @@
  *     - Clock generation with l_clk
  *     - Pipeline-aware result checking
  *
- * Functional Diagram:
- *
- *                 +-----------------------+
- *                 |                       |
- *                 |      TESTBENCH        |
- *                 |                       |
- *                 |  +-----------------+  |
- *                 |  | Clock Generator |  |--l_clk--> DUT
- *                 |  +-----------------+  |
- *                 |                       |
- *                 |  +-----------------+  |
- *                 |  | Reset Sequencer |  |--l_rst_n-> DUT
- *                 |  +-----------------+  |
- *                 |                       |
- *                 |  +-----------------+  |
- *                 |  | Pipeline Monitor|  |<--internal signals-- DUT
- *                 |  +-----------------+  |
- *                 |                       |
- *                 +-----------------------+
- *
  * Signal Descriptions:
  *     l_clk       - Generated clock signal (i_clk in DUT)
  *     l_rst_n     - Generated reset signal (i_rst_n in DUT)
- *     r_WriteData - Monitored write data from memory stage
- *     r_DataAdr   - Monitored address from memory stage
+ *     r_WriteData - Monitored write data from data memory interface
+ *     r_DataAdr   - Monitored address from data memory interface
  *     l_MemWrite  - Active-high write strobe monitor
  *
  * Pipeline Considerations:
@@ -71,7 +52,7 @@
  *
  * Memory Initialization:
  *     Path: Adjust path as needed for your test program
- *     Target: Pipeline instruction memory
+ *     Target: External instruction memory
  *     Format: Verilog hex memory file
  *
  * Clock Generation:
@@ -101,8 +82,7 @@
  *
  * Debug Support:
  *     - Pipeline stage monitoring
- *     - Hazard detection observation
- *     - Memory operation tracking
+ *     - Memory interface tracking
  *     - Clear termination messages
  */
 
@@ -111,24 +91,28 @@
 //-----------------------------------------------------------------------------
 `timescale 1ns/1ps
 
-module testbench_pipeline();
+module testbench_riscv_top();
 
     // Signal declarations
     logic           l_clk;         // Clock signal
     logic           l_rst_n;       // Reset signal (active low)
     
     // Internal pipeline monitoring signals
-    logic [31:0]    r_WriteData;   // Data to be written to memory (from MEM stage)
-    logic [31:0]    r_DataAdr;     // Memory address for write operation (from MEM stage)
-    logic           l_MemWrite;    // Memory write enable signal (from MEM stage)
+    logic [31:0]    r_WriteData;   // Data to be written to memory (from data memory interface)
+    logic [31:0]    r_DataAdr;     // Memory address for write operation (from data memory interface)
+    logic           l_MemWrite;    // Memory write enable signal (from data memory interface)
+    
+    // Memory interface monitoring signals
+    logic [8:0]     l_imem_addr;   // Instruction memory address
+    logic [31:0]    l_imem_rdata;  // Instruction memory read data
+    logic [7:0]     l_dmem_addr;   // Data memory address
+    logic [31:0]    l_dmem_wdata;  // Data memory write data
+    logic [31:0]    l_dmem_rdata;  // Data memory read data
+    logic           l_dmem_we;     // Data memory write enable
     
     // Pipeline stage monitoring (optional for debug)
-    logic [31:0]    l_if_pc;       // Current PC in IF stage
-    logic [31:0]    l_if_instr;    // Current instruction in IF stage
-    logic           l_stall_f;     // Fetch stall signal
-    logic           l_flush_d;     // Decode flush signal
-    logic [1:0]     l_forward_a;   // Forward control A
-    logic [1:0]     l_forward_b;   // Forward control B
+    logic [31:0]    l_if_pc;       // Current PC in IF/ID stage
+    logic [31:0]    l_if_instr;    // Current instruction in IF/ID stage
     
     // Cycle counter for pipeline timing analysis
     integer         cycle_count;
@@ -136,10 +120,12 @@ module testbench_pipeline();
     //=========================================================================
     // DUT Instantiation
     //=========================================================================
-    pipeline #(
+    riscv_top #(
         .P_DATA_WIDTH(32),
         .P_ADDR_WIDTH(10),
-        .P_REG_ADDR_WIDTH(5)
+        .P_REG_ADDR_WIDTH(5),
+        .P_IMEM_ADDR_WIDTH(9),
+        .P_DMEM_ADDR_WIDTH(8)
     ) dut (
         .i_clk(l_clk),
         .i_rst_n(l_rst_n)
@@ -148,18 +134,23 @@ module testbench_pipeline();
     //=========================================================================
     // Signal Monitoring Assignments
     //=========================================================================
-    // Monitor memory stage signals for verification
-    assign r_WriteData = dut.ex_mem_write_data;
-    assign r_DataAdr   = dut.ex_mem_alu_result;
-    assign l_MemWrite  = dut.ex_mem_memwrite;
+    // Monitor data memory interface signals for verification
+    assign r_WriteData = dut.dmem_wdata;
+    assign r_DataAdr   = dut.dmem_addr;
+    assign l_MemWrite  = dut.dmem_we;
     
-    // Optional: Monitor pipeline control signals for debug
-    assign l_if_pc     = dut.if_id_pc;
-    assign l_if_instr  = dut.if_id_instr;
-    assign l_stall_f   = dut.stall_f;
-    assign l_flush_d   = dut.flush_d;
-    assign l_forward_a = dut.forward_a;
-    assign l_forward_b = dut.forward_b;
+    // Monitor memory interface signals
+    assign l_imem_addr = dut.imem_addr;
+    assign l_imem_rdata = dut.imem_rdata;
+    assign l_dmem_addr = dut.dmem_addr;
+    assign l_dmem_wdata = dut.dmem_wdata;
+    assign l_dmem_rdata = dut.dmem_rdata;
+    assign l_dmem_we = dut.dmem_we;
+    
+    // Monitor processor core signals for debug
+    // Fixed: Use correct signal names from riscv_core module
+    assign l_if_pc     = dut.u_riscv_core.if_id_pc;      // IF/ID pipeline register PC
+    assign l_if_instr  = dut.u_riscv_core.if_id_instr;   // IF/ID pipeline register instruction
 
     //=========================================================================
     // Test Initialization
@@ -169,10 +160,10 @@ module testbench_pipeline();
         cycle_count = 0;
 
         // Load instructions into instruction memory from a file
-        // NOTE: Adjust the path to match your instruction memory location
-        // The hierarchical path needs to point to the instruction memory in the fetch stage
-        $readmemh("/home/david/Documents/PBL03/PBL3_equipe1/rtl/test0.txt", 
-                  dut.u_fetch_stage.u_instrucmem.l_rom);
+        // NOTE: Adjust the path to match your test program location
+        // The hierarchical path points to the external instruction memory
+        $readmemh("/home/david/Documents/GUSTAVO RISC/RISCV-RV32I/rtl/test0.txt", 
+                  dut.u_instrucmem.l_rom);
         
         // Reset sequence for pipelined processor:
         // Active-low reset: assert (0), hold for sufficient time, then release (1)
@@ -180,8 +171,9 @@ module testbench_pipeline();
         #10;           // Hold reset for 10ns (5 clock cycles)
         l_rst_n <= 1;  // Release reset
         
-        $display("Pipeline processor testbench started");
+        $display("RISC-V Top-Level processor testbench started");
         $display("Reset sequence completed at time %0t", $time);
+        $display("Instruction memory loaded from: /home/david/Documents/GUSTAVO RISC/RISCV-RV32I/rtl/test0.txt");
     end
 
     //=========================================================================
@@ -205,23 +197,34 @@ module testbench_pipeline();
     end
 
     //=========================================================================
+    // Memory Interface Monitoring
+    //=========================================================================
+    // Monitor instruction memory accesses
+    always @(posedge l_clk) begin
+        if (l_rst_n) begin
+            // Uncomment for detailed instruction fetch monitoring
+            // $display("Cycle %0d: IMEM - PC: %h, Instr: %h", cycle_count, l_imem_addr, l_imem_rdata);
+        end
+    end
+
+    //=========================================================================
     // Result Verification
     //=========================================================================
     // Check results on negative clock edges (when clock transitions from 1 to 0)
     always @(negedge l_clk) begin
         if (l_rst_n && l_MemWrite) begin  // Only check during memory write operations after reset
             
-            $display("Cycle %0d: Memory Write - Address: %0d, Data: %0d", 
+            $display("Cycle %0d: Data Memory Write - Address: %0d, Data: %0d", 
                      cycle_count, r_DataAdr, r_WriteData);
             
             // Check for success condition:
             // If writing value 25 to address 100, simulation succeeded
             if ((r_DataAdr === 100) && (r_WriteData === 25)) begin
-                $display("\n=== PIPELINE SIMULATION SUCCESS ===");
+                $display("\n=== RISC-V TOP SIMULATION SUCCESS ===");
                 $display("Final result: Address %0d = %0d", r_DataAdr, r_WriteData);
                 $display("Total cycles: %0d", cycle_count);
                 $display("Simulation time: %0t", $time);
-                $display("=====================================\n");
+                $display("======================================\n");
                 #10;  // Small delay before stopping
                 $stop;  // Stop simulation on success
                 
@@ -229,14 +232,25 @@ module testbench_pipeline();
             // If writing to any address other than 96 (expected intermediate address),
             // and it's not the success case, simulation failed
             end else if (r_DataAdr !== 96) begin
-                $display("\n=== PIPELINE SIMULATION FAILED ===");
+                $display("\n=== RISC-V TOP SIMULATION FAILED ===");
                 $display("Unexpected write: Address %0d = %0d", r_DataAdr, r_WriteData);
                 $display("Expected: Address 100 = 25 or Address 96 = intermediate");
                 $display("Cycle: %0d, Time: %0t", cycle_count, $time);
-                $display("===================================\n");
+                $display("=====================================\n");
                 #10;  // Small delay before stopping
                 $stop;  // Stop simulation on failure
             end
+        end
+    end
+
+    //=========================================================================
+    // Data Memory Read Monitoring
+    //=========================================================================
+    // Monitor data memory read operations
+    always @(posedge l_clk) begin
+        if (l_rst_n && !l_dmem_we && (|l_dmem_addr)) begin  // Read operation (not write, address not zero)
+            $display("Cycle %0d: Data Memory Read - Address: %0d, Data: %0d", 
+                     cycle_count, l_dmem_addr, l_dmem_rdata);
         end
     end
 
@@ -247,8 +261,26 @@ module testbench_pipeline();
     /*
     always @(posedge l_clk) begin
         if (l_rst_n) begin
-            $display("Cycle %0d: PC=%h, Instr=%h, Stall_F=%b, Flush_D=%b, Fwd_A=%b, Fwd_B=%b",
-                     cycle_count, l_if_pc, l_if_instr, l_stall_f, l_flush_d, l_forward_a, l_forward_b);
+            $display("Cycle %0d: PC=%h, Instr=%h, IMEM_Addr=%h, DMEM_We=%b, DMEM_Addr=%h",
+                     cycle_count, l_if_pc, l_if_instr, l_imem_addr, l_dmem_we, l_dmem_addr);
+        end
+    end
+    */
+
+    //=========================================================================
+    // Memory Content Display (Optional Debug)
+    //=========================================================================
+    // Uncomment to display memory contents at the end of simulation
+    /*
+    final begin
+        $display("\n=== INSTRUCTION MEMORY CONTENTS ===");
+        for (int i = 0; i < 16; i++) begin
+            $display("IMEM[%0d] = %h", i, dut.u_instrucmem.l_rom[i]);
+        end
+        
+        $display("\n=== DATA MEMORY CONTENTS ===");
+        for (int i = 0; i < 16; i++) begin
+            $display("DMEM[%0d] = %h", i, dut.u_data_memory.l_ram[i]);
         end
     end
     */
@@ -262,6 +294,8 @@ module testbench_pipeline();
         $display("\n=== SIMULATION TIMEOUT ===");
         $display("Simulation exceeded maximum time limit");
         $display("Check for infinite loops or stalls");
+        $display("Current cycle: %0d", cycle_count);
+        $display("Last PC: %h", l_if_pc);
         $display("==========================\n");
         $stop;
     end
