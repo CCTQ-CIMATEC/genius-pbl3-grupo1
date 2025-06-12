@@ -162,7 +162,7 @@ module testbench_pipeline();
         // Load instructions into instruction memory from a file
         // NOTE: Adjust the path to match your test program location
         // The hierarchical path points to the external instruction memory
-        $readmemh("/home/david/Documents/PBL03/PBL3_equipe1/rtl/test0.txt", 
+        $readmemh("/home/david/Documents/GUSTAVO RISC/RISCV-RV32I/rtl/test0.txt", 
                   dut.u_instrucmem.l_rom);
         
         // Reset sequence for pipelined processor:
@@ -219,7 +219,7 @@ module testbench_pipeline();
             
             // Check for success condition:
             // If writing value 25 to address 100, simulation succeeded
-            if ((r_DataAdr === 100) && (r_WriteData === 15)) begin
+            if ((r_DataAdr === 100) && (r_WriteData === 25)) begin
                 $display("\n=== RISC-V TOP SIMULATION SUCCESS ===");
                 $display("Final result: Address %0d = %0d", r_DataAdr, r_WriteData);
                 $display("Total cycles: %0d", cycle_count);

@@ -4,10 +4,10 @@ rtl/geral/mux3.sv
 rtl/fetch/flopr.sv
 rtl/fetch/instrucmem.sv
 rtl/fetch/fetch_stage.sv
-rtl/decode/extend.sv
 rtl/decode/regfile.sv
-rtl/decode/aludec.sv
+rtl/decode/extend.sv
 rtl/decode/maindec.sv
+rtl/decode/aludec.sv
 rtl/decode/controller.sv
 rtl/decode/decode_stage.sv
 rtl/execute/alu.sv
@@ -16,5 +16,6 @@ rtl/memory/datamemory.sv
 rtl/memory/memory_stage.sv
 rtl/writeback/writeback_cycle.sv
 rtl/hazard_stage.sv
-rtl/pipeline.sv
+rtl/riscv_core.sv
+rtl/riscv_top.sv
 tb/testbench_pipeline.sv
