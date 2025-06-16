@@ -1,10 +1,11 @@
-/**
+/**----------------------------------------------------------------------------- 
     PBL3 - RISC-V Pipeline Processor
     Execute Stage (EX) Module
     File name: execute_stage.sv
     Objective:
         Implement the execute stage of the RISC-V pipeline processor.
         Handles ALU operations, branch condition evaluation, and address calculations.
+        
     Specification:
         - Integrates ALU for arithmetic/logic operations
         - Calculates branch/jump target addresses
@@ -12,22 +13,7 @@
         - Handles immediate value selection
         - Supports forwarding inputs from later pipeline stages
         - Generates control signals for next stages
-    Functional Diagram:
-                     +------------------------+
-                     |                        |
-    rs1_data ------> |                        |
-    rs2_data ------> |                        |----> alu_result
-    imm_data ------> |      EXECUTE STAGE     |----> branch_taken
-    pc_current ----->|                        |----> target_addr
-    alucontrol ----->|                        |----> zero_flag
-    alusrc --------->|                        |
-    branch --------->|                        |
-    jump ----------> |                        |
-                     +------------------------+
-**/
-//----------------------------------------------------------------------------- 
-//  Execute Stage Module
-//-----------------------------------------------------------------------------
+----------------------------------------------------------------------------- **/
 `timescale 1ns / 1ps
 
 module execute_stage #(
@@ -38,8 +24,6 @@ module execute_stage #(
     input logic                   i_clk,
     input logic                   i_rst_n,
 
-    //input logic                   i_flush_e,
-
     // Data inputs from ID/EX pipeline register
     input  logic [DATA_WIDTH-1:0] i_rs1_data_e,    // Register source 1 data
     input  logic [DATA_WIDTH-1:0] i_rs2_data_e,    // Register source 2 data
@@ -47,13 +31,13 @@ module execute_stage #(
     input  logic [ADDR_WIDTH-1:0] i_pc_e,          // Current PC value
     input  logic [ADDR_WIDTH-1:0] i_pc4_e,         // PC+4 value
     
-    // Address inputs for forwarding logic
+    // forwarding logic
     input  logic [4:0]  i_rs1_addr_e,    // RS1 address
     input  logic [4:0]  i_rs2_addr_e,    // RS2 address
     input  logic [4:0]  i_rd_addr_e,     // RD address
     
     // Control signals from ID/EX pipeline register
-    input  logic [2:0]  i_aluctrl_e,     // ALU operation control (3-bit from your decode)
+    input  logic [3:0]  i_aluctrl_e,     // ALU operation control (4-bit from your decode)
     input  logic        i_alusrc_e,      // ALU source select (0=reg, 1=imm)
     input  logic        i_branch_e,      // Branch instruction flag
     input  logic        i_jump_e,        // Jump instruction flag
@@ -86,7 +70,6 @@ module execute_stage #(
     logic [DATA_WIDTH-1:0] l_alu_operand_b;          // ALU input B (after forwarding/mux)
     logic [DATA_WIDTH-1:0] l_rs1_forwarded;          // RS1 after forwarding
     logic [DATA_WIDTH-1:0] l_rs2_forwarded;          // RS2 after forwarding
-    logic [3:0]            l_alu_control_extended;   // Extended ALU control signal
     logic [DATA_WIDTH-1:0] l_alu_result_e;
     logic [DATA_WIDTH-1:0] l_write_data_e;
 
@@ -108,43 +91,29 @@ module execute_stage #(
         .o_y    (l_rs2_forwarded)
     );    
 
-    //-------------------------------------------------------------------------
     // ALU Input Selection
-    //-------------------------------------------------------------------------
     assign l_alu_operand_a = l_rs1_forwarded;
     
     // ALU Source B Multiplexer (register or immediate)
     assign l_alu_operand_b = i_alusrc_e ? i_immext_e : l_rs2_forwarded;
     
-    // Extend 3-bit ALU control to 4-bit for your ALU
-    assign l_alu_control_extended = {1'b0, i_aluctrl_e}; // ISSO PODE DAR BO, N LEMBRO DE TER ATUALIZADO A ULA
-
-    //-------------------------------------------------------------------------
+    // Extend 3-bit ALU control to 4-bit for your ALU   
     // ALU Instantiation
-    //-------------------------------------------------------------------------
     alu alu_inst (
         .i_a          (l_alu_operand_a),
         .i_b          (l_alu_operand_b),
-        .i_alucontrol (l_alu_control_extended),
+        .i_alucontrol (i_aluctrl_e),
         .o_result     (l_alu_result_e),
         .o_zero       (o_zero_e)
     );
 
-    //-------------------------------------------------------------------------
     // Branch/Jump Target Address Calculation
-    //-------------------------------------------------------------------------
     assign o_pctarget_e = i_pc_e + i_immext_e;
 
-    //-------------------------------------------------------------------------
     // Pass RS2 data for store operations
-    //-------------------------------------------------------------------------
     assign l_write_data_e = l_rs2_forwarded;
     
-    //-------------------------------------------------------------------------
     // Pass-through control signals to EX/MEM pipeline register
-    //-------------------------------------------------------------------------
-
-
     always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
             o_regwrite_m    <= 0;

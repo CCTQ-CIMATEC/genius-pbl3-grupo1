@@ -1,12 +1,12 @@
-/**
- * PBL3 - RISC-V Pipelined Processor Core
- * 
- * File name: riscv_core.sv
- * 
- * Objective:
- *     5-stage pipelined RISC-V processor core without external memories.
- *     Provides interfaces for external instruction and data memories.
- */
+/*-------------------------------------------------------------------------
+    PBL3 - RISC-V Pipelined Processor Core
+    
+    File name: riscv_core.sv
+    
+    Objective:
+        5-stage pipelined RISC-V processor core datapath.
+        Provides interfaces for external instruction and data memories.
+ -------------------------------------------------------------------------*/
 
 `timescale 1ns/1ps
 
@@ -30,10 +30,6 @@ module riscv_core #(
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata
 );
-
-    //=========================================================================
-    // Inter-stage Signal Declarations
-    //=========================================================================
     
     // IF/ID Pipeline Register Signals
     logic [P_ADDR_WIDTH-1:0]  if_id_pc;
@@ -46,7 +42,7 @@ module riscv_core #(
     logic                     id_ex_memwrite;
     logic                     id_ex_jump;
     logic                     id_ex_branch;
-    logic [2:0]               id_ex_aluctrl;
+    logic [3:0]               id_ex_aluctrl;
     logic                     id_ex_alusrc;
     logic [P_DATA_WIDTH-1:0]  id_ex_rs1_data;
     logic [P_DATA_WIDTH-1:0]  id_ex_rs2_data;
@@ -91,9 +87,9 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  forward_data_mem;
     logic [P_DATA_WIDTH-1:0]  forward_data_wb;
     
-    //=========================================================================
+
     // Stage Instantiations
-    //=========================================================================
+
     
     //-------------------------------------------------------------------------
     // Fetch Stage (with external instruction memory interface)
@@ -261,9 +257,9 @@ module riscv_core #(
         .o_forward_b_e  (forward_b)
     );
     
-    //=========================================================================
+
     // Forwarding Data Assignment
-    //=========================================================================
+
     assign forward_data_mem = ex_mem_alu_result;
     assign forward_data_wb = wb_result;
 
