@@ -93,8 +93,7 @@ module testbench_pipeline();
         cycle_count = 0;
 
         // Load instructions
-        $readmemh("/home/david/Documents/PBL03/PBL3_equipe1/rtl/test0.txt", // OBS -> Adjust the path
-                  dut.u_instrucmem.l_rom);
+        $readmemh("../rtl/test0.txt", dut.u_instrucmem.l_rom);
         
         // Reset
         l_rst_n <= 0;  
