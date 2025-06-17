@@ -1,62 +1,83 @@
-// aludec.sv - Enhanced version
-`timescale 1ns / 1ps
+/*-----------------------------------------------------------------------------
+    PBL3 - RISC-V PIPELINE Processor
+    ALU Decoder file
+
+    File name: aludec.sv
+    Usage: rtl/decode/controller.sv
+
+    Objective:
+        Creates the control o_alucrtl to indicate the operation to take place
+        on the ALU according to the instruction
+-----------------------------------------------------------------------------*/`timescale 1ns / 1ps
+
+import cpu_pkg::*;
 
 module aludec
 (
-    input logic i_opb5,           // Bit 5 of the opcode
-    input logic [2:0] i_funct3,   // funct3 field from instruction
-    input logic i_funct7b5,       // Bit 5 of funct7 field
-    input logic [1:0] i_aluop,    // ALUOp from main decoder
-    output logic [3:0] o_alucrtl  // 4-bit ALU control output
+    input  logic         i_opb5,        // Bit 5 of the opcode
+    input  logic [2:0]   i_funct3,      // funct3 field from instruction
+    input  logic         i_funct7b5,    // Bit 5 of funct7 field
+    input  logic [1:0]   i_aluop,       // ALUOp from main decoder
+    output alu_op_t      o_alucrtl      // 4-bit ALU control output
 );
 
-    // Internal signal to identify R-type subtract operation
+    // identify R-type subtract operation
     logic l_rtypesub;
     assign l_rtypesub = i_funct7b5 & i_opb5;
 
-    // Combinational logic for ALU control
+
     always_comb begin
         case (i_aluop)
-            2'b00: o_alucrtl = 4'b0000;  // ADD (for loads, stores)
+            2'b00: o_alucrtl = ALU_ADD;  // ADD -> LOAD AND STORES
             
-            2'b01: begin  // For branches
+            // SB TYPE
+            2'b01: begin
                 case (i_funct3)
-                    3'b000: o_alucrtl = 4'b1011;  // BEQ - Equal comparison
-                    3'b001: o_alucrtl = 4'b1100;  // BNE - Not equal comparison
-                    3'b100: o_alucrtl = 4'b0010;  // BLT - Set Less Than (signed)
-                    3'b101: o_alucrtl = 4'b1101;  // BGE - Greater/Equal (signed)
-                    3'b110: o_alucrtl = 4'b0011;  // BLTU - Set Less Than Unsigned
-                    3'b111: o_alucrtl = 4'b1111;  // BGEU - Greater/Equal Unsigned
-                    default: o_alucrtl = 4'b1110; // Undefined/Reserved
+                    3'b000  : o_alucrtl = ALU_EQUAL;      // BEQ - Equal comparison
+                    3'b001  : o_alucrtl = ALU_NEQUAL;     // BNE - Not equal comparison
+                    3'b100  : o_alucrtl = ALU_LT;         // BLT - Set Less Than (signed)
+                    3'b101  : o_alucrtl = ALU_GT;         // BGE - Greater/Equal (signed)
+                    3'b110  : o_alucrtl = ALU_LTU;        // BLTU - Set Less Than Unsigned
+                    3'b111  : o_alucrtl = ALU_GTU;        // BGEU - Greater/Equal Unsigned
+                    default : o_alucrtl = ALU_UNUSED;     // Undefined/Reserved
                 endcase
             end
             
-            default: begin  // For R-type and I-type instructions (when ALUOp = 1x)
+            default: begin  // For R-type and I-type
                 case (i_funct3)
-                    3'b000: begin  // ADD/SUB or ADDI
+
+                    // ADD/ADDI/SUB
+                    3'b000  : begin
                         if (l_rtypesub)
-                            o_alucrtl = 4'b1000;  // SUB (R-type)
+                            o_alucrtl = ALU_SUB;    // SUB
                         else
-                            o_alucrtl = 4'b0000;  // ADD (R-type), ADDI (I-type)
+                            o_alucrtl = ALU_ADD;    // ADD, ADDI
                     end
-                    3'b001: begin  // SLL/SLLI
+                    
+                    // SLL/SLLI
+                    3'b001  : begin
                         if (i_funct7b5 == 1'b0)
-                            o_alucrtl = 4'b0001;  // SLL
+                            o_alucrtl = ALU_SLL;    // SLL
                         else
-                            o_alucrtl = 4'b1110;  // Reserved/Error
+                            o_alucrtl = ALU_UNUSED; // Reserved/Error
                     end
-                    3'b010: o_alucrtl = 4'b0010;  // SLT, SLTI
-                    3'b011: o_alucrtl = 4'b0011;  // SLTU, SLTIU
-                    3'b100: o_alucrtl = 4'b0100;  // XOR, XORI
-                    3'b101: begin  // SRL/SRLI / SRA/SRAI
+
+                    3'b010  : o_alucrtl = ALU_LT;   // SLT/SLTI
+                    3'b011  : o_alucrtl = ALU_LTU;  // SLTU/SLTIU
+                    3'b100  : o_alucrtl = ALU_XOR;  // XOR/XORI
+
+                    // SRL/SRLI / SRA/SRAI
+                    3'b101  : begin
                         if (i_funct7b5 == 1'b0)
-                            o_alucrtl = 4'b0101;  // SRL
+                            o_alucrtl = ALU_SRL;    // SRL
                         else
-                            o_alucrtl = 4'b1001;  // SRA
+                            o_alucrtl = ALU_SRA;    // SRA
                     end
-                    3'b110: o_alucrtl = 4'b0110;  // OR, ORI
-                    3'b111: o_alucrtl = 4'b0111;  // AND, ANDI
-                    default: o_alucrtl = 4'b1110; // Reserved/Error
+
+                    3'b110  : o_alucrtl = ALU_OR;   // OR, ORI
+                    3'b111  : o_alucrtl = ALU_AND;  // AND, ANDI
+                    
+                    default: o_alucrtl = ALU_UNUSED;   // Reserved/Error
                 endcase
             end
         endcase

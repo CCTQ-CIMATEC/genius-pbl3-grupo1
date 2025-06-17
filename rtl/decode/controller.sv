@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------
-    PBL3 - RISC-V Single Cycle Processor
+    PBL3 - RISC-V PIPELINE Processor
     Controller Module
 
     File name: controller.sv    
@@ -22,7 +22,7 @@ module controller(
     input logic [2:0] i_funct3,         // 3-bit funct3 field from instruction
     input logic       i_funct7b5,       // funct7 bit 5 (for R-type instructions)
     
-    output logic [3:0] o_alucrtl,       // 3-bit ALU control signal
+    output alu_op_t    o_alucrtl,       // 3-bit ALU control signal
     output logic [1:0] o_resultsrc,     // Result multiplexer select (for writeback)
     output logic [1:0] o_immsrc,        // Immediate format select
     output logic       o_memwrite,      // Data memory write enable

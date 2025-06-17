@@ -24,20 +24,20 @@ module execute_stage #(
     input logic                   i_clk,
     input logic                   i_rst_n,
 
-    // Data inputs from ID/EX pipeline register
+    // Inputs ID/EX pipeline register
     input  logic [DATA_WIDTH-1:0] i_rs1_data_e,    // Register source 1 data
     input  logic [DATA_WIDTH-1:0] i_rs2_data_e,    // Register source 2 data
     input  logic [DATA_WIDTH-1:0] i_immext_e,      // Immediate value (sign-extended)
     input  logic [ADDR_WIDTH-1:0] i_pc_e,          // Current PC value
     input  logic [ADDR_WIDTH-1:0] i_pc4_e,         // PC+4 value
     
-    // forwarding logic
+    // Forwarding logic
     input  logic [4:0]  i_rs1_addr_e,    // RS1 address
     input  logic [4:0]  i_rs2_addr_e,    // RS2 address
     input  logic [4:0]  i_rd_addr_e,     // RD address
     
     // Control signals from ID/EX pipeline register
-    input  logic [3:0]  i_aluctrl_e,     // ALU operation control (4-bit from your decode)
+    input  alu_op_t     i_aluctrl_e,     // ALU operation control (4-bit from your decode)
     input  logic        i_alusrc_e,      // ALU source select (0=reg, 1=imm)
     input  logic        i_branch_e,      // Branch instruction flag
     input  logic        i_jump_e,        // Jump instruction flag
@@ -45,7 +45,7 @@ module execute_stage #(
     input  logic        i_memwrite_e,    // Memory write enable
     input  logic [1:0]  i_resultsrc_e,   // Result source select
     
-    // Forwarding inputs (from MEM and WB stages)
+    // Forwarding inputs
     input  logic [DATA_WIDTH-1:0] i_forward_m,   // Forwarded data from MEM stage
     input  logic [DATA_WIDTH-1:0] i_forward_w,    // Forwarded data from WB stage
     input  logic [1:0]  i_forward_a,            // Forward control for operand A
@@ -73,7 +73,7 @@ module execute_stage #(
     logic [DATA_WIDTH-1:0] l_alu_result_e;
     logic [DATA_WIDTH-1:0] l_write_data_e;
 
-    // Forwarding Logic for Operand A (RS1) using mux3
+    // Forwarding Logic for Operand A using mux3
     mux3 u_fmux1(
         .i_d0   (i_rs1_data_e), // No forwarding
         .i_d1   (i_forward_w),  // Forward from WB stage
@@ -82,7 +82,7 @@ module execute_stage #(
         .o_y    (l_rs1_forwarded)
     );    
 
-    // Forwarding Logic for Operand B (RS2) using mux3
+    // Forwarding Logic for Operand B using mux3
     mux3 u_fmux2(
         .i_d0   (i_rs2_data_e), // No forwarding
         .i_d1   (i_forward_w),  // Forward from WB stage
@@ -94,11 +94,9 @@ module execute_stage #(
     // ALU Input Selection
     assign l_alu_operand_a = l_rs1_forwarded;
     
-    // ALU Source B Multiplexer (register or immediate)
+    // ALU Source B Multiplexer
     assign l_alu_operand_b = i_alusrc_e ? i_immext_e : l_rs2_forwarded;
     
-    // Extend 3-bit ALU control to 4-bit for your ALU   
-    // ALU Instantiation
     alu alu_inst (
         .i_a          (l_alu_operand_a),
         .i_b          (l_alu_operand_b),
@@ -113,7 +111,7 @@ module execute_stage #(
     // Pass RS2 data for store operations
     assign l_write_data_e = l_rs2_forwarded;
     
-    // Pass-through control signals to EX/MEM pipeline register
+    // EX/MEM pipeline register
     always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
             o_regwrite_m    <= 0;

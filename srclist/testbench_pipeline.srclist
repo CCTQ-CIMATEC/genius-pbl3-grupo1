@@ -1,6 +1,7 @@
 rtl/geral/adder.sv
 rtl/geral/mux2.sv
 rtl/geral/mux3.sv
+rtl/geral/cpu_pkg.sv
 rtl/fetch/flopr.sv
 rtl/fetch/instrucmem.sv
 rtl/fetch/fetch_stage.sv

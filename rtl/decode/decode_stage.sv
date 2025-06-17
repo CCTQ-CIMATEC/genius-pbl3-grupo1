@@ -47,7 +47,7 @@ module decode_stage #(
     output logic        o_memwrite_e,
     output logic        o_jump_e,
     output logic        o_branch_e,
-    output logic [3:0]  o_aluctrl_e,
+    output alu_op_t     o_aluctrl_e,
     output logic        o_alusrc_e,
     
     // Data outputs
@@ -62,9 +62,9 @@ module decode_stage #(
     
     // Extended immediate and PC+4
     output logic [DATA_WIDTH-1:0] o_immext_e,
-    output logic [PC_WIDTH:0] o_pc4_e,
+    output logic [PC_WIDTH:0]     o_pc4_e,
     
-    // PC source output (for fetch stage)
+    // PC source output
     output logic o_pcsrc_e
 );
 
@@ -77,7 +77,7 @@ module decode_stage #(
     logic [ADDR_WIDTH-1:0]  l_rd_addr;
     
     // Controller outputs
-    logic [3:0]             l_aluctrl_d;
+    alu_op_t                l_aluctrl_d;
     logic [1:0]             l_resultsrc_d;
     logic [1:0]             l_immsrc_d;
     logic                   l_memwrite_d;
@@ -147,7 +147,7 @@ module decode_stage #(
             o_memwrite_e    <= 1'b0;
             o_jump_e        <= 1'b0;
             o_branch_e      <= 1'b0;
-            o_aluctrl_e     <= 4'b0000;
+            o_aluctrl_e     <= ALU_UNUSED;
             o_alusrc_e      <= 1'b0;
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};

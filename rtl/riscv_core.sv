@@ -42,7 +42,7 @@ module riscv_core #(
     logic                     id_ex_memwrite;
     logic                     id_ex_jump;
     logic                     id_ex_branch;
-    logic [3:0]               id_ex_aluctrl;
+    alu_op_t                  id_ex_aluctrl;
     logic                     id_ex_alusrc;
     logic [P_DATA_WIDTH-1:0]  id_ex_rs1_data;
     logic [P_DATA_WIDTH-1:0]  id_ex_rs2_data;
@@ -54,13 +54,13 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  id_ex_pc4;
     
     // EX/MEM Pipeline Register Signals
-    logic [P_DATA_WIDTH-1:0]  ex_mem_alu_result;
-    logic [P_DATA_WIDTH-1:0]  ex_mem_write_data;
-    logic                     ex_mem_regwrite;
-    logic                     ex_mem_memwrite;
-    logic [1:0]               ex_mem_resultsrc;
+    logic [P_DATA_WIDTH-1:0]    ex_mem_alu_result;
+    logic [P_DATA_WIDTH-1:0]    ex_mem_write_data;
+    logic                       ex_mem_regwrite;
+    logic                       ex_mem_memwrite;
+    logic [1:0]                 ex_mem_resultsrc;
     logic [P_REG_ADDR_WIDTH-1:0] ex_mem_rd_addr;
-    logic [P_DATA_WIDTH-1:0]  ex_mem_pc4;
+    logic [P_DATA_WIDTH-1:0]    ex_mem_pc4;
     
     // MEM/WB Pipeline Register Signals
     logic [P_DATA_WIDTH-1:0]  mem_wb_read_data;
