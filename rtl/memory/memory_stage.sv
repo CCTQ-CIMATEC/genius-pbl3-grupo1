@@ -1,18 +1,18 @@
-/**
- * PBL3 - RISC-V Pipelined Processor
- * Memory Stage Module with External Memory Interface
- *
- * File name: memory_stage.sv
- *
- * Objective:
- *     Implements the memory access stage of a pipelined RISC-V processor.
- *     Interfaces with external data memory and forwards pipeline data.
- *
- * Description:
- *     - Provides interface signals to external data memory
- *     - Handles memory read/write control
- *     - Manages MEM/WB pipeline register
- *     - No internal memory instantiation
+/*
+  PBL3 - RISC-V Pipelined Processor
+  Memory Stage Module with External Memory Interface
+ 
+  File name: memory_stage.sv
+ 
+  Objective:
+      Implements the memory access stage of a pipelined RISC-V processor.
+      Interfaces with external data memory and forwards pipeline data.
+ 
+  Description:
+      - Provides interface signals to external data memory
+      - Handles memory read/write control
+      - Manages MEM/WB pipeline register
+      - No internal memory instantiation
  */
 
 `timescale 1ns/1ps

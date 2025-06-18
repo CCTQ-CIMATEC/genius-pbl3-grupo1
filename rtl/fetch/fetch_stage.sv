@@ -1,21 +1,24 @@
 /**
- * PBL3 - RISC-V Pipelined Processor  
- * Fetch Stage Module with External Memory Interface
- *
- * File name: fetch_stage.sv
- *
- * Objective:
- *     Implement the instruction fetch stage for a RISC-V pipelined processor.
- *     Handles program counter management and interfaces with external instruction memory.
- *
- * Specification:
- *     - Program counter (PC) management with increment logic
- *     - External instruction memory interface
- *     - Pipeline stall and flush control
- *     - Branch target handling
- *     - Configurable address and data widths
- *     - Fully synthesizable with proper timing
- */
+-----------------------------------------------------------------------------
+    PBL3 - RISC-V Pipelined Processor  
+    Fetch Stage Module with External Memory Interface
+ 
+    File name: fetch_stage.sv
+    Usage: riscv_core.sv
+    
+    Objective:
+        Implement the instruction fetch stage for a RISC-V pipelined processor.
+        Handles program counter management and interfaces with external instruction memory.
+    
+    Specification:
+        Program counter (PC) management with increment logic
+        External instruction memory interface
+        Pipeline stall and flush control
+        Branch target handling
+        Configurable address and data widths
+        Fully synthesizable with proper timing
+ -----------------------------------------------------------------------------
+ **/
 
 `timescale 1ns/1ps
 

@@ -1,32 +1,19 @@
-/**
- * PBL3 - RISC-V Pipelined Processor
- * Instruction Decode Stage Module
- * 
- * File name: decode_stage.sv
- * 
- * Objective:
- *     Implements the instruction decode stage of a pipelined RISC-V processor.
- *     Combines controller, register file, and immediate extender functionality.
- * 
- * Description:
- *     - Decodes instruction fields and generates control signals
- *     - Reads source operands from register file
- *     - Extends immediate values based on instruction type
- *     - Passes all necessary signals to execute stage via pipeline register
- * 
- * Functional Diagram:
- * 
- *                    +----------------------------------+
- *                    |          DECODE STAGE            |
- *                    |                                  |
- *   i_instr_d    --->|  +----------+  +----------+      |
- *   i_pc_d       --->|  |CONTROLLER|  | REGFILE  |      |---> to EX stage
- *   i_pc4_d      --->|  +----------+  +----------+      |     via ID_EX_reg
- *   i_reg_write_w--->|                 +----------+     |
- *   i_rd_addr_w  --->|                 | EXTEND   |     |
- *   i_result_w   --->|                 +----------+     |
- *                    +----------------------------------+
- */
+/*-----------------------------------------------------------------------------
+    PBL3 - RISC-V Pipelined Processor
+    Instruction Decode Stage Module
+
+    File name: decode_stage.sv
+
+    Objective:
+        Implements the instruction decode stage of a pipelined RISC-V processor.
+        Combines controller, register file, and immediate extender functionality.
+
+    Description:
+        - Decodes instruction fields and generates control signals
+        - Reads source operands from register file
+        - Extends immediate values based on instruction type
+        - Passes all necessary signals to execute stage via pipeline register
+-----------------------------------------------------------------------------*/
 
 `timescale 1ns / 1ps
 
@@ -60,7 +47,7 @@ module decode_stage #(
     output logic        o_memwrite_e,
     output logic        o_jump_e,
     output logic        o_branch_e,
-    output logic [2:0]  o_aluctrl_e,
+    output alu_op_t     o_aluctrl_e,
     output logic        o_alusrc_e,
     
     // Data outputs
@@ -75,9 +62,9 @@ module decode_stage #(
     
     // Extended immediate and PC+4
     output logic [DATA_WIDTH-1:0] o_immext_e,
-    output logic [PC_WIDTH:0] o_pc4_e,
+    output logic [PC_WIDTH:0]     o_pc4_e,
     
-    // PC source output (for fetch stage)
+    // PC source output
     output logic o_pcsrc_e
 );
 
@@ -90,7 +77,7 @@ module decode_stage #(
     logic [ADDR_WIDTH-1:0]  l_rd_addr;
     
     // Controller outputs
-    logic [2:0]             l_aluctrl_d;
+    alu_op_t                l_aluctrl_d;
     logic [1:0]             l_resultsrc_d;
     logic [1:0]             l_immsrc_d;
     logic                   l_memwrite_d;
@@ -160,7 +147,7 @@ module decode_stage #(
             o_memwrite_e    <= 1'b0;
             o_jump_e        <= 1'b0;
             o_branch_e      <= 1'b0;
-            o_aluctrl_e     <= 3'b000;
+            o_aluctrl_e     <= ALU_UNUSED;
             o_alusrc_e      <= 1'b0;
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};
@@ -174,7 +161,7 @@ module decode_stage #(
             o_immext_e  <=  {DATA_WIDTH{1'b0}};
             o_pc4_e     <=  {PC_WIDTH{1'b0}};
         end else begin
-            // Latch control signals from decode stage
+            // signals from decode stage
             o_regwrite_e    <= l_regwrite_d;
             o_resultsrc_e   <= l_resultsrc_d;
             o_memwrite_e    <= l_memwrite_d;
@@ -183,17 +170,17 @@ module decode_stage #(
             o_aluctrl_e     <= l_aluctrl_d;
             o_alusrc_e      <= l_alusrc_d;
             
-            // Latch data signals from decode stage
+            // signals from decode stage
             o_rs1_data_e    <= l_rs1_data_d;
             o_rs2_data_e    <= l_rs2_data_d;
             o_pc_e          <= i_pc_d;
             
-            // Latch address signals from decode stage
+            // signals from decode stage
             o_rs1_addr_e    <= l_rs1_addr;
             o_rs2_addr_e    <= l_rs2_addr;
             o_rd_addr_e     <= l_rd_addr;
             
-            // Latch immediate and PC+4 from decode stage
+            // immediate and PC+4 from decode stage
             o_immext_e      <= l_immext_d;
             o_pc4_e         <= i_pc4_d;
         end
