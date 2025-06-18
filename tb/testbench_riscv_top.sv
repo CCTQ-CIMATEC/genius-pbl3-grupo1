@@ -38,7 +38,7 @@
 
 `timescale 1ns/1ps
 
-module testbench_pipeline();
+module testbench_riscv_top();
 
     logic           l_clk;         // Clock signal
     logic           l_rst_n;       // Reset signal
