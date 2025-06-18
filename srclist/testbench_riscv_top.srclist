@@ -19,4 +19,4 @@ ${P_RV32I}/rtl/writeback/writeback_cycle.sv
 ${P_RV32I}/rtl/hazard_stage.sv
 ${P_RV32I}/rtl/riscv_core.sv
 ${P_RV32I}/rtl/riscv_top.sv
-${P_RV32I}/tb/testbench_pipeline.sv
+${P_RV32I}/tb/testbench_riscv_top.sv
