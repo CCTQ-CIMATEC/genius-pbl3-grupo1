@@ -1,33 +1,26 @@
 //------------------------------------------------------------------------------
-// Package for adder agent components
+
+// Engineer: Ramylla Luiza Barbalho
+
 //------------------------------------------------------------------------------
-// This package includes the components and declarations for the adder agent.
-//
-// Author: Nelson Alves nelsonafn@gmail.com
-// Date  : October 2023
-//------------------------------------------------------------------------------
+`ifndef RISCV_AGENT_PKG
+`define RISCV_AGENT_PKG
 
-`ifndef ADDER_AGENT_PKG
-`define ADDER_AGENT_PKG
+package RISCV_agent_pkg;
 
-package adder_agent_pkg;
- 
-  import uvm_pkg::*;
-  `include "uvm_macros.svh"
+    import uvm_pkg::*;
 
-  /*
-   * Include Agent components: driver, monitor, sequencer
-   */
-  `include "adder_defines.svh"
-  `include "adder_transaction.sv"
-  `include "adder_sequencer.sv"
-  `include "adder_driver.sv"
-  `include "adder_monitor.sv"
-  `include "adder_agent.sv"
+    `include "uvm_macros.svh"
 
-endpackage
+    `include "RISCV_transaction.sv"
+    // 2. Sequencer:
+    `include "RISCV_sequencer.sv"
+    // 3. Monitor e Driver:
+    `include "RISCV_monitor.sv"
+    `include "RISCV_driver.sv"
+    // 4. Agente:
+    `include "RISCV_agent.sv"
 
-`endif
+endpackage : RISCV_agent_pkg
 
-
-
+`endif 

@@ -3,82 +3,81 @@
 //------------------------------------------------------------------------------
 // This module captures interface activity for the adder agent.
 //
-// Author: Nelson Alves nelsonafn@gmail.com
-// Date  : October 2023
+// Author: Ramylla Luiza Barbalho
+// Date  : JUN 2025
 //------------------------------------------------------------------------------
 
-`ifndef ADDER_MONITOR 
-`define ADDER_MONITOR
+`ifndef RISCV_MONITOR
 
-class adder_monitor extends uvm_monitor;
- 
-  /*
-   * Declaration of Virtual interface
-   */
-  virtual adder_interface vif;
+`define RISCV_MONITOR
 
-  /*
-   * Declaration of Analysis ports and exports 
-   */
-  uvm_analysis_port #(adder_transaction) mon2sb_port;
+class RISCV_monitor extends uvm_monitor;
 
-  /*
-   * Declaration of transaction item 
-   */
-  adder_transaction act_trans;
 
-  /*
-   * Declaration of component utils 
-   */
-  `uvm_component_utils(adder_monitor)
+  virtual RISCV_interface vif;
+  uvm_analysis_port #(RISCV_transaction) mon2sb_port;
 
-  /*
-   * Constructor
-   */
+  `uvm_component_utils(RISCV_monitor)
+
+
   function new (string name, uvm_component parent);
+
     super.new(name, parent);
-    act_trans = new();
+
     mon2sb_port = new("mon2sb_port", this);
+
   endfunction : new
 
-  /*
-   * Build phase: construct the components
-   * This phase retrieves the virtual interface from the UVM configuration database.
-   */
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-    if(!uvm_config_db#(virtual adder_interface)::get(this, "", "intf", vif))
-      `uvm_fatal("NOVIF",{"virtual interface must be set for: ",get_full_name(),".vif"});
-  endfunction: build_phase
 
-  /*
-   * Run phase: Extract the info from DUT via interface 
-   * This phase continuously samples the transaction signals from the DUT.
-   */
+  function void build_phase(uvm_phase phase);
+
+    super.build_phase(phase);
+
+    if (!uvm_config_db#(virtual RISCV_interface)::get(this, "", "intf", vif))
+
+      `uvm_fatal("NOVIF", {"Virtual interface must be set for: ", get_full_name(), ".vif"});
+
+  endfunction : build_phase
+
+
   virtual task run_phase(uvm_phase phase);
+
+    wait(!vif.reset);
+
     forever begin
-      collect_trans();
-      mon2sb_port.write(act_trans);
+
+      @(posedge vif.clk);
+
+      if (vif.instr_ready || vif.data_ready) begin
+
+        RISCV_transaction act_trans;
+
+        act_trans = RISCV_transaction::type_id::create("act_trans", this);
+        act_trans.instr_ready   = vif.instr_ready;
+        act_trans.instr_data    = vif.instr_data;
+        act_trans.data_ready    = vif.data_ready;
+        act_trans.data_rd       = vif.data_rd;
+        act_trans.inst_rd_en     = vif.inst_rd_en;
+        act_trans.inst_ctrl_cpu  = vif.inst_ctrl_cpu;
+        act_trans.inst_addr      = vif.inst_addr;
+        act_trans.data_wr        = vif.data_wr;
+        act_trans.data_addr      = vif.data_addr;
+        act_trans.data_rd_en_ctrl= vif.data_rd_en_ctrl;
+        act_trans.data_rd_en_ma  = vif.data_rd_en_ma;
+        act_trans.data_wr_en_ma  = vif.data_wr_en_ma;
+
+        `uvm_info(get_full_name(), $sformatf("Monitor captured transaction:\n%s", act_trans.sprint()), UVM_LOW);
+
+        // 4. ENVIA A TRANSAÇÃO
+
+        mon2sb_port.write(act_trans);
+
+      end
+
     end
+
   endtask : run_phase
 
-  /*
-   * Task: collect_actual_trans
-   * Samples the transaction signals from the DUT.
-   */
-  task collect_trans();
-    wait(!vif.reset);
-    @(vif.rc_cb);
-    @(vif.rc_cb);
-    act_trans.x = vif.rc_cb.x;
-    act_trans.y = vif.rc_cb.y;
-    act_trans.cin = vif.rc_cb.cin;
-    act_trans.sum = vif.rc_cb.sum;
-    act_trans.cout = vif.rc_cb.cout;
-    `uvm_info(get_full_name(),$sformatf("TRANSACTION FROM MONITOR"),UVM_LOW);
-    act_trans.print();
-  endtask
-
-endclass : adder_monitor
+endclass : RISCV_monitor
 
 `endif
