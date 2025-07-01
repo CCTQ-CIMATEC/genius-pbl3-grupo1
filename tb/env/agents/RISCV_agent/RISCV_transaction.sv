@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Transaction class for RISCV operations
-//------------------------------------------------------------------------------
-// This class defines the transaction fields and constraints for RISCV operations.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_TRANSACTION 
 `define RISCV_TRANSACTION
