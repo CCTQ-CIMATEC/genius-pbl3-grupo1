@@ -12,6 +12,8 @@ package RISCV_agent_pkg;
 
     `include "uvm_macros.svh"
 
+    `include "RISCV_defines.sv" //rever esse carinha
+
     `include "RISCV_transaction.sv"
     // 2. Sequencer:
     `include "RISCV_sequencer.sv"
@@ -21,6 +23,8 @@ package RISCV_agent_pkg;
     // 4. Agente:
     `include "RISCV_agent.sv"
 
-endpackage : RISCV_agent_pkg
+
+  
+endpackage
 
 `endif 

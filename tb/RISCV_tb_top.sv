@@ -56,9 +56,6 @@ RISCV_interface #(
        .P_DMEM_ADDR_WIDTH(P_DMEM_ADDR_WIDTH)
 ) RISCV_intf(clk, reset);
 
-/*
- * DUT instantiation for RISCV (core do seu colega)
- * Instantiates the RISCV DUT and connects it to the interface signals.
  */
 RISCV u_riscv_core (
     .clk                (clk),
