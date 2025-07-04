@@ -15,7 +15,7 @@ class RISCV_monitor extends uvm_monitor;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
 
-    mon2sb_port = new("mon2sb_port", this); // <-- Aqui é o local certo
+    mon2sb_port = new("mon2sb_port", this); 
 
     if (!uvm_config_db#(virtual RISCV_interface)::get(this, "", "intf", vif)) begin
       `uvm_fatal("NOVIF", {"Virtual interface must be set for: ", get_full_name(), ".vif"});
