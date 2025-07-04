@@ -17,7 +17,7 @@ class RISCV_store_test extends uvm_test;
    */
   `uvm_component_utils(RISCV_store_test)
  
-  RISCV_environment env;
+  RISCV_env env;
   RISCV_store_seq   seq;
  
   /*
@@ -34,7 +34,7 @@ class RISCV_store_test extends uvm_test;
    */
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    env = RISCV_environment::type_id::create("env", this);
+    env = RISCV_env::type_id::create("env", this);
     seq = RISCV_store_seq::type_id::create("seq");
   endfunction : build_phase
  
@@ -44,7 +44,7 @@ class RISCV_store_test extends uvm_test;
    */
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
-    seq.start(env.RISCV_agnt.sequencer);
+    seq.start(env.RISCV_agent.sequencer);
     phase.drop_objection(this);
   endtask : run_phase
  

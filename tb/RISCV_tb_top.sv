@@ -56,25 +56,27 @@ RISCV_interface #(
        .P_DMEM_ADDR_WIDTH(P_DMEM_ADDR_WIDTH)
 ) RISCV_intf(clk, reset);
 
- */
-RISCV u_riscv_core (
-    .clk                (clk),
-    .rst_n              (reset),
+
+RISCV //#(.P_DATA_WIDTH       (P_DATA_WIDTH),
+    //.P_ADDR_WIDTH       (P_ADDR_WIDTH),
+    //.P_REG_ADDR_WIDTH   (P_REG_ADDR_WIDTH),
+    //.P_IMEM_ADDR_WIDTH  (P_IMEM_ADDR_WIDTH),
+   // .P_DMEM_ADDR_WIDTH  (P_DMEM_ADDR_WIDTH)
+ u_riscv_core (
+    .clk              (clk),
+    .rst_n            (reset),
+    .i_instr_ready      (RISCV_intf.instr_ready),
+    .i_instr_data       (RISCV_intf.instr_data),
+    .o_inst_rd_en       (RISCV_intf.inst_rd_en),
+    .o_inst_addr        (RISCV_intf.inst_addr),
     
-    // Instruction Memory Interface
-    .i_instr_ready      (RISCV_intf.instr_ready),      // Instruction memory ready
-    .i_instr_data       (RISCV_intf.instr_data),       // Instruction memory data
-    .o_inst_rd_en       (RISCV_intf.inst_rd_en),       // Enable instruction memory read
-    .o_inst_addr        (RISCV_intf.inst_addr),        // PC address to fetch instruction
-    
-    // Data Memory Interface  
-    .i_data_ready       (RISCV_intf.data_ready),       // Data memory ready
-    .i_data_rd          (RISCV_intf.data_rd),          // Data memory read data
-    .o_data_wr          (RISCV_intf.data_wr),          // Data memory write data
-    .o_data_addr        (RISCV_intf.data_addr),        // Data memory address
-    .o_data_rd_en_ctrl  (RISCV_intf.data_rd_en_ctrl),  // Control for data memory read
-    .o_data_rd_en_ma    (RISCV_intf.data_rd_en_ma),    // Enable data memory read (memory access)
-    .o_data_wr_en_ma    (RISCV_intf.data_wr_en_ma)     // Enable data memory write (memory access)
+    .i_data_ready       (RISCV_intf.data_ready),
+    .i_data_rd          (RISCV_intf.data_rd),
+    .o_data_wr          (RISCV_intf.data_wr),
+    .o_data_addr        (RISCV_intf.data_addr),
+    .o_data_rd_en_ctrl  (RISCV_intf.data_rd_en_ctrl),
+    .o_data_rd_en_ma    (RISCV_intf.data_rd_en_ma),
+    .o_data_wr_en_ma    (RISCV_intf.data_wr_en_ma)
 );
 
 /*

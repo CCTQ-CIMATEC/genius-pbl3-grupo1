@@ -21,11 +21,11 @@ import uvm_pkg::*;
 // visible and can be instantiated within this environment.
 import RISCV_agent_pkg::*;      // includes RISCV_agent, RISCV_transaction, etc.
 import RISCV_ref_model_pkg::*;  // includes RISCV_ref_model and its package
-import RISCV_scoreboard_pkg::*; // includes RISCV_scoreboard and its package
-import RISCV_coverage_pkg::*;   // includes RISCV_coverage and its package
+//import RISCV_scoreboard_pkg::*; // includes RISCV_scoreboard and its package
+//import RISCV_coverage_pkg::*;   // includes RISCV_coverage and its package
 
 
-class RISCV_environment extends uvm_env;
+class RISCV_env extends uvm_env;
 
     // component declarations: declare handles for all components that will be part of this environment.
     RISCV_agent     riscv_agent_instance;
@@ -38,7 +38,7 @@ class RISCV_environment extends uvm_env;
     // register the environment class with the uvm factory.
     // this is crucial for uvm's factory mechanism, allowing dynamic creation
     // and type overriding of components during the simulation.
-    `uvm_component_utils(RISCV_environment)
+    `uvm_component_utils(RISCV_env)
 
     // constructor: standard uvm component constructor.
     // it performs basic initialization and calls the base class constructor.
@@ -86,7 +86,7 @@ class RISCV_environment extends uvm_env;
         // or if all data flow should go through the monitor.
     endfunction : connect_phase
 
-endclass : RISCV_environment
+endclass : RISCV_env
 // end of class RISCV_environment
 
 `endif // RISCV_ENV

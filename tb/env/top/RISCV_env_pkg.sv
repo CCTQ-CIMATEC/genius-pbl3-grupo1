@@ -28,8 +28,8 @@ package RISCV_env_pkg;
      */
     import RISCV_agent_pkg::*;      // contains RISCV_agent and RISCV_transaction
     import RISCV_ref_model_pkg::*;  // contains RISCV_ref_model
-    import RISCV_scoreboard_pkg::*; // assuming this package exists and contains RISCV_scoreboard
-    import RISCV_coverage_pkg::*;   // assuming this package exists and contains RISCV_coverage
+    //import RISCV_scoreboard_pkg::*; 
+   // import RISCV_coverage_pkg::*;   
 
     /*
      * include top environment files.
@@ -40,7 +40,7 @@ package RISCV_env_pkg;
      */
     `include "RISCV_coverage.sv"   // class RISCV_coverage
     `include "RISCV_scoreboard.sv" // class RISCV_scoreboard
-    `include "RISCV_environment.sv"// class RISCV_environment
+    `include "RISCV_env.sv"// class RISCV_environment
 
 endpackage
 

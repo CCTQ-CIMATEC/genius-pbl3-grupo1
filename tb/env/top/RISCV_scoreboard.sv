@@ -9,7 +9,7 @@
 // Date  : ????
 //------------------------------------------------------------------------------
 
-``ifndef RISCV_SCOREBOARD
+`ifndef RISCV_SCOREBOARD
 `define RISCV_SCOREBOARD
 
 // import necessary uvm packages and transaction types
