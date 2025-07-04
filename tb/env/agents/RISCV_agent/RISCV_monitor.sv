@@ -1,17 +1,8 @@
-//------------------------------------------------------------------------------
-// Monitor module for RISCV agent
-//------------------------------------------------------------------------------
-// This module captures interface activity for the RISCV agent.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
-
 `ifndef RISCV_MONITOR 
 `define RISCV_MONITOR
 
 class RISCV_monitor extends uvm_monitor;
- 
+
   virtual RISCV_interface vif;
   uvm_analysis_port #(RISCV_transaction) mon2sb_port;
 
@@ -19,13 +10,16 @@ class RISCV_monitor extends uvm_monitor;
 
   function new (string name, uvm_component parent);
     super.new(name, parent);
-    mon2sb_port = new("mon2sb_port", this);
   endfunction : new
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual RISCV_interface)::get(this, "", "intf", vif))
+
+    mon2sb_port = new("mon2sb_port", this); // <-- Aqui é o local certo
+
+    if (!uvm_config_db#(virtual RISCV_interface)::get(this, "", "intf", vif)) begin
       `uvm_fatal("NOVIF", {"Virtual interface must be set for: ", get_full_name(), ".vif"});
+    end
   endfunction : build_phase
 
   virtual task run_phase(uvm_phase phase);
@@ -42,11 +36,10 @@ class RISCV_monitor extends uvm_monitor;
     act_trans = RISCV_transaction::type_id::create("act_trans", this);
 
     // Inputs
-    act_trans.instr_ready   = vif.instr_ready;
-    act_trans.instr_data    = vif.instr_data;
-
-    act_trans.data_ready    = vif.data_ready;
-    act_trans.data_rd       = vif.data_rd;
+    act_trans.instr_ready    = vif.instr_ready;
+    act_trans.instr_data     = vif.instr_data;
+    act_trans.data_ready     = vif.data_ready;
+    act_trans.data_rd        = vif.data_rd;
 
     // Outputs esperados
     act_trans.inst_rd_en     = vif.inst_rd_en;

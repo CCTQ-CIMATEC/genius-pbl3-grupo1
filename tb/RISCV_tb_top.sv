@@ -20,8 +20,8 @@ localparam RAM_AMOUNT = 4;
 
 // Parâmetros para a interface (compatibilidade)
 parameter P_DATA_WIDTH = DATA_WIDTH;
-parameter P_IMEM_ADDR_WIDTH = 9;
-parameter P_DMEM_ADDR_WIDTH = 8;
+parameter P_IMEM_ADDR_WIDTH = 32;
+parameter P_DMEM_ADDR_WIDTH = 32;
 
 parameter cycle = 10;
 bit clk;

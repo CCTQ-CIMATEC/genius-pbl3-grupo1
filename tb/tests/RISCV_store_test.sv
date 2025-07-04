@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Store test for RISCV
-//------------------------------------------------------------------------------
-// This UVM test sets up the environment and sequence for the RISCV verification.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_STORE_TEST 
 `define RISCV_STORE_TEST
@@ -44,7 +37,7 @@ class RISCV_store_test extends uvm_test;
    */
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
-    seq.start(env.RISCV_agent.sequencer);
+    seq.start(env.riscv_agent_instance.sequencer);
     phase.drop_objection(this);
   endtask : run_phase
  

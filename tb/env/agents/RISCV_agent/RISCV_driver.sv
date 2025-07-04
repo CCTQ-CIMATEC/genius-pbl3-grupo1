@@ -51,29 +51,26 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
    * This version supports instruction fetch and store operations.
    */
   task drive();
-    wait(!vif.reset);
-    @(vif.dr_cb);
+  wait(!vif.reset);
+  @(vif.dr_cb);
 
-    // Drive instruction bus
-    vif.dr_cb.instr_ready <= req.instr_ready;
-    vif.dr_cb.instr_data  <= req.instr_data;
+  // Só pode atribuir sinais de saída do clocking block
+  vif.dr_cb.instr_data  <= req.instr_data;
+  vif.dr_cb.data_rd     <= req.data_rd;
 
-    // Memory signals (optional for future enhancements)
-    vif.dr_cb.data_ready  <= req.data_ready;
-    vif.dr_cb.data_rd     <= req.data_rd;
-  endtask
+  // Para sinais que são inputs, só leia, nunca atribua
+  // Exemplo: se precisar esperar instr_ready, faça algo assim:
+  // wait(vif.dr_cb.instr_ready == 1);
+endtask
 
-  /*
-   * Task: reset
-   * Resets the DUT inputs.
-   */
-  task reset();
-    @(vif.dr_cb);
-    vif.dr_cb.instr_ready <= 0;
-    vif.dr_cb.instr_data  <= 32'd0;
-    vif.dr_cb.data_ready  <= 0;
-    vif.dr_cb.data_rd     <= 32'd0;
-  endtask
+task reset();
+  @(vif.dr_cb);
+  vif.dr_cb.instr_data  <= 32'd0;
+  vif.dr_cb.data_rd     <= 32'd0;
+  // Não atribua instr_ready, data_ready, etc. aqui
+endtask
+
+
 
 endclass
 

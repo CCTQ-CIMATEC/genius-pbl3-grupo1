@@ -69,8 +69,8 @@ class RISCV_env extends uvm_env;
         // connect monitor's analysis port to scoreboard and reference model's input.
         // the monitor collects data from the dut and broadcasts it.
         // 'riscv_agent_instance.monitor.mon_ap' is the analysis_port in the monitor.
-        riscv_agent_instance.monitor.mon_ap.connect(scoreboard_instance.monitor_data_in_export);
-        riscv_agent_instance.monitor.mon_ap.connect(riscv_reference_model.monitor_data_input_export); // assuming ref_model has an input export to receive data from monitor
+        riscv_agent_instance.monitor.mon2sb_port.connect(scoreboard_instance.monitor_data_in_export);
+        riscv_agent_instance.monitor.mon2sb_port.connect(riscv_reference_model.rm_export);
 
         // connect reference model's output analysis port to scoreboard and coverage.
         // the reference model provides the expected behavior.
