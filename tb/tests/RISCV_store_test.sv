@@ -39,6 +39,8 @@ class RISCV_store_test extends uvm_test;
     phase.raise_objection(this);
     seq.start(env.riscv_agent_instance.sequencer);
     phase.drop_objection(this);
+   #100;
+  $finish;
   endtask : run_phase
  
 endclass : RISCV_store_test
