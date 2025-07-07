@@ -42,6 +42,7 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
       drv2rm_port.write(rsp);
       seq_item_port.item_done();
       seq_item_port.put(rsp);
+      
     end
   endtask
 

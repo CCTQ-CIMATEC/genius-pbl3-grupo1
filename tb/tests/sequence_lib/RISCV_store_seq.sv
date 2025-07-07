@@ -65,7 +65,7 @@ class RISCV_store_seq extends uvm_sequence#(RISCV_transaction);
       req.print();
 
       finish_item(req);
-      get_response(rsp);
+      //get_response(rsp);
     end
   endtask
    
