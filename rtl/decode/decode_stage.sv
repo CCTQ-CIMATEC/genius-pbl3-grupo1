@@ -20,7 +20,7 @@
 module decode_stage #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 5,
-    parameter PC_WIDTH = 10
+    parameter PC_WIDTH = 11
 ) (
     // Clock and Reset
     input logic i_clk,
@@ -62,7 +62,7 @@ module decode_stage #(
     
     // Extended immediate and PC+4
     output logic [DATA_WIDTH-1:0] o_immext_e,
-    output logic [PC_WIDTH:0]     o_pc4_e,
+    output logic [PC_WIDTH-1:0]     o_pc4_e,
     
     // PC source output
     output logic o_pcsrc_e

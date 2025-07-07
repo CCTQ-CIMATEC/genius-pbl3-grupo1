@@ -2,31 +2,12 @@
   PBL3 - RISC-V Pipelined Processor  
   Testbench Module (Top-Level)
  
-  File name: testbench_pipeline.sv
+  File name: testbench_riscv_top.sv
  
   Objective:
       Verification environment for RISC-V 5-stage pipelined processor with external memories.
       Provides stimulus generation, memory initialization, and result checking with pipeline-aware timing.
-  
-  Signal Descriptions:
-      l_clk       - Generated clock signal (i_clk in DUT)
-      l_rst_n     - Generated reset signal (i_rst_n in DUT)
-      r_WriteData - Monitored write data from data memory interface
-      r_DataAdr   - Monitored address from data memory interface
-      l_MemWrite  - Active-high write strobe monitor
 
-  Test Sequence:
-      1. Initialization:
-         - $readmemh loads instruction memory
-         - l_rst_n pulse sequence (0-1 transition)
- 
-      2. Execution:
-         - l_clk free-runs at 500MHz
- 
-      3. Completion:
-         - Checks memory write operations
-         - Terminates on success/failure
- 
   Memory Initialization:
       Path: Adjust path
       Target: External instruction memory
@@ -63,10 +44,9 @@ module testbench_riscv_top();
     // DUT Instantiation
     riscv_top #(
         .P_DATA_WIDTH(32),
-        .P_ADDR_WIDTH(10),
+        .P_ADDR_WIDTH(11),
         .P_REG_ADDR_WIDTH(5),
-        .P_IMEM_ADDR_WIDTH(9),
-        .P_DMEM_ADDR_WIDTH(8)
+        .P_DMEM_ADDR_WIDTH(11)
     ) dut (
         .i_clk(l_clk),
         .i_rst_n(l_rst_n)
@@ -137,7 +117,7 @@ module testbench_riscv_top();
             
             // If writing value 25 to address 100, simulation succeeded
             if ((r_DataAdr === 100) && (r_WriteData === 25)) begin
-                $display("\n=== RISC-V TOP SUCCESS ===");
+                $display("\n=== RISC-V TOP VICTORY ===");
                 $display("Final result: Address %0d = %0d", r_DataAdr, r_WriteData);
                 $display("Total cycles: %0d", cycle_count);
                 $display("Simulation time: %0t", $time);

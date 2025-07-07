@@ -12,16 +12,15 @@
 
 module riscv_core #(
     parameter P_DATA_WIDTH = 32,
-    parameter P_ADDR_WIDTH = 10,
+    parameter P_ADDR_WIDTH = 11,
     parameter P_REG_ADDR_WIDTH = 5,
-    parameter P_IMEM_ADDR_WIDTH = 9,
-    parameter P_DMEM_ADDR_WIDTH = 8
+    parameter P_DMEM_ADDR_WIDTH = 11
 )(
     input  logic i_clk,
     input  logic i_rst_n,
     
     // Instruction Memory Interface
-    output logic [P_IMEM_ADDR_WIDTH-1:0]  o_imem_addr,
+    output logic [P_ADDR_WIDTH-1:0]       o_imem_addr,
     input  logic [P_DATA_WIDTH-1:0]       i_imem_rdata,
     
     // Data Memory Interface
@@ -46,12 +45,12 @@ module riscv_core #(
     logic                     id_ex_alusrc;
     logic [P_DATA_WIDTH-1:0]  id_ex_rs1_data;
     logic [P_DATA_WIDTH-1:0]  id_ex_rs2_data;
-    logic [P_DATA_WIDTH-1:0]  id_ex_pc;
+    logic [P_ADDR_WIDTH-1:0]  id_ex_pc;
     logic [P_REG_ADDR_WIDTH-1:0] id_ex_rs1_addr;
     logic [P_REG_ADDR_WIDTH-1:0] id_ex_rs2_addr;
     logic [P_REG_ADDR_WIDTH-1:0] id_ex_rd_addr;
     logic [P_DATA_WIDTH-1:0]  id_ex_immext;
-    logic [P_DATA_WIDTH-1:0]  id_ex_pc4;
+    logic [P_ADDR_WIDTH-1:0]  id_ex_pc4;
     
     // EX/MEM Pipeline Register Signals
     logic [P_DATA_WIDTH-1:0]    ex_mem_alu_result;
@@ -60,14 +59,14 @@ module riscv_core #(
     logic                       ex_mem_memwrite;
     logic [1:0]                 ex_mem_resultsrc;
     logic [P_REG_ADDR_WIDTH-1:0] ex_mem_rd_addr;
-    logic [P_DATA_WIDTH-1:0]    ex_mem_pc4;
+    logic [P_ADDR_WIDTH-1:0]    ex_mem_pc4;
     
     // MEM/WB Pipeline Register Signals
     logic [P_DATA_WIDTH-1:0]  mem_wb_read_data;
     logic                     mem_wb_regwrite;
     logic [1:0]               mem_wb_resultsrc;
     logic [P_REG_ADDR_WIDTH-1:0] mem_wb_rd_addr;
-    logic [P_DATA_WIDTH-1:0]  mem_wb_pc4;
+    logic [P_ADDR_WIDTH-1:0]  mem_wb_pc4;
     logic [P_DATA_WIDTH-1:0]  mem_wb_alu_result;
     
     // Writeback Stage Signals
@@ -96,7 +95,7 @@ module riscv_core #(
     //-------------------------------------------------------------------------
     fetch_stage #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
-        .PC_WIDTH(P_IMEM_ADDR_WIDTH)
+        .PC_WIDTH(P_ADDR_WIDTH)
     ) u_fetch_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
@@ -104,7 +103,7 @@ module riscv_core #(
         .i_stall_d      (stall_d),
         .i_flush_d      (flush_d),
         .i_pcsrc_e      (pcsrc),
-        .i_pctarget_e   (pc_target[P_IMEM_ADDR_WIDTH:0]),
+        .i_pctarget_e   (pc_target[P_ADDR_WIDTH-1:0]),
         // External instruction memory interface
         .o_imem_addr    (o_imem_addr),
         .i_imem_rdata   (i_imem_rdata),
@@ -119,7 +118,8 @@ module riscv_core #(
     //-------------------------------------------------------------------------
     decode_stage #(
         .DATA_WIDTH(P_DATA_WIDTH),
-        .ADDR_WIDTH(P_REG_ADDR_WIDTH)
+        .ADDR_WIDTH(P_REG_ADDR_WIDTH),
+        .PC_WIDTH(P_ADDR_WIDTH)
     ) u_decode_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),

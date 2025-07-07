@@ -19,19 +19,19 @@
 
 module memory_stage #(
     parameter P_DATA_WIDTH = 32,
-    parameter P_DMEM_ADDR_WIDTH = 8
+    parameter P_DMEM_ADDR_WIDTH = 11
 )(
     input logic i_clk,
     input logic i_rst_n,
     
-    // Pipeline inputs from EX stage
-    input logic i_regwrite_m,
-    input logic [1:0] i_resultsrc_m,
-    input logic i_memwrite_m,
-    input logic [P_DATA_WIDTH-1:0] i_alu_result_m,
-    input logic [P_DATA_WIDTH-1:0] i_write_data_m,
-    input logic [4:0] i_rd_addr_m,
-    input logic [P_DATA_WIDTH-1:0] i_pc4_m,
+    // inputs from EX stage
+    input logic                     i_regwrite_m,
+    input logic [1:0]               i_resultsrc_m,
+    input logic                     i_memwrite_m,
+    input logic [P_DATA_WIDTH-1:0]  i_alu_result_m,
+    input logic [P_DATA_WIDTH-1:0]  i_write_data_m,
+    input logic [4:0]               i_rd_addr_m,
+    input logic [P_DMEM_ADDR_WIDTH-1:0]  i_pc4_m,
     
     // External Data Memory Interface
     output logic                          o_dmem_we,
@@ -41,16 +41,14 @@ module memory_stage #(
     
     // Pipeline Outputs to WB stage
     output logic [P_DATA_WIDTH-1:0] o_read_data_w,
-    output logic o_regwrite_w,
-    output logic [1:0] o_resultsrc_w,
-    output logic [4:0] o_rd_addr_w,
-    output logic [P_DATA_WIDTH-1:0] o_pc4_w,
+    output logic                    o_regwrite_w,
+    output logic [1:0]              o_resultsrc_w,
+    output logic [4:0]              o_rd_addr_w,
+    output logic [11-1:0] o_pc4_w,
     output logic [P_DATA_WIDTH-1:0] o_alu_result_w
 );
 
-    //=========================================================================
     // External Data Memory Interface Logic
-    //=========================================================================
     
     // Connect memory control signals to external data memory
     assign o_dmem_we    = i_memwrite_m;                              // Write enable
