@@ -1,13 +1,3 @@
-//------------------------------------------------------------------------------
-// Package for risc-v environment classes
-//------------------------------------------------------------------------------
-// This package acts as a central hub, providing a convenient way to compile
-// and access all top-level environment classes and their related components.
-// it ensures proper compilation order and easy access to verification ip.
-//
-// author: Glenda Barbosa do Nascimento
-// date  : ??????
-//------------------------------------------------------------------------------
 
 `ifndef RISCV_ENV_PKG
 `define RISCV_ENV_PKG
