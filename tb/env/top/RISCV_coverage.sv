@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Coverage collection module for RISCV
-//------------------------------------------------------------------------------
-// This module collects functional coverage for the RISCV environment.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_COVERAGE
 `define RISCV_COVERAGE
