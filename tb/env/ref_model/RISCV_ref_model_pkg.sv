@@ -1,11 +1,3 @@
-//------------------------------------------------------------------------------
-// Package for RISCV reference model components
-//------------------------------------------------------------------------------
-// This package includes the reference model components for the RISCV verification.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
 
 `ifndef RISCV_REF_MODEL_PKG
 `define RISCV_REF_MODEL_PKG
