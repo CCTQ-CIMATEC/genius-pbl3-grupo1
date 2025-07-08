@@ -1,13 +1,3 @@
-//------------------------------------------------------------------------------
-// RISCV_scoreboard.sv
-//------------------------------------------------------------------------------
-// This UVM scoreboard is responsible for verifying the functional correctness
-// of the RISC-V DUT by comparing its actual outputs (from the monitor)
-// against the expected behavior (from the reference model).
-//
-// Author: Glenda Barbosa do Nascimento
-// Date  : ????
-//------------------------------------------------------------------------------
 
 `ifndef RISCV_SCOREBOARD
 `define RISCV_SCOREBOARD
