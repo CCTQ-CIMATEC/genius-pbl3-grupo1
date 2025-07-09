@@ -29,7 +29,9 @@ module controller(
     output logic       o_alusrc,        // ALU source select (reg/immediate)
     output logic       o_regwrite,      // Register file write enable
     output logic       o_jump,          // Jump instruction flag
-    output logic       o_branch      
+    output logic       o_branch,
+
+    output logic [1:0] o_storetype      // NEW -> 00 = word, 01 = halfword, 10 = byte      
 );
     
     logic [1:0] r_aluop;                // ALU operation type from main decoder
@@ -38,6 +40,7 @@ module controller(
     // Main decoder
     maindec md (
         .i_op           (i_op),         // Instruction opcode
+        .i_funct3       (i_funct3),     // NEW -> SH, SB
         .o_resultsrc    (o_resultsrc),  // Result source
         .o_memwrite     (o_memwrite),   // Memory write enable
         .o_branch       (o_branch),     // Branch instruction
@@ -45,7 +48,8 @@ module controller(
         .o_regwrite     (o_regwrite),   // Register write enable
         .o_jump         (o_jump),       // Jump instruction
         .o_immsrc       (o_immsrc),     // Immediate format
-        .o_aluop        (r_aluop)       // ALU operation type
+        .o_aluop        (r_aluop),      // ALU operation type
+        .o_storetype    (o_storetype)
     );
 
     // ALU decoder

@@ -36,38 +36,39 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  if_id_instr;
     
     // ID/EX Pipeline Register Signals
-    logic                     id_ex_regwrite;
-    logic [1:0]               id_ex_resultsrc;
-    logic                     id_ex_memwrite;
-    logic                     id_ex_jump;
-    logic                     id_ex_branch;
-    alu_op_t                  id_ex_aluctrl;
-    logic                     id_ex_alusrc;
-    logic [P_DATA_WIDTH-1:0]  id_ex_rs1_data;
-    logic [P_DATA_WIDTH-1:0]  id_ex_rs2_data;
-    logic [P_ADDR_WIDTH-1:0]  id_ex_pc;
-    logic [P_REG_ADDR_WIDTH-1:0] id_ex_rs1_addr;
-    logic [P_REG_ADDR_WIDTH-1:0] id_ex_rs2_addr;
-    logic [P_REG_ADDR_WIDTH-1:0] id_ex_rd_addr;
-    logic [P_DATA_WIDTH-1:0]  id_ex_immext;
-    logic [P_ADDR_WIDTH-1:0]  id_ex_pc4;
+    logic                           id_ex_regwrite;
+    logic [1:0]                     id_ex_resultsrc;
+    logic                           id_ex_memwrite;
+    logic                           id_ex_jump;
+    logic                           id_ex_branch;
+    alu_op_t                        id_ex_aluctrl;
+    logic                           id_ex_alusrc;
+    logic [1:0]                     id_ex_storetype; //NEW FOR SH, SB
+    logic [P_DATA_WIDTH-1:0]        id_ex_rs1_data;
+    logic [P_DATA_WIDTH-1:0]        id_ex_rs2_data;
+    logic [P_ADDR_WIDTH-1:0]        id_ex_pc;
+    logic [P_REG_ADDR_WIDTH-1:0]    id_ex_rs1_addr;
+    logic [P_REG_ADDR_WIDTH-1:0]    id_ex_rs2_addr;
+    logic [P_REG_ADDR_WIDTH-1:0]    id_ex_rd_addr;
+    logic [P_DATA_WIDTH-1:0]        id_ex_immext;
+    logic [P_ADDR_WIDTH-1:0]        id_ex_pc4;
     
     // EX/MEM Pipeline Register Signals
-    logic [P_DATA_WIDTH-1:0]    ex_mem_alu_result;
-    logic [P_DATA_WIDTH-1:0]    ex_mem_write_data;
-    logic                       ex_mem_regwrite;
-    logic                       ex_mem_memwrite;
-    logic [1:0]                 ex_mem_resultsrc;
-    logic [P_REG_ADDR_WIDTH-1:0] ex_mem_rd_addr;
-    logic [P_ADDR_WIDTH-1:0]    ex_mem_pc4;
+    logic [P_DATA_WIDTH-1:0]        ex_mem_alu_result;
+    logic [P_DATA_WIDTH-1:0]        ex_mem_write_data;
+    logic                           ex_mem_regwrite;
+    logic                           ex_mem_memwrite;
+    logic [1:0]                     ex_mem_resultsrc;
+    logic [P_REG_ADDR_WIDTH-1:0]    ex_mem_rd_addr;
+    logic [P_ADDR_WIDTH-1:0]        ex_mem_pc4;
     
     // MEM/WB Pipeline Register Signals
-    logic [P_DATA_WIDTH-1:0]  mem_wb_read_data;
-    logic                     mem_wb_regwrite;
-    logic [1:0]               mem_wb_resultsrc;
-    logic [P_REG_ADDR_WIDTH-1:0] mem_wb_rd_addr;
-    logic [P_ADDR_WIDTH-1:0]  mem_wb_pc4;
-    logic [P_DATA_WIDTH-1:0]  mem_wb_alu_result;
+    logic [P_DATA_WIDTH-1:0]        mem_wb_read_data;
+    logic                           mem_wb_regwrite;
+    logic [1:0]                     mem_wb_resultsrc;
+    logic [P_REG_ADDR_WIDTH-1:0]    mem_wb_rd_addr;
+    logic [P_ADDR_WIDTH-1:0]        mem_wb_pc4;
+    logic [P_DATA_WIDTH-1:0]        mem_wb_alu_result;
     
     // Writeback Stage Signals
     logic [P_DATA_WIDTH-1:0]  wb_result;
@@ -138,6 +139,7 @@ module riscv_core #(
         .o_branch_e     (id_ex_branch),
         .o_aluctrl_e    (id_ex_aluctrl),
         .o_alusrc_e     (id_ex_alusrc),
+        .o_storetype_e  (id_ex_storetype), // NEW FOR SH,SB
         .o_rs1_data_e   (id_ex_rs1_data),
         .o_rs2_data_e   (id_ex_rs2_data),
         .o_pc_e         (id_ex_pc),
@@ -173,6 +175,7 @@ module riscv_core #(
         .i_regwrite_e   (id_ex_regwrite),
         .i_memwrite_e   (id_ex_memwrite),
         .i_resultsrc_e  (id_ex_resultsrc),
+        .i_storetype_e  (id_ex_storetype),
         .i_forward_m    (forward_data_mem),
         .i_forward_w    (forward_data_wb),
         .i_forward_a    (forward_a),

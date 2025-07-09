@@ -1,19 +1,13 @@
-/**----------------------------------------------------------------------------- 
-    PBL3 - RISC-V Pipeline Processor
+/*----------------------------------------------------------------------------- 
+    PBL3 - RISC-V Processor
     Execute Stage (EX) Module
+
     File name: execute_stage.sv
+    Usage: riscv_core.sv
+
     Objective:
         Implement the execute stage of the RISC-V pipeline processor.
-        Handles ALU operations, branch condition evaluation, and address calculations.
-        
-    Specification:
-        - Integrates ALU for arithmetic/logic operations
-        - Calculates branch/jump target addresses
-        - Evaluates branch conditions
-        - Handles immediate value selection
-        - Supports forwarding inputs from later pipeline stages
-        - Generates control signals for next stages
------------------------------------------------------------------------------ **/
+-----------------------------------------------------------------------------*/
 `timescale 1ns / 1ps
 
 module execute_stage #(
@@ -44,6 +38,7 @@ module execute_stage #(
     input  logic        i_regwrite_e,    // Register write enable
     input  logic        i_memwrite_e,    // Memory write enable
     input  logic [1:0]  i_resultsrc_e,   // Result source select
+    input  logic [1:0]  i_storetype_e,   // NEW
     
     // Forwarding inputs
     input  logic [DATA_WIDTH-1:0] i_forward_m,   // Forwarded data from MEM stage

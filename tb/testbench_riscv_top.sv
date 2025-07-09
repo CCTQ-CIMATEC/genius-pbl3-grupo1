@@ -123,6 +123,9 @@ module testbench_riscv_top();
                 $display("Simulation time: %0t", $time);
                 $display("======================================\n");
                 #10;
+
+                //$display("\nTÁ PRESTANDO FI!!!!\n");
+
                 $stop;
                 
             // Check for failure condition
