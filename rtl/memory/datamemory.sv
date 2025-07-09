@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------- 
-    PBL3 - RISC-V Single Cycle Processor  
+    PBL3 - RISC-V Processor  
     Data Memory Module
 
     File name: datamemory.sv

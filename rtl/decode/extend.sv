@@ -1,29 +1,15 @@
-/**
-    PBL3 - RISC-V Single Cycle Processor
+/*-----------------------------------------------------------------------------
+    PBL3 - RISC-V Processor
     Immediate Value Extender Module
 
     File name: extend.sv
+    Usage: decode_stage.sv
 
     Objective:
         Extract and sign-extend immediate values from RISC-V instructions.
         Handles all RISC-V immediate formats required for the RV32I instruction set.
 
         Extracts and sign-extends immediate values from instruction fields
-    
-    Specification:
-        - Supports all RISC-V immediate formats (I-type, S-type, B-type, J-type)
-        - Performs proper sign extension for all immediate values
-        - Handles special alignment requirements for branch and jump targets
-        - Pure combinational logic
-
-    Functional Diagram:
-
-                       +------------------+
-                       |      MODULE      |
-        i_instr[31:7]->|     IMMEDIATE    |
-        i_immsrc[1:0]->|     EXTENDER     |--> o_immext[31:0]
-                       |                  |
-                       +------------------+
 
     Inputs:
         i_instr[31:7] - Relevant instruction bits containing immediate fields
@@ -41,18 +27,7 @@
         S-type: [31:25] + [11:7] -> 12-bit immediate (combined and sign-extended)
         B-type: [7] + [30:25] + [11:8] + 0 -> 13-bit immediate (aligned to 2 bytes)
         J-type: [19:12] + [20] + [30:21] + 0 -> 21-bit immediate (aligned to 2 bytes)
-
-    Operation:
-        - Decodes immediate format based on i_immsrc
-        - Extracts relevant instruction bits
-        - Performs sign extension by replicating MSB
-        - For B/J-types, adds implicit 0 in LSB for proper alignment
-**/
-
-//----------------------------------------------------------------------------- 
-//  Immediate Value Extender Module
-//-----------------------------------------------------------------------------
-`timescale 1ns / 1ps  // Set simulation time unit to 1ns, precision to 1ps
+-----------------------------------------------------------------------------*/
 module extend (
     input  logic [31:7] i_instr,
     input  logic [1:0]  i_immsrc,    //tipo da i_instrução
