@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Driver module for RISCV agent
-//------------------------------------------------------------------------------
-// This module handles transaction driving for the RISCV agent.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_DRIVER
 `define RISCV_DRIVER
@@ -42,6 +35,7 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
       drv2rm_port.write(rsp);
       seq_item_port.item_done();
       seq_item_port.put(rsp);
+      
     end
   endtask
 
@@ -54,12 +48,10 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
   wait(!vif.reset);
   @(vif.dr_cb);
 
-  // Só pode atribuir sinais de saída do clocking block
+  // Só pode atribuir sinais de saída do clocking block???
   vif.dr_cb.instr_data  <= req.instr_data;
   vif.dr_cb.data_rd     <= req.data_rd;
 
-  // Para sinais que são inputs, só leia, nunca atribua
-  // Exemplo: se precisar esperar instr_ready, faça algo assim:
   // wait(vif.dr_cb.instr_ready == 1);
 endtask
 

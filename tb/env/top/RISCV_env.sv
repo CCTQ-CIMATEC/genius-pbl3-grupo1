@@ -1,15 +1,4 @@
-//------------------------------------------------------------------------------
-// RISCV_environment.sv
-//------------------------------------------------------------------------------
-// This uvm environment module serves as the top-level container for all
-// verification intellectual property (vip) components related to the risc-v dut.
-// it is responsible for instantiating these components (agent, reference model,
-// scoreboard, and functional coverage) and establishing their tlm connections,
-// creating a complete verification environment.
-//
-// author: Glenda Barbosa do Nascimento
-// date  : ?????
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_ENV
 `define RISCV_ENV
