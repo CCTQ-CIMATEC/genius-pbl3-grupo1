@@ -80,7 +80,7 @@ module testbench_riscv_top();
         #10;           
         l_rst_n <= 1; 
         
-        $display("RISC-V Top-Level processor testbench started");
+        $display("\n\nRISC-V Top-Level processor testbench started");
         $display("Reset sequence completed at time %0t", $time);
         $display("Instruction memory loaded from: /home/david/Documents/PBL03/PBL3_equipe1/rtl/test0.txt");
     end

@@ -27,7 +27,8 @@ module riscv_core #(
     output logic                          o_dmem_we,
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
-    input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata
+    input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
+    output logic [1:0]                    o_storetype
 );
     
     // IF/ID Pipeline Register Signals
@@ -61,6 +62,7 @@ module riscv_core #(
     logic [1:0]                     ex_mem_resultsrc;
     logic [P_REG_ADDR_WIDTH-1:0]    ex_mem_rd_addr;
     logic [P_ADDR_WIDTH-1:0]        ex_mem_pc4;
+    logic [1:0]                     ex_mem_storetype;
     
     // MEM/WB Pipeline Register Signals
     logic [P_DATA_WIDTH-1:0]        mem_wb_read_data;

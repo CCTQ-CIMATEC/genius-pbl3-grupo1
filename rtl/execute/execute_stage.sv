@@ -38,7 +38,7 @@ module execute_stage #(
     input  logic        i_regwrite_e,    // Register write enable
     input  logic        i_memwrite_e,    // Memory write enable
     input  logic [1:0]  i_resultsrc_e,   // Result source select
-    input  logic [1:0]  i_storetype_e,   // NEW
+    input  logic [1:0]  i_storetype_e,   // NEW FOR SH AND SB
     
     // Forwarding inputs
     input  logic [DATA_WIDTH-1:0] i_forward_m,   // Forwarded data from MEM stage
@@ -53,11 +53,12 @@ module execute_stage #(
     output logic                  o_zero_e,          // ALU zero flag
     
     // Pass-through control signals
-    output logic        o_regwrite_m,    // Register write enable to MEM
-    output logic        o_memwrite_m,    // Memory write enable to MEM
-    output logic [1:0]  o_resultsrc_m,   // Result source to MEM
-    output logic [4:0]  o_rd_addr_m,     // RD address to MEM
-    output logic [ADDR_WIDTH-1:0] o_pc4_m          // PC+4 to MEM
+    output logic                    o_regwrite_m,   // Register write enable to MEM
+    output logic                    o_memwrite_m,   // Memory write enable to MEM
+    output logic [1:0]              o_resultsrc_m,  // Result source to MEM
+    output logic [4:0]              o_rd_addr_m,    // RD address to MEM
+    output logic [ADDR_WIDTH-1:0]   o_pc4_m,         // PC+4 to MEM
+    output logic [1:0]              o_storetype_m   // NEW FOR SH AND SB
 );
 
     // Internal signals
@@ -116,6 +117,8 @@ module execute_stage #(
             o_write_data_m  <= 0;
             o_rd_addr_m     <= 0;
             o_pc4_m         <= 0;
+            o_storetype_m   <= 2'b0;
+
         end else begin
             o_regwrite_m    <= i_regwrite_e;
             o_resultsrc_m   <= i_resultsrc_e;
@@ -124,6 +127,7 @@ module execute_stage #(
             o_write_data_m  <= l_write_data_e;
             o_rd_addr_m     <= i_rd_addr_e;
             o_pc4_m         <= i_pc4_e;
+            o_storetype_m   <= i_storetype_e;
         end
     end
 
