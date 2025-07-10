@@ -1,39 +1,50 @@
 
-
 `ifndef RISCV_ENV
 `define RISCV_ENV
 
-import uvm_pkg::*;
-class RISCV_agent extends uvm_agent;
+class RISCV_env extends uvm_env;
+ 
+  /*
+   * Declaration of components
+   */
+  RISCV_agent RISCV_agnt;
+  RISCV_ref_model ref_model;
+  RISCV_coverage#(RISCV_transaction) coverage;
+  RISCV_scoreboard  sb;
+   
+  /*
+   * Register with factory
+   */
 
-  RISCV_driver     driver;
-  RISCV_monitor    monitor;
-  RISCV_sequencer  sequencer;
-
-  `uvm_component_utils(RISCV_agent)
+  `uvm_component_utils(RISCV_env)
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
-  endfunction
+  endfunction : new
 
+  /*
+   * Build phase: instantiate components
+   */
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    
-    monitor = RISCV_monitor::type_id::create("monitor", this);
+    RISCV_agnt = RISCV_agent::type_id::create("RISCV_agent", this);
+    ref_model = RISCV_ref_model::type_id::create("ref_model", this);
+    coverage = RISCV_coverage#(RISCV_transaction)::type_id::create("coverage", this);
+    sb = RISCV_scoreboard::type_id::create("sb", this);
+  endfunction : build_phase
 
-    if (is_active == UVM_ACTIVE) begin
-      driver    = RISCV_driver::type_id::create("driver", this);
-      sequencer = RISCV_sequencer::type_id::create("sequencer", this);
-    end
-  endfunction
-
+  /*
+   * Connect phase: hook up TLM ports
+   */
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
-    if (is_active == UVM_ACTIVE) begin
-      driver.seq_item_port.connect(sequencer.seq_item_export);
-    end
-  endfunction
+    RISCV_agnt.driver.drv2rm_port.connect(ref_model.rm_export);
+    RISCV_agnt.monitor.mon2sb_port.connect(sb.mon2sb_export);
+    ref_model.rm2sb_port.connect(coverage.analysis_export);
+    ref_model.rm2sb_port.connect(sb.rm2sb_export);
+  endfunction : connect_phase
 
-endclass
+
+endclass : RISCV_env
 
 `endif // RISCV_ENV

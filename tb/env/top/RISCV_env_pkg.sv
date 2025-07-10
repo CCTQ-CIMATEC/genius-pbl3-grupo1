@@ -1,4 +1,3 @@
-
 `ifndef RISCV_ENV_PKG
 `define RISCV_ENV_PKG
 
@@ -23,5 +22,3 @@ package RISCV_env_pkg;
 endpackage
 
 `endif
-
-
