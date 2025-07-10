@@ -1,3 +1,11 @@
+//------------------------------------------------------------------------------
+// Reference model module for RISCV
+//------------------------------------------------------------------------------
+// This module defines the reference model for the RISCV verification.
+//
+// Author: Gustavo Santiago
+// Date  : June 2025
+//------------------------------------------------------------------------------
 
 `ifndef RISCV_REF_MODEL 
 `define RISCV_REF_MODEL
@@ -93,19 +101,19 @@ class RISCV_ref_model extends uvm_component;
   wb = '{rd: 0, value: 0, we: 0};
 
   // ADD instruction (R-type)
-  if (opcode == 7'b0110011 && funct3 == 3'b000 && funct7 == 7'b0000000) begin
+  if (opcode == 7'b0110011) begin
     exp_trans_local.data_addr = rs1 + rs2;
     wb = '{rd: reg_dest, value: exp_trans_local.data_addr, we: 1};
   end
   // LW instruction (I-type)
-  else if (opcode == 7'b0000011 && funct3 == 3'b010) begin
+  else if (opcode == 7'b0000011) begin
     // Não usa o regfile, assume rs1 = 0 (mesmo comportamento do DUT atual)
     exp_trans_local.data_addr = imm;  // Só o imediato, igual ao que o DUT está fazendo
     exp_trans_local.data_wr_en_ma = 0;
     exp_trans_local.data_wr = 0;
   end
   // SW instruction (S-type)
-  else if (opcode == 7'b0100011 && funct3 == 3'b010) begin
+  else if (opcode == 7'b0100011 ) begin
     imm = {{20{input_trans.instr_data[31]}}, input_trans.instr_data[31:25], input_trans.instr_data[11:7]};
     exp_trans_local.data_addr = rs1 + imm;
     exp_trans_local.data_wr  = rs2;
