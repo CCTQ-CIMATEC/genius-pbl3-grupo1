@@ -55,14 +55,14 @@ endtask : collect_inputs
 //outputs
   task collect_outputs();
     RISCV_transaction complete_trans;
-    `uvm_info(get_full_name(), $sformatf("\n\n\nENTROU %h\n\n\n", vif.instr_data), UVM_LOW);
+    //`uvm_info(get_full_name(), $sformatf("\n\n\nENTROU %h\n\n\n", vif.instr_data), UVM_LOW);
     if (vif.reset && vif.instr_data != 0) begin
-      `uvm_info(get_full_name(), $sformatf("\n\n\nENTROU out\n\n\n"), UVM_LOW);
-      repeat(4) @(posedge vif.clk);
+      //`uvm_info(get_full_name(), $sformatf("\n\n\nENTROU out\n\n\n"), UVM_LOW);
+      repeat(5) @(posedge vif.clk);
        
       complete_trans = transaction_queue.pop_front();
 
-      complete_trans.inst_rd_en      = vif.rc_cb.inst_rd_en;
+      complete_trans.inst_rd_en      = vif.inst_rd_en;
       complete_trans.inst_ctrl_cpu   = vif.inst_ctrl_cpu;
       complete_trans.inst_addr       = vif.inst_addr;
       complete_trans.data_wr         = vif.data_wr;
