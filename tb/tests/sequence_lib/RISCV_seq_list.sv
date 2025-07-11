@@ -3,8 +3,8 @@
 //------------------------------------------------------------------------------
 // This package includes the basic sequence for the RISCV testbench.
 //
-// Author: Gustavo Santiago
-// Date  : June 2025
+// Author: Glenda & Thor
+// Date  : July 2025
 //------------------------------------------------------------------------------
 
 `ifndef RISCV_SEQ_LIST 

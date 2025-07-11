@@ -3,6 +3,10 @@
 `ifndef RISCV_STORE_TEST 
 `define RISCV_STORE_TEST
 
+import uvm_pkg::*;
+`include "uvm_macros.svh"
+import RISCV_env_pkg::*;
+
 class RISCV_store_test extends uvm_test;
  
   /*
@@ -37,7 +41,7 @@ class RISCV_store_test extends uvm_test;
    */
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
-    seq.start(env.riscv_agent_instance.sequencer);
+    seq.start(env.RISCV_agnt.sequencer);
     phase.drop_objection(this);
    #100;
   $finish;
