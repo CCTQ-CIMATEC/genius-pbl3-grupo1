@@ -11,10 +11,10 @@ class RISCV_store_seq extends uvm_sequence#(RISCV_transaction);
   endfunction
 
   // Fields to be randomized
-  rand bit [4:0] rs1;
-  rand bit [4:0] rs2;
+  rand bit [4:0]  rs1;
+  rand bit [4:0]  rs2;
   rand bit [11:0] imm;
-  rand bit [2:0] funct3;
+  rand bit [2:0]  funct3;
 
   // Fixed opcode for store instructions
   localparam bit [6:0] STORE_OPCODE = 7'b0100011;

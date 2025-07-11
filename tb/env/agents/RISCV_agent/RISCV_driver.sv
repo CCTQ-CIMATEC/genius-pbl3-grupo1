@@ -44,8 +44,8 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
  task drive();
     
     // Drive instruction to DUT
-    vif.dr_cb.instr_data <= req.instr_data;
-    vif.dr_cb.data_rd    <= req.data_rd;
+    vif.instr_data <= req.instr_data;
+    vif.data_rd    <= req.data_rd;
     
     `uvm_info(get_full_name(), $sformatf("Driving instruction: %s", req.instr_name), UVM_LOW);
 endtask
