@@ -28,10 +28,11 @@ module riscv_top #(
     logic [P_DATA_WIDTH-1:0]       imem_rdata;
     
     // Data Memory Interface  
-    logic                          dmem_we;
-    logic [P_DMEM_ADDR_WIDTH-1:0]  dmem_addr;
-    logic [P_DATA_WIDTH-1:0]       dmem_wdata;
-    logic [P_DATA_WIDTH-1:0]       dmem_rdata;
+    logic                           dmem_we;
+    logic [P_DMEM_ADDR_WIDTH-1:0]   dmem_addr;
+    logic [P_DATA_WIDTH-1:0]        dmem_wdata;
+    logic [P_DATA_WIDTH-1:0]        dmem_rdata;
+    logic [1:0]                     dmem_storetype;
 
     // RISC-V Processor Core
     riscv_core #(
@@ -42,14 +43,17 @@ module riscv_top #(
     ) u_riscv_core (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
+        
         // Instruction Memory Interface
         .o_imem_addr    (imem_addr),
         .i_imem_rdata   (imem_rdata),
+        
         // Data Memory Interface
-        .o_dmem_we      (dmem_we),
-        .o_dmem_addr    (dmem_addr),
-        .o_dmem_wdata   (dmem_wdata),
-        .i_dmem_rdata   (dmem_rdata)
+        .o_dmem_we          (dmem_we),
+        .o_dmem_addr        (dmem_addr),
+        .o_dmem_wdata       (dmem_wdata),
+        .i_dmem_rdata       (dmem_rdata),
+        .o_dmem_storetype   (dmem_storetype)
     );
 
     // INSTRUCTION MEMORY
@@ -60,11 +64,12 @@ module riscv_top #(
 
     // DATA MEMORY
     data_memory u_data_memory (
-        .i_clk   (i_clk),
-        .i_we    (dmem_we),
-        .i_addr  (dmem_addr),
-        .i_wdata (dmem_wdata),
-        .o_rdata (dmem_rdata)
+        .i_clk              (i_clk),
+        .i_we               (dmem_we),
+        .i_addr             (dmem_addr),
+        .i_storetype        (dmem_storetype),    
+        .i_wdata            (dmem_wdata),
+        .o_rdata            (dmem_rdata)
     );
 
 endmodule

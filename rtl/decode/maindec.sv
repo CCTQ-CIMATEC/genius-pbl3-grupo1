@@ -73,6 +73,7 @@ module maindec(
                 o_branch    = 1'b0;
                 o_aluop     = 2'b00;
                 o_jump      = 1'b0;
+                o_storetype = i_funct3;
             end
 
             // R-type instructions

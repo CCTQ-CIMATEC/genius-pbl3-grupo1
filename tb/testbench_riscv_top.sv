@@ -57,12 +57,12 @@ module testbench_riscv_top();
     assign r_DataAdr   = dut.dmem_addr;
     assign l_MemWrite  = dut.dmem_we;
     
-    assign l_imem_addr = dut.imem_addr;
-    assign l_imem_rdata = dut.imem_rdata;
-    assign l_dmem_addr = dut.dmem_addr;
-    assign l_dmem_wdata = dut.dmem_wdata;
-    assign l_dmem_rdata = dut.dmem_rdata;
-    assign l_dmem_we = dut.dmem_we;
+    assign l_imem_addr  =   dut.imem_addr;
+    assign l_imem_rdata =   dut.imem_rdata;
+    assign l_dmem_addr  =   dut.dmem_addr;
+    assign l_dmem_wdata =   dut.dmem_wdata;
+    assign l_dmem_rdata =   dut.dmem_rdata;
+    assign l_dmem_we    =   dut.dmem_we;
 
     assign l_if_pc     = dut.u_riscv_core.if_id_pc;
     assign l_if_instr  = dut.u_riscv_core.if_id_instr;
@@ -82,7 +82,7 @@ module testbench_riscv_top();
         
         $display("\n\nRISC-V Top-Level processor testbench started");
         $display("Reset sequence completed at time %0t", $time);
-        $display("Instruction memory loaded from: /home/david/Documents/PBL03/PBL3_equipe1/rtl/test0.txt");
+        $display("Instruction memory loaded from: rtl/test0.txt");
     end
 
     // Clock Generation

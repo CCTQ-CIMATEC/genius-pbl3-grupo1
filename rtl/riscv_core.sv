@@ -2,6 +2,7 @@
     PBL3 - RISC-V Pipelined Processor Core
     
     File name: riscv_core.sv
+    Usage: riscv_top.sv
     
     Objective:
         5-stage pipelined RISC-V processor core datapath.
@@ -28,7 +29,7 @@ module riscv_core #(
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
-    output logic [1:0]                    o_storetype
+    output logic [1:0]                    o_dmem_storetype
 );
     
     // IF/ID Pipeline Register Signals
@@ -89,13 +90,7 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  forward_data_mem;
     logic [P_DATA_WIDTH-1:0]  forward_data_wb;
     
-
-    // Stage Instantiations
-
-    
-    //-------------------------------------------------------------------------
-    // Fetch Stage (with external instruction memory interface)
-    //-------------------------------------------------------------------------
+    // FETCH STAGE
     fetch_stage #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
         .PC_WIDTH(P_ADDR_WIDTH)
@@ -188,6 +183,7 @@ module riscv_core #(
         .o_zero_e       (zero_flag),
         .o_regwrite_m   (ex_mem_regwrite),
         .o_memwrite_m   (ex_mem_memwrite),
+        .o_storetype_m  (ex_mem_storetype),
         .o_resultsrc_m  (ex_mem_resultsrc),
         .o_rd_addr_m    (ex_mem_rd_addr),
         .o_pc4_m        (ex_mem_pc4)
@@ -200,27 +196,29 @@ module riscv_core #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
         .P_DMEM_ADDR_WIDTH(P_DMEM_ADDR_WIDTH)
     ) u_memory_stage (
-        .i_clk          (i_clk),
-        .i_rst_n        (i_rst_n),
-        .i_regwrite_m   (ex_mem_regwrite),
-        .i_resultsrc_m  (ex_mem_resultsrc),
-        .i_memwrite_m   (ex_mem_memwrite),
-        .i_alu_result_m (ex_mem_alu_result),
-        .i_write_data_m (ex_mem_write_data),
-        .i_rd_addr_m    (ex_mem_rd_addr),
-        .i_pc4_m        (ex_mem_pc4),
+        .i_clk              (i_clk),
+        .i_rst_n            (i_rst_n),
+        .i_regwrite_m       (ex_mem_regwrite),
+        .i_resultsrc_m      (ex_mem_resultsrc),
+        .i_memwrite_m       (ex_mem_memwrite),
+        .i_alu_result_m     (ex_mem_alu_result),
+        .i_write_data_m     (ex_mem_write_data),
+        .i_rd_addr_m        (ex_mem_rd_addr),
+        .i_pc4_m            (ex_mem_pc4),
+        .i_storetype_m      (ex_mem_storetype),
         // External data memory interface
-        .o_dmem_we      (o_dmem_we),
-        .o_dmem_addr    (o_dmem_addr),
-        .o_dmem_wdata   (o_dmem_wdata),
-        .i_dmem_rdata   (i_dmem_rdata),
+        .o_dmem_we          (o_dmem_we),
+        .o_dmem_addr        (o_dmem_addr),
+        .o_dmem_wdata       (o_dmem_wdata),
+        .i_dmem_rdata       (i_dmem_rdata),
+        .o_dmem_storetype   (o_dmem_storetype),
         // Pipeline outputs
-        .o_read_data_w  (mem_wb_read_data),
-        .o_regwrite_w   (mem_wb_regwrite),
-        .o_resultsrc_w  (mem_wb_resultsrc),
-        .o_rd_addr_w    (mem_wb_rd_addr),
-        .o_pc4_w        (mem_wb_pc4),
-        .o_alu_result_w (mem_wb_alu_result)
+        .o_read_data_w      (mem_wb_read_data),
+        .o_regwrite_w       (mem_wb_regwrite),
+        .o_resultsrc_w      (mem_wb_resultsrc),
+        .o_rd_addr_w        (mem_wb_rd_addr),
+        .o_pc4_w            (mem_wb_pc4),
+        .o_alu_result_w     (mem_wb_alu_result)
     );
     
     //-------------------------------------------------------------------------

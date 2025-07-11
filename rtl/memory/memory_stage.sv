@@ -1,4 +1,4 @@
-/*
+/*-------------------------------------------------------------------------
   PBL3 - RISC-V Pipelined Processor
   Memory Stage Module with External Memory Interface
  
@@ -13,7 +13,7 @@
       - Handles memory read/write control
       - Manages MEM/WB pipeline register
       - No internal memory instantiation
- */
+-------------------------------------------------------------------------*/
 
 `timescale 1ns/1ps
 
@@ -39,29 +39,26 @@ module memory_stage #(
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
-    output logic [1:0]                    o_storetype,
+    output logic [1:0]                    o_dmem_storetype,
 
     // Pipeline Outputs to WB stage
     output logic [P_DATA_WIDTH-1:0] o_read_data_w,
     output logic                    o_regwrite_w,
     output logic [1:0]              o_resultsrc_w,
     output logic [4:0]              o_rd_addr_w,
-    output logic [11-1:0] o_pc4_w,
+    output logic [11-1:0]           o_pc4_w,
     output logic [P_DATA_WIDTH-1:0] o_alu_result_w
 );
 
     // External Data Memory Interface Logic
     
     // Connect memory control signals to external data memory
-    assign o_dmem_we    = i_memwrite_m;                              // Write enable
-    assign o_dmem_addr  = i_alu_result_m[P_DMEM_ADDR_WIDTH-1:0];     // Address from ALU
-    assign o_dmem_wdata = i_write_data_m;                            // Write data
-    assign o_storetype  = i_storetype_d;
+    assign o_dmem_we        = i_memwrite_m;                              // Write enable
+    assign o_dmem_addr      = i_alu_result_m[P_DMEM_ADDR_WIDTH-1:0];     // Address from ALU
+    assign o_dmem_wdata     = i_write_data_m;                            // Write data
+    assign o_dmem_storetype = i_storetype_m;
 
-    //=========================================================================
     // MEM/WB Pipeline Register
-    //=========================================================================
-    
     always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
             // Reset all outputs to safe values
