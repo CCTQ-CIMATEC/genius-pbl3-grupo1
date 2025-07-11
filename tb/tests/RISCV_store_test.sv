@@ -46,15 +46,3 @@ class RISCV_store_test extends uvm_test;
 endclass : RISCV_store_test
 
 `endif
-
-
-
-
-
-
-
-
-
-
-
-
