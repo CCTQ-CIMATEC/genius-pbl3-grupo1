@@ -14,7 +14,7 @@
 module riscv_top #(
     parameter P_DATA_WIDTH = 32,
     parameter P_ADDR_WIDTH = 11,
-    parameter P_REG_ADDR_WIDTH = 5, // 32 REGISTERS
+    parameter P_REG_ADDR_WIDTH = 5,
     parameter P_DMEM_ADDR_WIDTH = 11
 )(
     input  logic i_clk,
@@ -32,7 +32,7 @@ module riscv_top #(
     logic [P_DMEM_ADDR_WIDTH-1:0]   dmem_addr;
     logic [P_DATA_WIDTH-1:0]        dmem_wdata;
     logic [P_DATA_WIDTH-1:0]        dmem_rdata;
-    logic [1:0]                     dmem_storetype;
+    logic [2:0]                     dmem_storetype;
 
     // RISC-V Processor Core
     riscv_core #(

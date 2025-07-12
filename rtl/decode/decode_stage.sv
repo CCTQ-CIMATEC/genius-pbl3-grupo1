@@ -3,6 +3,7 @@
     Instruction Decode Stage Module
 
     File name: decode_stage.sv
+    Usage: riscv_core.sv
 
     Objective:
         Implements the instruction decode stage of a pipelined RISC-V processor.
@@ -49,7 +50,7 @@ module decode_stage #(
     output logic        o_branch_e,
     output alu_op_t     o_aluctrl_e,
     output logic        o_alusrc_e,
-    output logic [1:0]  o_storetype_e,      // NEW -> FOR SH,SB
+    output logic [2:0]  o_storetype_e,      // NEW -> FOR SH,SB
     
     // Data outputs
     output logic [DATA_WIDTH-1:0] o_rs1_data_e,
@@ -86,7 +87,7 @@ module decode_stage #(
     logic                   l_regwrite_d;
     logic                   l_jump_d;
     logic                   l_branch_d;
-    logic [1:0]             l_storetype_d;
+    logic [2:0]             l_storetype_d;
     
     // Register file outputs
     logic [DATA_WIDTH-1:0] l_rs1_data_d;
@@ -152,7 +153,7 @@ module decode_stage #(
             o_branch_e      <= 1'b0;
             o_aluctrl_e     <= ALU_UNUSED;
             o_alusrc_e      <= 1'b0;
-            o_storetype_e   <= 2'b10;
+            o_storetype_e   <= 3'b010;
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};
             o_rs2_data_e <= {DATA_WIDTH{1'b0}};

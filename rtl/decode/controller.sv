@@ -18,9 +18,9 @@
 
 `timescale 1ns / 1ps
 module controller(
-    input logic [6:0] i_op,             // 7-bit opcode field from instruction
-    input logic [2:0] i_funct3,         // 3-bit funct3 field from instruction
-    input logic       i_funct7b5,       // funct7 bit 5 (for R-type instructions)
+    input logic [6:0] i_op,             // 7-bit opcode
+    input logic [2:0] i_funct3,         // 3-bit funct3
+    input logic       i_funct7b5,       // funct7 bit 5
     
     output alu_op_t    o_alucrtl,       // 3-bit ALU control signal
     output logic [1:0] o_resultsrc,     // Result multiplexer select (for writeback)
@@ -31,7 +31,7 @@ module controller(
     output logic       o_jump,          // Jump instruction flag
     output logic       o_branch,
 
-    output logic [1:0] o_storetype      // NEW -> 00 = word, 01 = halfword, 10 = byte      
+    output logic [2:0] o_storetype      // NEW -> 00 = word, 01 = halfword, 10 = byte      
 );
     
     logic [1:0] r_aluop;                // ALU operation type from main decoder

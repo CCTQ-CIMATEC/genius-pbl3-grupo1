@@ -32,14 +32,14 @@ module memory_stage #(
     input logic [P_DATA_WIDTH-1:0]          i_write_data_m,
     input logic [4:0]                       i_rd_addr_m,
     input logic [P_DMEM_ADDR_WIDTH-1:0]     i_pc4_m,
-    input logic [1:0]                       i_storetype_m,
+    input logic [2:0]                       i_storetype_m,
     
     // External Data Memory Interface
     output logic                          o_dmem_we,
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
-    output logic [1:0]                    o_dmem_storetype,
+    output logic [2:0]                    o_dmem_storetype,
 
     // Pipeline Outputs to WB stage
     output logic [P_DATA_WIDTH-1:0] o_read_data_w,

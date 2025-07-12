@@ -29,7 +29,7 @@ module riscv_core #(
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
-    output logic [1:0]                    o_dmem_storetype
+    output logic [2:0]                    o_dmem_storetype
 );
     
     // IF/ID Pipeline Register Signals
@@ -45,7 +45,7 @@ module riscv_core #(
     logic                           id_ex_branch;
     alu_op_t                        id_ex_aluctrl;
     logic                           id_ex_alusrc;
-    logic [1:0]                     id_ex_storetype; //NEW FOR SH, SB
+    logic [2:0]                     id_ex_storetype; //NEW FOR SH, SB
     logic [P_DATA_WIDTH-1:0]        id_ex_rs1_data;
     logic [P_DATA_WIDTH-1:0]        id_ex_rs2_data;
     logic [P_ADDR_WIDTH-1:0]        id_ex_pc;
@@ -63,7 +63,7 @@ module riscv_core #(
     logic [1:0]                     ex_mem_resultsrc;
     logic [P_REG_ADDR_WIDTH-1:0]    ex_mem_rd_addr;
     logic [P_ADDR_WIDTH-1:0]        ex_mem_pc4;
-    logic [1:0]                     ex_mem_storetype;
+    logic [2:0]                     ex_mem_storetype;
     
     // MEM/WB Pipeline Register Signals
     logic [P_DATA_WIDTH-1:0]        mem_wb_read_data;
@@ -90,7 +90,7 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  forward_data_mem;
     logic [P_DATA_WIDTH-1:0]  forward_data_wb;
     
-    // FETCH STAGE
+    //FETCH STAGE
     fetch_stage #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
         .PC_WIDTH(P_ADDR_WIDTH)
@@ -111,9 +111,7 @@ module riscv_core #(
         .o_instr_d      (if_id_instr)
     );
     
-    //-------------------------------------------------------------------------
-    // Decode Stage
-    //-------------------------------------------------------------------------
+    //DECODE STAGE
     decode_stage #(
         .DATA_WIDTH(P_DATA_WIDTH),
         .ADDR_WIDTH(P_REG_ADDR_WIDTH),
@@ -148,9 +146,8 @@ module riscv_core #(
         .o_pcsrc_e      (pcsrc)
     );
     
-    //-------------------------------------------------------------------------
-    // Execute Stage
-    //-------------------------------------------------------------------------
+
+    //EXECUTE STAGE
     execute_stage #(
         .DATA_WIDTH(P_DATA_WIDTH),
         .ADDR_WIDTH(P_ADDR_WIDTH)
@@ -189,9 +186,7 @@ module riscv_core #(
         .o_pc4_m        (ex_mem_pc4)
     );
     
-    //-------------------------------------------------------------------------
-    // Memory Stage (with external data memory interface)
-    //-------------------------------------------------------------------------
+    //MEMORY STAGE
     memory_stage #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
         .P_DMEM_ADDR_WIDTH(P_DMEM_ADDR_WIDTH)
@@ -221,9 +216,7 @@ module riscv_core #(
         .o_alu_result_w     (mem_wb_alu_result)
     );
     
-    //-------------------------------------------------------------------------
-    // Writeback Stage
-    //-------------------------------------------------------------------------
+    //WRITEBACK STAGE
     write_back #(
         .P_WIDTH(P_DATA_WIDTH)
     ) u_write_back (
@@ -234,9 +227,7 @@ module riscv_core #(
         .o_result_w     (wb_result)
     );
     
-    //-------------------------------------------------------------------------
-    // Hazard Detection Unit
-    //-------------------------------------------------------------------------
+    // HAZARD DETECTION UNIT
     hazard_stage u_hazard_stage (
         .i_clk          (i_clk),
         .if_id_instr    (if_id_instr),
