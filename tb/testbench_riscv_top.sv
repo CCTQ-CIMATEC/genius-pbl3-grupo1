@@ -101,13 +101,6 @@ module testbench_riscv_top();
         end
     end
 
-    // Memory Interface Monitoring
-    always @(posedge l_clk) begin
-        if (l_rst_n) begin
-            // $display("Cycle %0d: IMEM - PC: %h, Instr: %h", cycle_count, l_imem_addr, l_imem_rdata);
-        end
-    end
-
     // Result Verification
     always @(negedge l_clk) begin
         if (l_rst_n && l_MemWrite) begin

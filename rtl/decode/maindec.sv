@@ -18,18 +18,18 @@
 
 `timescale 1ns / 1ps
 module maindec(
-    input  logic [6:0] i_op,           // 7-bit opcode field
-    input  logic [2:0] i_funct3,       // 3-bit funct3 field from instruction
+    input  logic [6:0] i_op,            // 7-bit opcode field
+    input  logic [2:0] i_funct3,        // 3-bit funct3 field from instruction
 
-    output logic [1:0] o_resultsrc,    // Result source selection
-    output logic       o_memwrite,     // Memory write enable
-    output logic       o_branch,       // Branch instruction flag
-    output logic       o_alusrc,       // ALU source selection
-    output logic       o_regwrite,     // Register write enable
-    output logic       o_jump,         // Jump instruction flag
-    output logic [1:0] o_immsrc,       // Immediate format selection
-    output logic [1:0] o_aluop,        // ALU operation type
-    output logic [2:0] o_f3     // NEW -> 00 = word, 01 = halfword, 10 = byte 
+    output logic [1:0] o_resultsrc,     // Result source selection
+    output logic       o_memwrite,      // Memory write enable
+    output logic       o_branch,        // Branch instruction flag
+    output logic       o_alusrc,        // ALU source selection
+    output logic       o_regwrite,      // Register write enable
+    output logic       o_jump,          // Jump instruction flag
+    output logic [1:0] o_immsrc,        // Immediate format selection
+    output logic [1:0] o_aluop,         // ALU operation type
+    output logic [2:0] o_f3             // NEW -> 00 = word, 01 = halfword, 10 = byte 
 );
 
     always_comb begin   
