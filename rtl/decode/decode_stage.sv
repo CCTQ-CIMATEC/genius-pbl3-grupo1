@@ -81,7 +81,7 @@ module decode_stage #(
     // Controller outputs
     alu_op_t                l_aluctrl_d;
     logic [1:0]             l_resultsrc_d;
-    logic [1:0]             l_immsrc_d;
+    logic [2:0]             l_immsrc_d;
     logic                   l_memwrite_d;
     logic                   l_alusrc_d;
     logic                   l_regwrite_d;
@@ -153,7 +153,7 @@ module decode_stage #(
             o_branch_e      <= 1'b0;
             o_aluctrl_e     <= ALU_UNUSED;
             o_alusrc_e      <= 1'b0;
-            o_f3_e   <= 3'b010;
+            o_f3_e          <= 3'b010;
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};
             o_rs2_data_e <= {DATA_WIDTH{1'b0}};

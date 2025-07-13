@@ -24,7 +24,7 @@ module controller(
     
     output alu_op_t    o_alucrtl,       // 3-bit ALU control signal
     output logic [1:0] o_resultsrc,     // Result multiplexer select (for writeback)
-    output logic [1:0] o_immsrc,        // Immediate format select
+    output logic [2:0] o_immsrc,        // Immediate format select
     output logic       o_memwrite,      // Data memory write enable
     output logic       o_alusrc,        // ALU source select (reg/immediate)
     output logic       o_regwrite,      // Register file write enable

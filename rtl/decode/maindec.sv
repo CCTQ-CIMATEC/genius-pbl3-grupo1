@@ -27,7 +27,7 @@ module maindec(
     output logic       o_alusrc,        // ALU source selection
     output logic       o_regwrite,      // Register write enable
     output logic       o_jump,          // Jump instruction flag
-    output logic [1:0] o_immsrc,        // Immediate format selection
+    output logic [2:0] o_immsrc,        // Immediate format selection
     output logic [1:0] o_aluop,         // ALU operation type
     output logic [2:0] o_f3             // NEW -> 00 = word, 01 = halfword, 10 = byte 
 );
@@ -35,7 +35,7 @@ module maindec(
     always_comb begin   
         // Default values
         o_regwrite  = 1'b0;
-        o_immsrc    = 2'b00;
+        o_immsrc    = 3'b000;
         o_alusrc    = 1'b0;
         o_memwrite  = 1'b0;
         o_resultsrc = 2'b00;
@@ -48,7 +48,7 @@ module maindec(
             // Load Word (LW) - I-type
             7'b0000011: begin
                 o_regwrite  = 1'b1;
-                o_immsrc    = 2'b00;
+                o_immsrc    = 3'b000;
                 o_alusrc    = 1'b1;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b01;
@@ -61,7 +61,7 @@ module maindec(
             // Store Word (SW) - S-type
             7'b0100011: begin
                 o_regwrite  = 1'b0;
-                o_immsrc    = 2'b01;
+                o_immsrc    = 3'b001;
                 o_alusrc    = 1'b1;
                 o_memwrite  = 1'b1;
                 o_resultsrc = 2'b00;
@@ -74,7 +74,7 @@ module maindec(
             // R-type instructions
             7'b0110011: begin
                 o_regwrite  = 1'b1;
-                o_immsrc    = 2'b00;
+                o_immsrc    = 3'b000;
                 o_alusrc    = 1'b0;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
@@ -86,7 +86,7 @@ module maindec(
             // Branch (e.g., BEQ, BNE, BLT, etc.) - B-type
             7'b1100011: begin
                 o_regwrite  = 1'b0;
-                o_immsrc    = 2'b10;
+                o_immsrc    = 3'b010;
                 o_alusrc    = 1'b0;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
@@ -98,7 +98,7 @@ module maindec(
             // I-type ALU ops (e.g., ADDI)
             7'b0010011: begin
                 o_regwrite  = 1'b1;
-                o_immsrc    = 2'b00;
+                o_immsrc    = 2'b000;
                 o_alusrc    = 1'b1;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
@@ -119,10 +119,34 @@ module maindec(
                 o_jump      = 1'b1;
             end
 
+            // LUI
+            7'b0110111: begin
+                o_regwrite  = 1'b1;    //  Writes to register
+                o_immsrc    = 3'b100;  //  Immediate is from U-type
+                o_alusrc    = 1'b1;    //  Use immediate as input (no rs1 needed)
+                o_memwrite  = 1'b0;    //  No memory write
+                o_resultsrc = 2'b00;   //  Result comes directly from immediate (not ALU or memory)
+                o_branch    = 1'b0;    //  Not a branch
+                o_aluop     = 2'b00;   //  ALU not used (or do a simple pass-through)
+                o_jump      = 1'b0;    //  Not a jump
+            end
+
+            /* AUIPC
+            7'b0010111: begin
+                o_regwrite  = 1'b1;
+                o_immsrc    = 3'b000;
+                o_alusrc    = 1'b1;
+                o_memwrite  = 1'b0;
+                o_resultsrc = 2'b00;
+                o_branch    = 1'b0;
+                o_aluop     = 2'b10;
+                o_jump      = 1'b0;                  
+            end */
+
             // undefined or unsupported opcode
             default: begin
                 o_regwrite  = 1'b0;
-                o_immsrc    = 2'b00;
+                o_immsrc    = 3'b000;
                 o_alusrc    = 1'b0;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;

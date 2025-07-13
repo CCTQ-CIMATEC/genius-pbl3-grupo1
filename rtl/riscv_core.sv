@@ -133,7 +133,7 @@ module riscv_core #(
         .o_branch_e     (id_ex_branch),
         .o_aluctrl_e    (id_ex_aluctrl),
         .o_alusrc_e     (id_ex_alusrc),
-        .o_f3_e  (id_ex_f3), // NEW FOR SH,SB
+        .o_f3_e         (id_ex_f3), // NEW FOR SH,SB
         .o_rs1_data_e   (id_ex_rs1_data),
         .o_rs2_data_e   (id_ex_rs2_data),
         .o_pc_e         (id_ex_pc),
@@ -168,7 +168,7 @@ module riscv_core #(
         .i_regwrite_e   (id_ex_regwrite),
         .i_memwrite_e   (id_ex_memwrite),
         .i_resultsrc_e  (id_ex_resultsrc),
-        .i_f3_e  (id_ex_f3),
+        .i_f3_e         (id_ex_f3),
         .i_forward_m    (forward_data_mem),
         .i_forward_w    (forward_data_wb),
         .i_forward_a    (forward_a),

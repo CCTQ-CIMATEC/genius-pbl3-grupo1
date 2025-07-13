@@ -31,14 +31,14 @@ module execute_stage #(
     input  logic [4:0]  i_rd_addr_e,     // RD address
     
     // Control signals from ID/EX pipeline register
-    input  alu_op_t     i_aluctrl_e,     // ALU operation control (4-bit from your decode)
+    input  alu_op_t     i_aluctrl_e,     // ALU operation control
     input  logic        i_alusrc_e,      // ALU source select (0=reg, 1=imm)
     input  logic        i_branch_e,      // Branch instruction flag
     input  logic        i_jump_e,        // Jump instruction flag
     input  logic        i_regwrite_e,    // Register write enable
     input  logic        i_memwrite_e,    // Memory write enable
     input  logic [1:0]  i_resultsrc_e,   // Result source select
-    input  logic [2:0]  i_f3_e,   // NEW FOR SH AND SB
+    input  logic [2:0]  i_f3_e,          // NEW FOR SH AND SB
     
     // Forwarding inputs
     input  logic [DATA_WIDTH-1:0] i_forward_m,   // Forwarded data from MEM stage
