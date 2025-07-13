@@ -15,7 +15,7 @@ module data_memory #(
     input logic                         i_clk,
     input logic                         i_we,
     input logic     [P_ADDR_WIDTH-1:0]  i_addr,
-    input logic     [2:0]               i_storetype,
+    input logic     [2:0]               i_f3,
     input logic     [P_DATA_WIDTH-1:0]  i_wdata,
     output logic    [P_DATA_WIDTH-1:0]  o_rdata
 );
@@ -26,11 +26,11 @@ module data_memory #(
 
     always_ff @(posedge i_clk) begin
         if (i_we) begin
-            case (i_storetype)
-                3'b000: begin //SB, write only 8 bits
+            case (i_f3)
+                3'b000: begin  //SB, write only 8 bits
                     mem_r[i_addr][7:0] <= i_wdata[7:0];
                 end
-                3'b001: begin //SH, write only 16 bits
+                3'b001: begin  //SH, write only 16 bits
                     mem_r[i_addr][15:0] <= i_wdata[15:0];
                 end
                 default: begin //SW

@@ -50,7 +50,7 @@ module decode_stage #(
     output logic        o_branch_e,
     output alu_op_t     o_aluctrl_e,
     output logic        o_alusrc_e,
-    output logic [2:0]  o_storetype_e,      // NEW -> FOR SH,SB
+    output logic [2:0]  o_f3_e,      // NEW -> FOR SH,SB
     
     // Data outputs
     output logic [DATA_WIDTH-1:0] o_rs1_data_e,
@@ -87,7 +87,7 @@ module decode_stage #(
     logic                   l_regwrite_d;
     logic                   l_jump_d;
     logic                   l_branch_d;
-    logic [2:0]             l_storetype_d;
+    logic [2:0]             l_f3_d;
     
     // Register file outputs
     logic [DATA_WIDTH-1:0] l_rs1_data_d;
@@ -117,7 +117,7 @@ module decode_stage #(
         .o_regwrite     (l_regwrite_d),
         .o_jump         (l_jump_d),
         .o_branch       (l_branch_d),
-        .o_storetype    (l_storetype_d)
+        .o_f3           (l_f3_d)
     );
     
     // Register file instance
@@ -153,7 +153,7 @@ module decode_stage #(
             o_branch_e      <= 1'b0;
             o_aluctrl_e     <= ALU_UNUSED;
             o_alusrc_e      <= 1'b0;
-            o_storetype_e   <= 3'b010;
+            o_f3_e   <= 3'b010;
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};
             o_rs2_data_e <= {DATA_WIDTH{1'b0}};
@@ -174,7 +174,7 @@ module decode_stage #(
             o_branch_e      <= l_branch_d;
             o_aluctrl_e     <= l_aluctrl_d;
             o_alusrc_e      <= l_alusrc_d;
-            o_storetype_e   <= l_storetype_d;
+            o_f3_e   <= l_f3_d;
 
             // signals from decode stage
             o_rs1_data_e    <= l_rs1_data_d;

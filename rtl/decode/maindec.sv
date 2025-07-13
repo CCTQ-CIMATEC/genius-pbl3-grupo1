@@ -14,11 +14,6 @@
         - Decodes all major instruction formats (R, I, S, B, J)
         - Generates 12 control signals from 7-bit opcode
         - Pure combinational logic
-
-    Operation:
-        - Decodes 7-bit opcode into 12-bit control vector
-        - Splits control vector into individual signals
-        - Handles undefined opcodes with '0' outputs
 -----------------------------------------------------------------------------*/
 
 `timescale 1ns / 1ps
@@ -34,7 +29,7 @@ module maindec(
     output logic       o_jump,         // Jump instruction flag
     output logic [1:0] o_immsrc,       // Immediate format selection
     output logic [1:0] o_aluop,        // ALU operation type
-    output logic [2:0] o_storetype     // NEW -> 00 = word, 01 = halfword, 10 = byte 
+    output logic [2:0] o_f3     // NEW -> 00 = word, 01 = halfword, 10 = byte 
 );
 
     always_comb begin   
@@ -47,7 +42,7 @@ module maindec(
         o_branch    = 1'b0;
         o_aluop     = 2'b00;
         o_jump      = 1'b0;
-        o_storetype = 3'b010; // IS THE VALUE OF FUNCT3 FOR SW
+        o_f3 = 3'b010; // IS THE VALUE OF FUNCT3 FOR SW
 
         case (i_op)
             // Load Word (LW) - I-type
@@ -60,7 +55,7 @@ module maindec(
                 o_branch    = 1'b0;
                 o_aluop     = 2'b00;
                 o_jump      = 1'b0;
-                o_storetype = i_funct3;
+                o_f3 = i_funct3;
             end
 
             // Store Word (SW) - S-type
@@ -73,7 +68,7 @@ module maindec(
                 o_branch    = 1'b0;
                 o_aluop     = 2'b00;
                 o_jump      = 1'b0;
-                o_storetype = i_funct3;
+                o_f3 = i_funct3;
             end
 
             // R-type instructions

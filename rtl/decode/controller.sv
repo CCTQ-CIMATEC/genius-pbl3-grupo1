@@ -31,7 +31,7 @@ module controller(
     output logic       o_jump,          // Jump instruction flag
     output logic       o_branch,
 
-    output logic [2:0] o_storetype      // NEW -> 00 = word, 01 = halfword, 10 = byte      
+    output logic [2:0] o_f3             // NEW -> 00 = word, 01 = halfword, 10 = byte      
 );
     
     logic [1:0] r_aluop;                // ALU operation type from main decoder
@@ -49,7 +49,7 @@ module controller(
         .o_jump         (o_jump),       // Jump instruction
         .o_immsrc       (o_immsrc),     // Immediate format
         .o_aluop        (r_aluop),      // ALU operation type
-        .o_storetype    (o_storetype)
+        .o_f3    (o_f3)
     );
 
     // ALU decoder

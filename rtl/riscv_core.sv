@@ -9,8 +9,6 @@
         Provides interfaces for external instruction and data memories.
  -------------------------------------------------------------------------*/
 
-`timescale 1ns/1ps
-
 module riscv_core #(
     parameter P_DATA_WIDTH = 32,
     parameter P_ADDR_WIDTH = 11,
@@ -29,7 +27,7 @@ module riscv_core #(
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
-    output logic [2:0]                    o_dmem_storetype
+    output logic [2:0]                    o_dmem_f3
 );
     
     // IF/ID Pipeline Register Signals
@@ -45,7 +43,7 @@ module riscv_core #(
     logic                           id_ex_branch;
     alu_op_t                        id_ex_aluctrl;
     logic                           id_ex_alusrc;
-    logic [2:0]                     id_ex_storetype; //NEW FOR SH, SB
+    logic [2:0]                     id_ex_f3; //NEW FOR SH, SB
     logic [P_DATA_WIDTH-1:0]        id_ex_rs1_data;
     logic [P_DATA_WIDTH-1:0]        id_ex_rs2_data;
     logic [P_ADDR_WIDTH-1:0]        id_ex_pc;
@@ -63,7 +61,7 @@ module riscv_core #(
     logic [1:0]                     ex_mem_resultsrc;
     logic [P_REG_ADDR_WIDTH-1:0]    ex_mem_rd_addr;
     logic [P_ADDR_WIDTH-1:0]        ex_mem_pc4;
-    logic [2:0]                     ex_mem_storetype;
+    logic [2:0]                     ex_mem_f3;
     
     // MEM/WB Pipeline Register Signals
     logic [P_DATA_WIDTH-1:0]        mem_wb_read_data;
@@ -72,6 +70,7 @@ module riscv_core #(
     logic [P_REG_ADDR_WIDTH-1:0]    mem_wb_rd_addr;
     logic [P_ADDR_WIDTH-1:0]        mem_wb_pc4;
     logic [P_DATA_WIDTH-1:0]        mem_wb_alu_result;
+    logic [2:0]                     mem_wb_f3;
     
     // Writeback Stage Signals
     logic [P_DATA_WIDTH-1:0]  wb_result;
@@ -134,7 +133,7 @@ module riscv_core #(
         .o_branch_e     (id_ex_branch),
         .o_aluctrl_e    (id_ex_aluctrl),
         .o_alusrc_e     (id_ex_alusrc),
-        .o_storetype_e  (id_ex_storetype), // NEW FOR SH,SB
+        .o_f3_e  (id_ex_f3), // NEW FOR SH,SB
         .o_rs1_data_e   (id_ex_rs1_data),
         .o_rs2_data_e   (id_ex_rs2_data),
         .o_pc_e         (id_ex_pc),
@@ -169,7 +168,7 @@ module riscv_core #(
         .i_regwrite_e   (id_ex_regwrite),
         .i_memwrite_e   (id_ex_memwrite),
         .i_resultsrc_e  (id_ex_resultsrc),
-        .i_storetype_e  (id_ex_storetype),
+        .i_f3_e  (id_ex_f3),
         .i_forward_m    (forward_data_mem),
         .i_forward_w    (forward_data_wb),
         .i_forward_a    (forward_a),
@@ -180,7 +179,7 @@ module riscv_core #(
         .o_zero_e       (zero_flag),
         .o_regwrite_m   (ex_mem_regwrite),
         .o_memwrite_m   (ex_mem_memwrite),
-        .o_storetype_m  (ex_mem_storetype),
+        .o_f3_m  (ex_mem_f3),
         .o_resultsrc_m  (ex_mem_resultsrc),
         .o_rd_addr_m    (ex_mem_rd_addr),
         .o_pc4_m        (ex_mem_pc4)
@@ -200,27 +199,29 @@ module riscv_core #(
         .i_write_data_m     (ex_mem_write_data),
         .i_rd_addr_m        (ex_mem_rd_addr),
         .i_pc4_m            (ex_mem_pc4),
-        .i_storetype_m      (ex_mem_storetype),
+        .i_f3_m             (ex_mem_f3),
         // External data memory interface
         .o_dmem_we          (o_dmem_we),
         .o_dmem_addr        (o_dmem_addr),
         .o_dmem_wdata       (o_dmem_wdata),
         .i_dmem_rdata       (i_dmem_rdata),
-        .o_dmem_storetype   (o_dmem_storetype),
+        .o_dmem_f3          (o_dmem_f3),
         // Pipeline outputs
         .o_read_data_w      (mem_wb_read_data),
         .o_regwrite_w       (mem_wb_regwrite),
         .o_resultsrc_w      (mem_wb_resultsrc),
         .o_rd_addr_w        (mem_wb_rd_addr),
         .o_pc4_w            (mem_wb_pc4),
-        .o_alu_result_w     (mem_wb_alu_result)
+        .o_alu_result_w     (mem_wb_alu_result),
+        .o_f3_w             (mem_wb_f3)
     );
     
     //WRITEBACK STAGE
     write_back #(
-        .P_WIDTH(P_DATA_WIDTH)
+        .P_WIDTH(32)
     ) u_write_back (
         .i_alu_result_w (mem_wb_alu_result),
+        .i_f3_w         (mem_wb_f3),
         .i_mem_data_w   (mem_wb_read_data),
         .i_pc_plus_4_w  (mem_wb_pc4),
         .i_sel_w        (mem_wb_resultsrc),
@@ -251,7 +252,6 @@ module riscv_core #(
         .o_forward_b_e  (forward_b)
     );
     
-
     // Forwarding Data Assignment
 
     assign forward_data_mem = ex_mem_alu_result;

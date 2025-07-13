@@ -3,16 +3,11 @@
   Memory Stage Module with External Memory Interface
  
   File name: memory_stage.sv
+  Usage: riscv_top.sv
  
   Objective:
       Implements the memory access stage of a pipelined RISC-V processor.
       Interfaces with external data memory and forwards pipeline data.
- 
-  Description:
-      - Provides interface signals to external data memory
-      - Handles memory read/write control
-      - Manages MEM/WB pipeline register
-      - No internal memory instantiation
 -------------------------------------------------------------------------*/
 
 `timescale 1ns/1ps
@@ -32,14 +27,14 @@ module memory_stage #(
     input logic [P_DATA_WIDTH-1:0]          i_write_data_m,
     input logic [4:0]                       i_rd_addr_m,
     input logic [P_DMEM_ADDR_WIDTH-1:0]     i_pc4_m,
-    input logic [2:0]                       i_storetype_m,
+    input logic [2:0]                       i_f3_m,
     
     // External Data Memory Interface
     output logic                          o_dmem_we,
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
     input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
-    output logic [2:0]                    o_dmem_storetype,
+    output logic [2:0]                    o_dmem_f3,
 
     // Pipeline Outputs to WB stage
     output logic [P_DATA_WIDTH-1:0] o_read_data_w,
@@ -47,7 +42,8 @@ module memory_stage #(
     output logic [1:0]              o_resultsrc_w,
     output logic [4:0]              o_rd_addr_w,
     output logic [11-1:0]           o_pc4_w,
-    output logic [P_DATA_WIDTH-1:0] o_alu_result_w
+    output logic [P_DATA_WIDTH-1:0] o_alu_result_w,
+    output logic [2:0]              o_f3_w
 );
 
     // External Data Memory Interface Logic
@@ -56,7 +52,7 @@ module memory_stage #(
     assign o_dmem_we        = i_memwrite_m;                              // Write enable
     assign o_dmem_addr      = i_alu_result_m[P_DMEM_ADDR_WIDTH-1:0];     // Address from ALU
     assign o_dmem_wdata     = i_write_data_m;                            // Write data
-    assign o_dmem_storetype = i_storetype_m;
+    assign o_dmem_f3 = i_f3_m;
 
     // MEM/WB Pipeline Register
     always_ff @(posedge i_clk or negedge i_rst_n) begin
@@ -68,14 +64,16 @@ module memory_stage #(
             o_rd_addr_w    <= '0;
             o_pc4_w        <= '0;
             o_alu_result_w <= '0;
+            o_f3_w         <= '0;
         end else begin
             // Forward control signals and data to WB stage
             o_regwrite_w   <= i_regwrite_m;
             o_resultsrc_w  <= i_resultsrc_m;
             o_alu_result_w <= i_alu_result_m;
-            o_read_data_w  <= i_dmem_rdata;     // Data read from external memory
+            o_read_data_w  <= i_dmem_rdata;
             o_rd_addr_w    <= i_rd_addr_m;
             o_pc4_w        <= i_pc4_m;
+            o_f3_w         <= i_f3_m;
         end
     end
 

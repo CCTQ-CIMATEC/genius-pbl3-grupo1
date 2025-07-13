@@ -32,7 +32,7 @@ module riscv_top #(
     logic [P_DMEM_ADDR_WIDTH-1:0]   dmem_addr;
     logic [P_DATA_WIDTH-1:0]        dmem_wdata;
     logic [P_DATA_WIDTH-1:0]        dmem_rdata;
-    logic [2:0]                     dmem_storetype;
+    logic [2:0]                     dmem_f3;
 
     // RISC-V Processor Core
     riscv_core #(
@@ -53,7 +53,7 @@ module riscv_top #(
         .o_dmem_addr        (dmem_addr),
         .o_dmem_wdata       (dmem_wdata),
         .i_dmem_rdata       (dmem_rdata),
-        .o_dmem_storetype   (dmem_storetype)
+        .o_dmem_f3   (dmem_f3)
     );
 
     // INSTRUCTION MEMORY
@@ -67,7 +67,7 @@ module riscv_top #(
         .i_clk              (i_clk),
         .i_we               (dmem_we),
         .i_addr             (dmem_addr),
-        .i_storetype        (dmem_storetype),    
+        .i_f3        (dmem_f3),    
         .i_wdata            (dmem_wdata),
         .o_rdata            (dmem_rdata)
     );
