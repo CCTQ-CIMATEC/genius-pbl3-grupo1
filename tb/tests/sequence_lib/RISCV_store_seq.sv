@@ -1,11 +1,3 @@
-//------------------------------------------------------------------------------
-// Store sequence for RISCV
-//------------------------------------------------------------------------------
-// This sequence generates randomized transactions for the RISCV UVM verification.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
 
 `ifndef RISCV_STORE_SEQ 
 `define RISCV_STORE_SEQ
