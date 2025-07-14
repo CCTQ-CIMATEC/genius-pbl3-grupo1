@@ -49,13 +49,13 @@ module decode_stage #(
     output logic        o_jump_e,
     output logic        o_branch_e,
     output alu_op_t     o_aluctrl_e,
-    output logic        o_alusrc_e,
+    output logic [1:0]  o_alusrc_e,
     output logic [2:0]  o_f3_e,      // NEW -> FOR SH,SB
     
     // Data outputs
-    output logic [DATA_WIDTH-1:0] o_rs1_data_e,
-    output logic [DATA_WIDTH-1:0] o_rs2_data_e,
-    output logic [PC_WIDTH-1:0] o_pc_e,
+    output logic [DATA_WIDTH-1:0]   o_rs1_data_e,
+    output logic [DATA_WIDTH-1:0]   o_rs2_data_e,
+    output logic [PC_WIDTH-1:0]     o_pc_e,
     
     // Instruction fields
     output logic [ADDR_WIDTH-1:0] o_rs1_addr_e,
@@ -83,7 +83,7 @@ module decode_stage #(
     logic [1:0]             l_resultsrc_d;
     logic [2:0]             l_immsrc_d;
     logic                   l_memwrite_d;
-    logic                   l_alusrc_d;
+    logic [1:0]             l_alusrc_d;
     logic                   l_regwrite_d;
     logic                   l_jump_d;
     logic                   l_branch_d;
@@ -152,7 +152,7 @@ module decode_stage #(
             o_jump_e        <= 1'b0;
             o_branch_e      <= 1'b0;
             o_aluctrl_e     <= ALU_UNUSED;
-            o_alusrc_e      <= 1'b0;
+            o_alusrc_e      <= 2'b00;
             o_f3_e          <= 3'b010;
             
             o_rs1_data_e <= {DATA_WIDTH{1'b0}};

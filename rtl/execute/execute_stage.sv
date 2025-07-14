@@ -32,7 +32,7 @@ module execute_stage #(
     
     // Control signals from ID/EX pipeline register
     input  alu_op_t     i_aluctrl_e,     // ALU operation control
-    input  logic        i_alusrc_e,      // ALU source select (0=reg, 1=imm)
+    input  logic [1:0]  i_alusrc_e,      // ALU source select [0](0=reg, 1=imm) [1] (0=reg, 1=pc)
     input  logic        i_branch_e,      // Branch instruction flag
     input  logic        i_jump_e,        // Jump instruction flag
     input  logic        i_regwrite_e,    // Register write enable
@@ -88,10 +88,10 @@ module execute_stage #(
     );    
 
     // ALU Input Selection
-    assign l_alu_operand_a = l_rs1_forwarded;
+    assign l_alu_operand_a = i_alusrc_e[1] ? i_pc_e : l_rs1_forwarded;
     
     // ALU Source B Multiplexer
-    assign l_alu_operand_b = i_alusrc_e ? i_immext_e : l_rs2_forwarded;
+    assign l_alu_operand_b = i_alusrc_e[0] ? i_immext_e : l_rs2_forwarded;
     
     alu alu_inst (
         .i_a          (l_alu_operand_a),

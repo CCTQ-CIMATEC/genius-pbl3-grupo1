@@ -42,7 +42,7 @@ module riscv_core #(
     logic                           id_ex_jump;
     logic                           id_ex_branch;
     alu_op_t                        id_ex_aluctrl;
-    logic                           id_ex_alusrc;
+    logic [1:0]                     id_ex_alusrc;
     logic [2:0]                     id_ex_f3; //NEW FOR SH, SB
     logic [P_DATA_WIDTH-1:0]        id_ex_rs1_data;
     logic [P_DATA_WIDTH-1:0]        id_ex_rs2_data;

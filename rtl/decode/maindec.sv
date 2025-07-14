@@ -24,7 +24,7 @@ module maindec(
     output logic [1:0] o_resultsrc,     // Result source selection
     output logic       o_memwrite,      // Memory write enable
     output logic       o_branch,        // Branch instruction flag
-    output logic       o_alusrc,        // ALU source selection
+    output logic [1:0] o_alusrc,        // ALU source selection
     output logic       o_regwrite,      // Register write enable
     output logic       o_jump,          // Jump instruction flag
     output logic [2:0] o_immsrc,        // Immediate format selection
@@ -36,7 +36,7 @@ module maindec(
         // Default values
         o_regwrite  = 1'b0;
         o_immsrc    = 3'b000;
-        o_alusrc    = 1'b0;
+        o_alusrc    = 2'b00;
         o_memwrite  = 1'b0;
         o_resultsrc = 2'b00;
         o_branch    = 1'b0;
@@ -49,7 +49,7 @@ module maindec(
             7'b0000011: begin
                 o_regwrite  = 1'b1;
                 o_immsrc    = 3'b000;
-                o_alusrc    = 1'b1;
+                o_alusrc    = 2'b01;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b01;
                 o_branch    = 1'b0;
@@ -62,7 +62,7 @@ module maindec(
             7'b0100011: begin
                 o_regwrite  = 1'b0;
                 o_immsrc    = 3'b001;
-                o_alusrc    = 1'b1;
+                o_alusrc    = 2'b01;
                 o_memwrite  = 1'b1;
                 o_resultsrc = 2'b00;
                 o_branch    = 1'b0;
@@ -75,7 +75,7 @@ module maindec(
             7'b0110011: begin
                 o_regwrite  = 1'b1;
                 o_immsrc    = 3'b000;
-                o_alusrc    = 1'b0;
+                o_alusrc    = 2'b00;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
                 o_branch    = 1'b0;
@@ -87,7 +87,7 @@ module maindec(
             7'b1100011: begin
                 o_regwrite  = 1'b0;
                 o_immsrc    = 3'b010;
-                o_alusrc    = 1'b0;
+                o_alusrc    = 2'b00;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
                 o_branch    = 1'b1;
@@ -99,7 +99,7 @@ module maindec(
             7'b0010011: begin
                 o_regwrite  = 1'b1;
                 o_immsrc    = 2'b000;
-                o_alusrc    = 1'b1;
+                o_alusrc    = 2'b01;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
                 o_branch    = 1'b0;
@@ -111,7 +111,7 @@ module maindec(
             7'b1101111: begin
                 o_regwrite  = 1'b1;
                 o_immsrc    = 2'b11;
-                o_alusrc    = 1'b0;
+                o_alusrc    = 2'b00;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b10;
                 o_branch    = 1'b0;
@@ -123,7 +123,7 @@ module maindec(
             7'b0110111: begin
                 o_regwrite  = 1'b1;    //  Writes to register
                 o_immsrc    = 3'b100;  //  Immediate is from U-type
-                o_alusrc    = 1'b1;    //  Use immediate as input (no rs1 needed)
+                o_alusrc    = 2'b01;    //  Use immediate as input (no rs1 needed)
                 o_memwrite  = 1'b0;    //  No memory write
                 o_resultsrc = 2'b00;   //  Result comes directly from immediate (not ALU or memory)
                 o_branch    = 1'b0;    //  Not a branch
@@ -131,23 +131,23 @@ module maindec(
                 o_jump      = 1'b0;    //  Not a jump
             end
 
-            /* AUIPC
+            // AUIPC
             7'b0010111: begin
                 o_regwrite  = 1'b1;
-                o_immsrc    = 3'b000;
-                o_alusrc    = 1'b1;
+                o_immsrc    = 3'b100;
+                o_alusrc    = 2'b11;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
                 o_branch    = 1'b0;
-                o_aluop     = 2'b10;
+                o_aluop     = 2'b00;
                 o_jump      = 1'b0;                  
-            end */
+            end
 
             // undefined or unsupported opcode
             default: begin
                 o_regwrite  = 1'b0;
                 o_immsrc    = 3'b000;
-                o_alusrc    = 1'b0;
+                o_alusrc    = 2'b00;
                 o_memwrite  = 1'b0;
                 o_resultsrc = 2'b00;
                 o_branch    = 1'b0;

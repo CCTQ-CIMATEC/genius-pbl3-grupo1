@@ -26,7 +26,7 @@ module controller(
     output logic [1:0] o_resultsrc,     // Result multiplexer select (for writeback)
     output logic [2:0] o_immsrc,        // Immediate format select
     output logic       o_memwrite,      // Data memory write enable
-    output logic       o_alusrc,        // ALU source select (reg/immediate)
+    output logic [1:0] o_alusrc,        // ALU source select (reg/immediate/pc)
     output logic       o_regwrite,      // Register file write enable
     output logic       o_jump,          // Jump instruction flag
     output logic       o_branch,
