@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Package for listing RISCV sequences
-//------------------------------------------------------------------------------
-// This package includes the basic sequence for the RISCV testbench.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_SEQ_LIST 
 `define RISCV_SEQ_LIST
