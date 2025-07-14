@@ -15,8 +15,6 @@
        - Uses an ALU decoder for ALU operation control
        - Combines branch and zero conditions for PC source control
 -----------------------------------------------------------------------------*/
-
-`timescale 1ns / 1ps
 module controller(
     input logic [6:0] i_op,             // 7-bit opcode
     input logic [2:0] i_funct3,         // 3-bit funct3
