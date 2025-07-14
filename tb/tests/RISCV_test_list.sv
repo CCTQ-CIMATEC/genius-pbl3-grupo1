@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Package for aggregating RISCV tests
-//------------------------------------------------------------------------------
-// This package includes all the tests for the RISCV simulation.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_TEST_LIST 
 `define RISCV_TEST_LIST
