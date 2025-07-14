@@ -1,11 +1,4 @@
-//------------------------------------------------------------------------------
-// Store test for RISCV
-//------------------------------------------------------------------------------
-// This UVM test sets up the environment and sequence for the RISCV verification.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+
 
 `ifndef RISCV_STORE_TEST 
 `define RISCV_STORE_TEST
