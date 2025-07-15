@@ -19,10 +19,8 @@ package RISCV_seq_list;
   import RISCV_ref_model_pkg::*;
   import RISCV_env_pkg::*;
 
-  /*
-   * Including RISCV store sequence 
-   */
   `include "RISCV_store_seq.sv"
+  `include "RISCV_addi_seq.sv"
 
 endpackage
 
