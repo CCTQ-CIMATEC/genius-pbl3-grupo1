@@ -55,9 +55,7 @@ endtask : collect_inputs
 //outputs
   task collect_outputs();
     RISCV_transaction complete_trans;
-    //`uvm_info(get_full_name(), $sformatf("\n\n\nENTROU %h\n\n\n", vif.instr_data), UVM_LOW);
     if (vif.reset && vif.instr_data != 0) begin
-      //`uvm_info(get_full_name(), $sformatf("\n\n\nENTROU out\n\n\n"), UVM_LOW);
       repeat(5) @(posedge vif.clk);
        
       complete_trans = transaction_queue.pop_front();

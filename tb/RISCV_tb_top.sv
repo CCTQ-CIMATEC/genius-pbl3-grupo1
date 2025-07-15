@@ -58,14 +58,9 @@ RISCV_interface #(
 ) RISCV_intf(clk, reset);
 
 
-RISCV //#(.P_DATA_WIDTH       (P_DATA_WIDTH),
-    //.P_ADDR_WIDTH       (P_ADDR_WIDTH),
-    //.P_REG_ADDR_WIDTH   (P_REG_ADDR_WIDTH),
-    //.P_IMEM_ADDR_WIDTH  (P_IMEM_ADDR_WIDTH),
-   // .P_DMEM_ADDR_WIDTH  (P_DMEM_ADDR_WIDTH)
- u_riscv_core (
-    .clk              (clk),
-    .rst_n            (reset),
+RISCV u_riscv_core (
+    .clk                (clk),
+    .rst_n              (reset),
     .i_instr_ready      (RISCV_intf.instr_ready),
     .i_instr_data       (RISCV_intf.instr_data),
     .o_inst_rd_en       (RISCV_intf.inst_rd_en),
