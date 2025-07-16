@@ -143,7 +143,7 @@ module maindec(
                 o_jump      = 1'b0;                  
             end
 
-            // undefined or unsupported opcode
+            // undefined
             default: begin
                 o_regwrite  = 1'b0;
                 o_immsrc    = 3'b000;
