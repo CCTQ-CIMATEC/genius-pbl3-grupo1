@@ -121,14 +121,14 @@ module maindec(
 
             // LUI
             7'b0110111: begin
-                o_regwrite  = 1'b1;    //  Writes to register
-                o_immsrc    = 3'b100;  //  Immediate is from U-type
-                o_alusrc    = 2'b01;    //  Use immediate as input (no rs1 needed)
-                o_memwrite  = 1'b0;    //  No memory write
-                o_resultsrc = 2'b00;   //  Result comes directly from immediate (not ALU or memory)
-                o_branch    = 1'b0;    //  Not a branch
-                o_aluop     = 2'b00;   //  ALU not used (or do a simple pass-through)
-                o_jump      = 1'b0;    //  Not a jump
+                o_regwrite  = 1'b1;    
+                o_immsrc    = 3'b100;  
+                o_alusrc    = 2'b01;   
+                o_memwrite  = 1'b0;    
+                o_resultsrc = 2'b00;   
+                o_branch    = 1'b0;    
+                o_aluop     = 2'b00;   
+                o_jump      = 1'b0;  
             end
 
             // AUIPC
