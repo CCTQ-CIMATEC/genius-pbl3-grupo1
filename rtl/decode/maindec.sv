@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------
-    PBL3 - RISC-V Single Cycle Processor
+    PBL3 - RISC-V Processor
     Main Control Decoder Module
 
     File name: maindec.sv
