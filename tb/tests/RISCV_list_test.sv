@@ -13,8 +13,7 @@ package RISCV_test_list;
   // Including basic test definition
 
   `include "RISCV_store_test.sv"
-  `include "RISCV_load_test.sv" 
-//`include "RISCV_add_test.sv" 
+  //`include "RISCV_rtype_test.sv" 
 
 endpackage 
 

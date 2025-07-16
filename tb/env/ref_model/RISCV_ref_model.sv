@@ -120,7 +120,7 @@ class RISCV_ref_model extends uvm_component;
     exp_trans_local.data_wr_en_ma  = 1;
   end
   else begin
-    `uvm_warning(get_full_name(), $sformatf("Unsupported instruction: 0x%h", input_trans.instr_data));
+    `uvm_fatal(get_full_name(), $sformatf("\nUnsupported instruction: 0x%h\n", input_trans.instr_data));
   end
 
   writeback_queue[4] = wb;
