@@ -2,35 +2,35 @@ module hazard_stage (
     input logic i_clk,
         
     // instruction from IF/ID pipeline register
-    input logic [31:0] if_id_instr,     // InstrD - instruction from fetch/decode
+    input logic [31:0] if_id_instr,     
     
     // signals from the decode stage
-    input logic i_branch_d,             // BranchD - branch instruction (decode)
-    input logic i_jump_d,               // JumpD - jump instruction (decode)
+    input logic i_branch_d,             
+    input logic i_jump_d,               
     
     // signals from the execute stage  
-    input logic [4:0] i_rs1_addr_e,     // Rs1E - source register 1 address (execute)
-    input logic [4:0] i_rs2_addr_e,     // Rs2E - source register 2 address (execute)
-    input logic [4:0] i_rd_addr_e,      // RdE - destination register address (execute)
-    input logic       i_regwrite_e,           // RegWriteE - register write signal (execute)
-    input logic [1:0] i_resultsrc_e,    // ResultSrcE[1:0] - result source selector
+    input logic [4:0] i_rs1_addr_e,    
+    input logic [4:0] i_rs2_addr_e,    
+    input logic [4:0] i_rd_addr_e,      
+    input logic       i_regwrite_e,     
+    input logic [1:0] i_resultsrc_e,    
     
     // signals from the memory stage
-    input logic [4:0] i_rd_addr_m,      // RdM - destination register address (memory)
-    input logic i_regwrite_m,           // RegWriteM - register write signal (memory)
-    
+    input logic [4:0] i_rd_addr_m,     
+    input logic i_regwrite_m,              
+
     // signals from the writeback stage
-    input logic [4:0] i_rd_addr_w,      // RdW - destination register address (writeback)
-    input logic i_regwrite_w,           // RegWriteW - register write signal (writeback)
-    
+    input logic [4:0] i_rd_addr_w,   
+    input logic i_regwrite_w,            
+
     // branch control signals
-    input logic i_pcsrc_e,              // PCSrcE - PC source (branch taken)
+    input logic i_pcsrc_e,             
     
     // output signals for pipeline control
-    output logic o_stall_f,             // StallF - fetch stage stall
-    output logic o_stall_d,             // StallD - decode stage stall  
-    output logic o_flush_d,             // FlushD - decode stage flush
-    output logic o_flush_e,             // FlushE - execute stage flush
+    output logic o_stall_f,         
+    output logic o_stall_d,            
+    output logic o_flush_d,          
+    output logic o_flush_e,           
     
     // forwarding signals
     output logic [1:0] o_forward_a_e,  
