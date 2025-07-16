@@ -11,10 +11,11 @@ package RISCV_ref_model_pkg;
    * Importing packages: agent, ref model, register, etc.
    */
   import RISCV_agent_pkg::*;
-
-  /*
-   * Include ref model files 
-   */
+  typedef struct {
+    bit [4:0]  rd;
+    bit [31:0] value;
+    bit        we;
+  } wb_info_t;
   `include "RISCV_ref_model.sv"
 
 endpackage
