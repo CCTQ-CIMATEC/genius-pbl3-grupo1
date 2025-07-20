@@ -1,4 +1,3 @@
-
 `ifndef RISCV_RTYPE_SEQ 
 `define RISCV_RTYPE_SEQ
 
@@ -50,7 +49,7 @@ class RISCV_rtype_seq extends uvm_sequence#(RISCV_transaction);
             default: req.instr_name = "UNKNOWN";
         endcase
 
-        `uvm_info(get_type_name(), $sformatf("%s x%0d,x%0d,x%0d [0x%08h]", req.instr_name, rd, rs1, rs2, req.instr_data), UVM_LOW);        
+        `uvm_info(get_type_name(), $sformatf("%s x%0d,x%0d,x%0d [0x%08h]", req.instr_name, rd, rs1, rs2, req.instr_data), UVM_HIGH);        
         //req.print();
 
         finish_item(req);

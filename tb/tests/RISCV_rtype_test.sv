@@ -1,5 +1,3 @@
-
-
 `ifndef RISCV_RTYPE_TEST 
 `define RISCV_RTYPE_TEST
 
