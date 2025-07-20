@@ -24,6 +24,7 @@ package RISCV_seq_list;
    */
   `include "RISCV_store_seq.sv"
   `include "RISCV_rtype_seq.sv"
+  `include "RISCV_and_seq.sv"
 
 endpackage
 
