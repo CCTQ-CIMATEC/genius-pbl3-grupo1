@@ -16,11 +16,10 @@ package RISCV_test_list;
   `include "RISCV_store_test.sv"
   `include "RISCV_rtype_test.sv"
   `include "RISCV_and_test.sv"
+  `include "RISCV_add_test.sv"
 
 endpackage 
 
 `endif
-
-
 
 
