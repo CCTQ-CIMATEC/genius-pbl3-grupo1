@@ -137,7 +137,7 @@ module testbench_riscv_top();
             
             // If writing value 25 to address 100, simulation succeeded
             if ((r_DataAdr === 100) && (r_WriteData === 25)) begin
-                $display("\n=== RISC-V TOP TESTE ===");
+                $display("\n=== RISC-V TOP ANOTHER TEST ===");
                 $display("Final result: Address %0d = %0d", r_DataAdr, r_WriteData);
                 $display("Total cycles: %0d", cycle_count);
                 $display("Simulation time: %0t", $time);
