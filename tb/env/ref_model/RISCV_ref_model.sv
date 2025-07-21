@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 // This module defines the reference model for the RISCV verification.
 //
-// Author: Gustavo Santiago
+// Author: David Machado
 // Date  : June 2025
 //------------------------------------------------------------------------------
 
