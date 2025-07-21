@@ -1,12 +1,3 @@
-//------------------------------------------------------------------------------
-// Package for listing RISCV sequences
-//------------------------------------------------------------------------------
-// This package includes the basic sequence for the RISCV testbench.
-//
-// Author: Glenda & Thor
-// Date  : July 2025
-//------------------------------------------------------------------------------
-
 `ifndef RISCV_SEQ_LIST 
 `define RISCV_SEQ_LIST
 
@@ -22,7 +13,11 @@ package RISCV_seq_list;
   /*
    * Including RISCV store sequence 
    */
-  `include "RISCV_store_seq.sv"
+  `include "RISCV_sw_seq.sv" 
+  `include "RISCV_sh_seq.sv" 
+  `include "RISCV_sb_seq.sv"  
+  `include "RISCV_lui_seq.sv"
+  `include "RISCV_auipc_seq.sv"
 
 endpackage
 

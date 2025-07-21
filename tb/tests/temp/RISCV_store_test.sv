@@ -35,6 +35,15 @@ class RISCV_store_test extends uvm_test;
     seq = RISCV_store_seq::type_id::create("seq");
   endfunction : build_phase
  
+  
+  // Adicione no build_phase:
+    function void build_phase(uvm_phase phase);
+      if(!uvm_config_db#(bit[2:0])::get(this, "", "funct3", funct3))
+        funct3 = 3'b010; // Default SW
+    endfunction
+  endclass
+
+
   /*
    * Run phase: Start the sequence on the agent’s sequencer
    * This phase starts the sequence, which generates and sends transactions to the DUT.

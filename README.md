@@ -29,6 +29,7 @@ Before running the simulation, ensure that the required tools (Vivado or Vitis) 
 $ source /opt/Xilinx/Vitis/2024.1/settings64.sh 
 # or
 $ source /opt/Xilinx/Vivado/2024.1/.settings64-Vivado.sh 
+
 ```
 
 ### Step 2: Run the simulation script
@@ -63,6 +64,13 @@ To run a specific test case:
 $ ../bin/xrun.sh -top RISCV_tb_top --name_of_test RISCV_store_test --c -vivado "--g -view RISCV_tb_top_sim.wcfg"
 ```
 - `--name_of_test RISCV_store_test`: Specifies the test case to run (default is `RISCV_store_test`).
+
+```
+   $ bash ./bin/xrun.sh --top RISCV_tb_top --name_of_test RISCV_sw_test --vivado "--R"
+   $ bash ./bin/xrun.sh --top RISCV_tb_top --name_of_test RISCV_sh_test --vivado "--R"
+   $ bash ./bin/xrun.sh --top RISCV_tb_top --name_of_test RISCV_sb_test --vivado "--R"
+   $ bash ./bin/xrun.sh --top RISCV_tb_top --name_of_test RISCV_lui_test --vivado "--R"
+   $ bash ./bin/xrun.sh --top RISCV_tb_top --name_of_test RISCV_auipc_test --vivado "--R"
 
 ### Step 3: Analyze results
 - For batch mode, check the console output for pass/fail status and logs.
