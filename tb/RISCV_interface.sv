@@ -33,9 +33,9 @@ interface RISCV_interface
     output data_wr;
     output data_addr;
     output data_wr_en_ma;
-
-    input instr_ready;
-    input data_ready;
+    output data_ready;
+    output instr_ready;
+    
     input inst_rd_en;
     input inst_ctrl_cpu;
     input data_rd_en_ctrl;
