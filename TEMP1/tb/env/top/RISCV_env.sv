@@ -1,8 +1,16 @@
+//------------------------------------------------------------------------------
+// Environment module for RISCV
+//------------------------------------------------------------------------------
+// This module instantiates agents, monitors, and other components for the RISCV environment.
+//
+// Author: Gustavo Santiago
+// Date  : June 2025
+//------------------------------------------------------------------------------
 
 `ifndef RISCV_ENV
 `define RISCV_ENV
 
-class RISCV_env extends uvm_env;
+class RISCV_environment extends uvm_env;
  
   /*
    * Declaration of components
@@ -15,9 +23,11 @@ class RISCV_env extends uvm_env;
   /*
    * Register with factory
    */
-
-  `uvm_component_utils(RISCV_env)
-
+  `uvm_component_utils(RISCV_environment)
+     
+  /*
+   * Constructor
+   */
   function new(string name, uvm_component parent);
     super.new(name, parent);
   endfunction : new
@@ -44,7 +54,10 @@ class RISCV_env extends uvm_env;
     ref_model.rm2sb_port.connect(sb.rm2sb_export);
   endfunction : connect_phase
 
+endclass : RISCV_environment
 
-endclass : RISCV_env
+`endif
 
-`endif // RISCV_ENV
+
+
+

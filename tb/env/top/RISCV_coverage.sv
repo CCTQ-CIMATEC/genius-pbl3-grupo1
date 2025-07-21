@@ -1,79 +1,139 @@
-//------------------------------------------------------------------------------
-// Coverage collection module for RISCV
-//------------------------------------------------------------------------------
-// This module collects functional coverage for the RISCV environment.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
+// `ifndef RISCV_COVERAGE
+// `define RISCV_COVERAGE
+
+// class RISCV_coverage#(type T = RISCV_transaction) extends uvm_subscriber#(T);
+
+//   `uvm_component_utils(RISCV_coverage)
+
+//   covergroup sw_cg with function sample(T trans);
+//     option.per_instance = 1;
+    
+//     // Instruction fields
+//     cp_opcode: coverpoint trans.instr_data[6:0] {
+//       bins sw = {7'b0100011};
+//     }
+//     cp_funct3: coverpoint trans.instr_data[14:12] {
+//       bins sw = {3'b010};
+//     }
+    
+//     // Address characteristics
+//     cp_addr_align: coverpoint trans.data_addr[1:0] {
+//       bins aligned = {2'b00};
+//       illegal_bins unaligned = {[1:3]};
+//     }
+    
+//     // Control signals
+//     cp_wr_en: coverpoint trans.data_wr_en_ma {
+//       bins active = {1'b1};
+//       bins inactive = {1'b0};
+//     }
+    
+//     // Cross coverage
+//     cross cp_opcode, cp_funct3, cp_wr_en;
+//   endgroup
+
+//   function new(string name = "RISCV_coverage", uvm_component parent);
+//     super.new(name, parent);
+//     sw_cg = new();
+//   endfunction
+
+//   function void write(T t);
+//     if (t.instr_data[6:0] == 7'b0100011 && t.instr_data[14:12] == 3'b010) begin
+//       sw_cg.sample(t);
+//       `uvm_info(get_type_name(), 
+//         $sformatf("Coverage: SW wr_en=%b, addr=0x%08h", 
+//         t.data_wr_en_ma, t.data_addr), 
+//         UVM_HIGH)
+//     end
+//   endfunction
+
+// endclass
+
+// `endif
 
 `ifndef RISCV_COVERAGE
 `define RISCV_COVERAGE
 
 class RISCV_coverage#(type T = RISCV_transaction) extends uvm_subscriber#(T);
 
-  /*
-   * Local copy of the transaction for coverage sampling
-   */
-  RISCV_transaction cov_trans;
   `uvm_component_utils(RISCV_coverage)
 
-  /*
-   * Covergroup for functional coverage of store instructions
-   */
-  covergroup riscv_store_cg;
+  covergroup sw_cg with function sample(T trans);
     option.per_instance = 1;
-
-    // Coverpoint for opcode (bits [6:0] of instr_data)
-    cp_opcode: coverpoint cov_trans.instr_data[6:0] {
-      bins sb = {7'b0100011}; // opcode for STORE group
+    option.name = "riscv_sw_coverage";
+    
+    // Instruction fields
+    cp_opcode: coverpoint trans.instr_data[6:0] {
+      bins sw = {7'b0100011};
     }
-
-    // Coverpoint for funct3 (bits [14:12] of instr_data)
-    cp_funct3: coverpoint cov_trans.instr_data[14:12] {
-      bins sb_bin = {3'b000}; // SB
-      bins sh_bin = {3'b001}; // SH
-      bins sw_bin = {3'b010}; // SW
+    
+    cp_funct3: coverpoint trans.instr_data[14:12] {
+      bins sw    = {3'b010};
+      bins other = default;
     }
-
-    // Coverpoint for instr_ready signal
-    cp_instr_ready: coverpoint cov_trans.instr_ready {
-      bins ready     = {1};
-      bins not_ready = {0};
+    
+    // Register usage
+    cp_rs1: coverpoint trans.instr_data[19:15] {
+      bins zero     = {0};
+      bins non_zero = {[1:31]};
     }
-
-    // Coverpoint for address being written to
-    cp_data_addr: coverpoint cov_trans.data_addr {
-      bins low_addr  = {[32'h0000_0000 : 32'h0000_00FF]};
-      bins mid_addr  = {[32'h0000_0100 : 32'h0000_0FFF]};
-      bins high_addr = {[32'h0000_1000 : 32'hFFFF_FFFF]};
+    
+    cp_rs2: coverpoint trans.instr_data[24:20] {
+      bins zero     = {0};
+      bins non_zero = {[1:31]};
     }
-
-    // Coverpoint for data being written
-    cp_data_wr: coverpoint cov_trans.data_wr {
-      bins zero_val     = {32'd0};
-      bins all_ones_val = {32'hFFFF_FFFF};
-      bins small_val    = {[32'd1 : 32'd255]};
-      bins large_val    = {[32'd256 : 32'hFFFF_FFFF]};
+    
+    // Address characteristics
+    cp_addr_align: coverpoint trans.data_addr[1:0] {
+      bins aligned    = {2'b00};
+      illegal_bins unaligned = {[1:3]};
     }
-
+    
+    // Control signals
+    cp_wr_en: coverpoint trans.data_wr_en_ma {
+      bins active   = {1'b1};
+      bins inactive = {1'b0};
+    }
+    
+    // Cross coverage
+    cross_valid_sw: cross cp_opcode, cp_funct3, cp_rs1, cp_rs2 {
+      ignore_bins invalid = binsof(cp_opcode.sw) && 
+                           binsof(cp_funct3.sw) &&
+                           (binsof(cp_rs1.zero) || binsof(cp_rs2.zero));
+    }
+    
+    cross_wr_ops: cross cp_opcode, cp_funct3, cp_wr_en;
   endgroup
 
-  /*
-   * Constructor: Initializes the coverage group and transaction object.
-   */
   function new(string name = "RISCV_coverage", uvm_component parent);
     super.new(name, parent);
-    riscv_store_cg = new();
-    cov_trans = new();
+    sw_cg = new();
   endfunction
 
-  /*
-   * Coverage sampling callback
-   */
-  function void write(RISCV_transaction t);
-    this.cov_trans = t;
-    riscv_store_cg.sample();
+  function void write(T t);
+    if (t.instr_data[6:0] == 7'b0100011) begin
+      if (t.instr_data[14:12] == 3'b010) begin // SW
+        `uvm_info(get_type_name(), 
+          $sformatf("Coverage: SW rs1=x%0d, rs2=x%0d, wr_en=%b, addr=0x%08h", 
+          t.instr_data[19:15], t.instr_data[24:20], 
+          t.data_wr_en_ma, t.data_addr), 
+          UVM_MEDIUM)
+          
+        sw_cg.sample(t);
+      end
+      else begin
+        `uvm_info(get_type_name(),
+          $sformatf("Unsupported store type: funct3=%0d", t.instr_data[14:12]),
+          UVM_HIGH)
+      end
+    end
+  endfunction
+
+  function void report_phase(uvm_phase phase);
+    super.report_phase(phase);
+    `uvm_info(get_type_name(),
+      $sformatf("Coverage SW Instructions: %0.2f%%", sw_cg.get_inst_coverage()),
+      UVM_LOW)
   endfunction
 
 endclass

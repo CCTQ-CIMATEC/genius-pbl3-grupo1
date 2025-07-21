@@ -1,12 +1,3 @@
-//------------------------------------------------------------------------------
-// Transaction class for RISCV operations
-//------------------------------------------------------------------------------
-// This class defines the transaction fields and constraints for RISCV operations.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
-
 `ifndef RISCV_TRANSACTION 
 `define RISCV_TRANSACTION
 
@@ -32,20 +23,40 @@ class RISCV_transaction extends uvm_sequence_item;
   // Instruction type name, useful for debugging and logging
   string instr_name;
 
+
+  rand bit [31:0] data_mem_address;
+  rand bit [31:0] data_mem_write_data;
+  rand bit        data_mem_write_enable;
+  string     event_type;
+  rand bit [7:0]  simon_led_state_actual;
+  rand bit [7:0]  simon_led_state_expected;
+  rand bit [7:0]  simon_buzzer_state_actual;
+  rand bit [7:0]  simon_buzzer_state_expected;
+
   `uvm_object_utils_begin(RISCV_transaction)
-    `uvm_field_int(instr_ready,       UVM_ALL_ON)
-    `uvm_field_int(instr_data,        UVM_ALL_ON)
-    `uvm_field_int(data_ready,        UVM_ALL_ON)
-    `uvm_field_int(data_rd,           UVM_ALL_ON)
-    `uvm_field_int(inst_rd_en,        UVM_ALL_ON)
-    `uvm_field_int(inst_ctrl_cpu,     UVM_ALL_ON)
-    `uvm_field_int(inst_addr,         UVM_ALL_ON)
-    `uvm_field_int(data_wr,           UVM_ALL_ON)
-    `uvm_field_int(data_addr,         UVM_ALL_ON)
-    `uvm_field_int(data_rd_en_ctrl,   UVM_ALL_ON)
-    `uvm_field_int(data_rd_en_ma,     UVM_ALL_ON)
-    `uvm_field_int(data_wr_en_ma,     UVM_ALL_ON)
-    `uvm_field_string(instr_name,     UVM_ALL_ON)
+    `uvm_field_int(instr_ready,               UVM_ALL_ON)
+    `uvm_field_int(instr_data,                UVM_ALL_ON)
+    `uvm_field_int(data_ready,                UVM_ALL_ON)
+    `uvm_field_int(data_rd,                   UVM_ALL_ON)
+    `uvm_field_int(inst_rd_en,                UVM_ALL_ON)
+    `uvm_field_int(inst_ctrl_cpu,             UVM_ALL_ON)
+    `uvm_field_int(inst_addr,                 UVM_ALL_ON)
+    `uvm_field_int(data_wr,                   UVM_ALL_ON)
+    `uvm_field_int(data_addr,                 UVM_ALL_ON)
+    `uvm_field_int(data_rd_en_ctrl,           UVM_ALL_ON)
+    `uvm_field_int(data_rd_en_ma,             UVM_ALL_ON)
+    `uvm_field_int(data_wr_en_ma,             UVM_ALL_ON)
+    `uvm_field_string(instr_name,             UVM_ALL_ON)
+
+    
+    `uvm_field_int(data_mem_address,          UVM_ALL_ON)
+    `uvm_field_int(data_mem_write_data,       UVM_ALL_ON)
+    `uvm_field_int(data_mem_write_enable,     UVM_ALL_ON)
+    `uvm_field_string(event_type,             UVM_ALL_ON)
+    `uvm_field_int(simon_led_state_actual,    UVM_ALL_ON)
+    `uvm_field_int(simon_led_state_expected,  UVM_ALL_ON)
+    `uvm_field_int(simon_buzzer_state_actual, UVM_ALL_ON)
+    `uvm_field_int(simon_buzzer_state_expected, UVM_ALL_ON)
   `uvm_object_utils_end
 
   // Constructor
@@ -57,6 +68,7 @@ class RISCV_transaction extends uvm_sequence_item;
    * Method: post_randomize
    */
   function void post_randomize();
+    // colocar lógica de pós-randomização aqui!!!!!
   endfunction 
 
 endclass

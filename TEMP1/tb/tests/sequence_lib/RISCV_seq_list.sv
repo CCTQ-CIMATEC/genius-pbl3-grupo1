@@ -1,3 +1,5 @@
+
+
 `ifndef RISCV_SEQ_LIST 
 `define RISCV_SEQ_LIST
 
@@ -13,11 +15,7 @@ package RISCV_seq_list;
   /*
    * Including RISCV store sequence 
    */
-  `include "RISCV_sw_seq.sv" 
-  `include "RISCV_sh_seq.sv" 
-  `include "RISCV_sb_seq.sv"  
-  `include "RISCV_lui_seq.sv"
-  `include "RISCV_auipc_seq.sv"
+  `include "RISCV_store_seq.sv"
 
 endpackage
 
