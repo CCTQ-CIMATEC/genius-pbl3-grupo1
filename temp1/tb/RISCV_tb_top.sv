@@ -3,7 +3,7 @@
 `include "uvm_macros.svh"
 `include "RISCV_interface.sv"
 import uvm_pkg::*;
-// import riscv_definitions::*; 
+import riscv_definitions::*; 
 
 module RISCV_tb_top;
    
