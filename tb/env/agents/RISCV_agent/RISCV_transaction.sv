@@ -10,6 +10,8 @@ class RISCV_transaction extends uvm_sequence_item;
   rand bit data_ready;
   rand bit [31:0] data_rd;
 
+  rand bit [31:0] pc;  // PC field for instructions that need it (AUIPC)
+
   // Expected output signals from the CPU (used by monitor or scoreboard)
   bit inst_rd_en;
   bit [3:0] inst_ctrl_cpu;
@@ -57,6 +59,12 @@ class RISCV_transaction extends uvm_sequence_item;
     `uvm_field_int(simon_led_state_expected,  UVM_ALL_ON)
     `uvm_field_int(simon_buzzer_state_actual, UVM_ALL_ON)
     `uvm_field_int(simon_buzzer_state_expected, UVM_ALL_ON)
+
+
+    `uvm_field_int(instr_ready,               UVM_ALL_ON)
+    `uvm_field_int(instr_data,                UVM_ALL_ON)
+    `uvm_field_int(pc,                        UVM_ALL_ON)  
+    `uvm_field_int(data_ready,                UVM_ALL_ON)
   `uvm_object_utils_end
 
   // Constructor
