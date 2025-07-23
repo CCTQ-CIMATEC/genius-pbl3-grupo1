@@ -23,6 +23,13 @@ package RISCV_test_list;
   `include "RISCV_slt_test.sv"
   `include "RISCV_addi_test.sv"
   `include "RISCV_ori_test.sv"
+  `include "RISCV_sll_test.sv" 
+  `include "RISCV_slli_test.sv" 
+  `include "RISCV_srl_test.sv" 
+  `include "RISCV_slti_test.sv" 
+  `include "RISCV_sltiu_test.sv" 
+  `include "RISCV_sltu_test.sv" 
+  `include "RISCV_srai_test.sv" 
 
 endpackage 
 

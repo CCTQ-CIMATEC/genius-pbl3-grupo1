@@ -29,7 +29,13 @@ package RISCV_seq_list;
   `include "RISCV_slt_seq.sv"
   `include "RISCV_addi_seq.sv"
   `include "RISCV_ori_seq.sv"
-
+  `include "RISCV_sll_seq.sv" 
+  `include "RISCV_slli_seq.sv" 
+  `include "RISCV_srl_seq.sv" 
+  `include "RISCV_slti_seq.sv" 
+  `include "RISCV_sltiu_seq.sv" 
+  `include "RISCV_sltu_seq.sv" 
+   `include "RISCV_srai_seq.sv" 
 
 endpackage
 
