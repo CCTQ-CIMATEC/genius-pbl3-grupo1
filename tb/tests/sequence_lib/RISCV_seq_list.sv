@@ -20,7 +20,16 @@ package RISCV_seq_list;
   import RISCV_env_pkg::*;
 
   `include "RISCV_store_seq.sv"
+  `include "RISCV_rtype_seq.sv"
+  `include "RISCV_and_seq.sv"
+  `include "RISCV_add_seq.sv"
+  `include "RISCV_sub_seq.sv"
+  `include "RISCV_xor_seq.sv"
+  `include "RISCV_or_seq.sv"
+  `include "RISCV_slt_seq.sv"
   `include "RISCV_addi_seq.sv"
+  `include "RISCV_ori_seq.sv"
+
 
 endpackage
 

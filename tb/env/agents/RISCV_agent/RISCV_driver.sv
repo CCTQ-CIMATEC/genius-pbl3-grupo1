@@ -21,8 +21,9 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
   endfunction
 
   virtual task run_phase(uvm_phase phase);
-    reset();
+  //  reset();
     wait(vif.reset);
+   
     forever begin
       seq_item_port.get_next_item(req);
       drive();
@@ -42,10 +43,14 @@ class RISCV_driver extends uvm_driver #(RISCV_transaction);
    * Dirige os sinais da transação para o DUT via interface.
    */
  task drive();
+
+  @(vif.dr_cb);
     
     // Drive instruction to DUT
-    vif.instr_data <= req.instr_data;
-    vif.data_rd    <= req.data_rd;
+    vif.dr_cb.instr_data  <= req.instr_data;
+    vif.dr_cb.data_rd     <= req.data_rd;
+    vif.dr_cb.data_ready  <= 1;
+    vif.dr_cb.instr_ready <= 1;
     
     `uvm_info(get_full_name(), $sformatf("Driving instruction: %s", req.instr_name), UVM_LOW);
 endtask
