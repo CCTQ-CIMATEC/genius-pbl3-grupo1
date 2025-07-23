@@ -32,7 +32,7 @@ package RISCV_seq_list;
   `include "RISCV_slt_seq.sv"
   `include "RISCV_addi_seq.sv"
   `include "RISCV_ori_seq.sv"
-
+  `include "RISCV_lbi_seq.sv"
 
 endpackage
 
