@@ -98,23 +98,23 @@ class RISCV_ref_model extends uvm_component;
     exp_trans_local.copy(input_trans);
     
     // Decode instruction fields
-    opcode = input_trans.instr_data[6:0];
-    funct3 = input_trans.instr_data[14:12];
-    funct7 = input_trans.instr_data[31:25];
+    opcode    = input_trans.instr_data[6:0];
+    funct3    = input_trans.instr_data[14:12];
+    funct7    = input_trans.instr_data[31:25];
     reg1_addr = input_trans.instr_data[19:15];
     reg2_addr = input_trans.instr_data[24:20];
-    reg_dest = input_trans.instr_data[11:7];
+    reg_dest  = input_trans.instr_data[11:7];
 
     // Get register values
     rs1 = (reg1_addr == 0) ? 32'h0 : regfile[reg1_addr];
     rs2 = (reg2_addr == 0) ? 32'h0 : regfile[reg2_addr];
     
     // Decode immediate values for different instruction types
-    imm_i = {{20{input_trans.instr_data[31]}}, input_trans.instr_data[31:20]};
-    imm_s = {{20{input_trans.instr_data[31]}}, input_trans.instr_data[31:25], input_trans.instr_data[11:7]};
-    imm_sb = {{19{input_trans.instr_data[31]}}, input_trans.instr_data[31], input_trans.instr_data[7], input_trans.instr_data[30:25], input_trans.instr_data[11:8], 1'b0};
-    imm_u = {input_trans.instr_data[31:12], 12'h0};
-    imm_uj = {{11{input_trans.instr_data[31]}}, input_trans.instr_data[31], input_trans.instr_data[19:12], input_trans.instr_data[20], input_trans.instr_data[30:21], 1'b0};
+    imm_i   = {{20{input_trans.instr_data[31]}}, input_trans.instr_data[31:20]};
+    imm_s   = {{20{input_trans.instr_data[31]}}, input_trans.instr_data[31:25], input_trans.instr_data[11:7]};
+    imm_sb  = {{19{input_trans.instr_data[31]}}, input_trans.instr_data[31], input_trans.instr_data[7], input_trans.instr_data[30:25], input_trans.instr_data[11:8], 1'b0};
+    imm_u   = {input_trans.instr_data[31:12], 12'h0};
+    imm_uj  = {{11{input_trans.instr_data[31]}}, input_trans.instr_data[31], input_trans.instr_data[19:12], input_trans.instr_data[20], input_trans.instr_data[30:21], 1'b0};
     
     // Initialize writeback info
     wb = '{rd: 0, value: 0, we: 0};

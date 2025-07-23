@@ -1,6 +1,8 @@
-
 `ifndef RISCV_ADDI_SEQ
 `define RISCV_ADDI_SEQ
+
+`define NO_OF_TRANSACTIONS 10 
+
 
 class RISCV_addi_seq extends uvm_sequence#(RISCV_transaction);
 
