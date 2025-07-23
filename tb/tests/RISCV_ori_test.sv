@@ -30,7 +30,7 @@ class RISCV_ori_test extends uvm_test;
    */
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
-    seq.start(env.RISCV_agnt.sequencer);
+    seq.start(env.riscv_agent.sequencer);
     phase.drop_objection(this);
   endtask : run_phase
 endclass

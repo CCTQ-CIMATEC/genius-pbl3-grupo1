@@ -4,7 +4,6 @@
 `include "uvm_macros.svh"
 import uvm_pkg::*;
 
-`define NO_OF_TRANSACTIONS 10 
  
 class RISCV_ori_seq extends uvm_sequence#(RISCV_transaction);
  

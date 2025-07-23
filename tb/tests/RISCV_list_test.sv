@@ -15,6 +15,7 @@ package RISCV_test_list;
   `include "RISCV_store_test.sv"
   //`include "RISCV_load_test.sv" 
 `include "RISCV_andi_test.sv" 
+`include "RISCV_xori_test.sv" 
 
 endpackage 
 
