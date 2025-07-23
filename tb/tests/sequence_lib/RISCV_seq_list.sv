@@ -30,6 +30,9 @@ package RISCV_seq_list;
   `include "RISCV_xor_seq.sv"
   `include "RISCV_or_seq.sv"
   `include "RISCV_slt_seq.sv"
+  `include "RISCV_addi_seq.sv"
+  `include "RISCV_ori_seq.sv"
+
 
 endpackage
 

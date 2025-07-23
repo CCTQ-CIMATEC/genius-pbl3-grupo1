@@ -21,6 +21,8 @@ package RISCV_test_list;
   `include "RISCV_xor_test.sv"
   `include "RISCV_or_test.sv"
   `include "RISCV_slt_test.sv"
+  `include "RISCV_addi_test.sv"
+  `include "RISCV_ori_test.sv"
 
 endpackage 
 
