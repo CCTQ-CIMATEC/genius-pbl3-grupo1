@@ -10,12 +10,6 @@ class RISCV_ori_seq extends uvm_sequence#(RISCV_transaction);
  
   `uvm_object_utils(RISCV_ori_seq)
  
-  // Campos que serão randomizados
-  rand bit [31:0] rs1_value; 
-  rand bit [31:0] rd_value;  
- 
-  logic [31:0] regfile[32];
- 
   rand bit [11:0] imm;  
   rand bit [4:0]  rs1_addr;  
   rand bit [4:0]  rd_addr;  
@@ -35,21 +29,16 @@ class RISCV_ori_seq extends uvm_sequence#(RISCV_transaction);
       req = RISCV_transaction::type_id::create("req");
       start_item(req);
  
-      if (!randomize(imm, rs1_addr, rd_addr, rs1_value)) begin
+      if (!randomize(imm, rs1_addr, rd_addr)) begin
         `uvm_fatal(get_type_name(), "Randomization failed!");
       end
- 
-      // Calcula o resultado esperado da operação OR com imediato
-      // O imediato é sign-extended para 32 bits
-      rd_value = rs1_value | {{20{imm[11]}}, imm};
  
       // Monta a instrução tipo I (ORI)
       req.instr_data = {
        imm, rs1_addr, ORI_FUNCT3, rd_addr, ORI_OPCODE
       };
  
-      req.instr_name = $sformatf("ORI x%0d, x%0d, %0d | VALUES: 0x%08h | 0x%08h = 0x%08h", 
-                                rd_addr, rs1_addr, $signed(imm), rs1_value, {{20{imm[11]}}, imm}, rd_value);
+      req.instr_name = $sformatf("ORI x%0d, x%0d, %0d |", rd_addr, rs1_addr, $signed(imm));
  
       `uvm_info(get_full_name(), $sformatf("Generated ORI instruction: %s", req.instr_name), UVM_LOW);
  

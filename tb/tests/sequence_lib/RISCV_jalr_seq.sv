@@ -8,13 +8,6 @@ class RISCV_jalr_seq extends uvm_sequence#(RISCV_transaction);
  
   `uvm_object_utils(RISCV_jalr_seq)
  
-  // Campos que serão randomizados
-  rand bit [31:0] rs1_value; 
-  rand bit [31:0] pc_value;   // Current PC for JALR calculation
-  bit [31:0]      rd_value;   // Output of the instruction (pc + 4)
- 
-  logic [31:0]  regfile[32];
- 
   rand bit [11:0] imm;  
   rand bit [4:0]  rs1_addr;  
   rand bit [4:0]  rd_addr;  
@@ -33,7 +26,7 @@ class RISCV_jalr_seq extends uvm_sequence#(RISCV_transaction);
       req = RISCV_transaction::type_id::create("req");
       start_item(req);
  
-      if (!randomize(imm, rs1_addr, rd_addr, rs1_value, pc_value)) begin
+      if (!randomize(imm, rs1_addr, rd_addr)) begin
         `uvm_fatal(get_type_name(), "Randomization failed!");
       end
  

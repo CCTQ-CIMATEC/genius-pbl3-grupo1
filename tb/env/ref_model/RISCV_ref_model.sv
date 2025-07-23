@@ -58,8 +58,8 @@ class RISCV_ref_model extends uvm_component;
   task run_phase(uvm_phase phase);
     forever begin
       // Apply writeback from the oldest entry in the queue
-      
-      //`uvm_info(get_full_name(), "\n\n\nReference model run_phase started\n\n\n", UVM_LOW);
+
+      pc = pc + 4;      
       
       if (writeback_queue[0].we && writeback_queue[0].rd != 0) begin
           `uvm_info(get_full_name(), $sformatf("\n\n Writing back: x%0d = 0x%08x\n\n", 
