@@ -154,11 +154,11 @@ class RISCV_ref_model extends uvm_component;
         wb.rd = reg_dest;
         wb.we = 1;
         case (funct3)
-          3'b000: wb.value = {{24{exp_trans_local.data_rd[7]}}, exp_trans_local.data_rd[7:0]};   // LB (sign-extend byte)
-          3'b001: wb.value = {{16{exp_trans_local.data_rd[15]}}, exp_trans_local.data_rd[15:0]}; // LH (sign-extend halfword)
-          3'b010: wb.value = exp_trans_local.data_rd;                                            // LW (full word)
-          3'b100: wb.value = {24'h0, exp_trans_local.data_rd[7:0]};                             // LBU (zero-extend byte)
-          3'b101: wb.value = {16'h0, exp_trans_local.data_rd[15:0]};                            // LHU (zero-extend halfword)
+          3'b000: wb.value = {{24{exp_trans_local.data_rd[7]}}, exp_trans_local.data_rd[7:0]};    // LB (sign-extend byte)
+          3'b001: wb.value = {{16{exp_trans_local.data_rd[15]}}, exp_trans_local.data_rd[15:0]};  // LH (sign-extend halfword)
+          3'b010: wb.value = exp_trans_local.data_rd;                                             // LW (full word)
+          3'b100: wb.value = {24'h0, exp_trans_local.data_rd[7:0]};                               // LBU (zero-extend byte)
+          3'b101: wb.value = {16'h0, exp_trans_local.data_rd[15:0]};                              // LHU (zero-extend halfword)
         endcase
       end
 
@@ -167,15 +167,17 @@ class RISCV_ref_model extends uvm_component;
         wb.rd = reg_dest;
         wb.we = 1;
         case (funct3)
-          3'b000: wb.value = rs1 + imm_i;                                    // ADDI
-          3'b001: wb.value = rs1 << imm_i[4:0];                             // SLLI
-          3'b100: wb.value = rs1 ^ imm_i;                                    // XORI
+          3'b000: wb.value = rs1 + imm_i;                                          // ADDI
+          3'b001: wb.value = rs1 << imm_i[4:0];                                    // SLLI
+          3'b010: wb.value = ($signed(rs1) < $signed(imm_i)) ? 1 : 0;              // SLTI
+          3'b011: wb.value = ($unsigned(rs1) < $unsigned(imm_i)) ? 1 : 0;          // SLTIU
+          3'b100: wb.value = rs1 ^ imm_i;                                          // XORI
           3'b101: begin // SRLI/SRAI
             if (funct7 == 7'b0000000) wb.value = rs1 >> imm_i[4:0];                // SRLI
             else if (funct7 == 7'b0100000) wb.value = $signed(rs1) >>> imm_i[4:0]; // SRAI
           end
-          3'b110: wb.value = rs1 | imm_i;                                    // ORI
-          3'b111: wb.value = rs1 & imm_i;                                    // ANDI
+          3'b110: wb.value = rs1 | imm_i;                                          // ORI
+          3'b111: wb.value = rs1 & imm_i;                                          // ANDI
         endcase
         exp_trans_local.data_addr = wb.value;
       end
@@ -195,9 +197,9 @@ class RISCV_ref_model extends uvm_component;
         exp_trans_local.data_addr = mem_addr;
         exp_trans_local.data_wr_en_ma = 1;
         case (funct3)
-          3'b000: exp_trans_local.data_wr = {24'h0, rs2[7:0]};   // SB
-          3'b001: exp_trans_local.data_wr = {16'h0, rs2[15:0]};  // SH
-          3'b010: exp_trans_local.data_wr = rs2;                 // SW
+          3'b000: exp_trans_local.data_wr = {24'h0, rs2[7:0]};                     // SB
+          3'b001: exp_trans_local.data_wr = {16'h0, rs2[15:0]};                    // SH
+          3'b010: exp_trans_local.data_wr = rs2;                                   // SW
         endcase
       end
 
