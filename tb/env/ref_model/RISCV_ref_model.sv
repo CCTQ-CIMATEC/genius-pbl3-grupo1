@@ -191,7 +191,7 @@ class RISCV_ref_model extends uvm_component;
         exp_trans_local.data_addr = wb.value;
       end
 
-      // S-type Store instructions (0100011)
+      // S-type Store instructions
       7'b0100011: begin
         mem_addr = rs1 + imm_s;
         exp_trans_local.data_addr = mem_addr;
@@ -203,22 +203,22 @@ class RISCV_ref_model extends uvm_component;
         endcase
       end
 
-      // SB-type Branch instructions (1100011) - Note: Your table shows 1100111 but that's JALR, branches are typically 1100011
+      // SB-type Branch instructions
       7'b1100011: begin
         case (funct3)
           3'b000: branch_taken = (rs1 == rs2);                                    // BEQ
           3'b001: branch_taken = (rs1 != rs2);                                    // BNE
-          3'b100: branch_taken = ($signed(rs1) < $signed(rs2));                  // BLT
-          3'b101: branch_taken = ($signed(rs1) >= $signed(rs2));                 // BGE
+          3'b100: branch_taken = ($signed(rs1) < $signed(rs2));                   // BLT
+          3'b101: branch_taken = ($signed(rs1) >= $signed(rs2));                  // BGE
           3'b110: branch_taken = (rs1 < rs2);                                     // BLTU (unsigned)
-          3'b111: branch_taken = (rs1 >= rs2);                                   // BGEU (unsigned)
+          3'b111: branch_taken = (rs1 >= rs2);                                    // BGEU (unsigned)
         endcase
         if (branch_taken) pc = pc + imm_sb;
         else pc = pc + 4;
         exp_trans_local.data_addr = pc;
       end
 
-      // U-type LUI instruction (0110111)
+      // U-type LUI instruction
       7'b0110111: begin
         wb.rd = reg_dest;
         wb.we = 1;
@@ -226,7 +226,7 @@ class RISCV_ref_model extends uvm_component;
         exp_trans_local.data_addr = wb.value;
       end
 
-      // UJ-type JAL instruction (1101111)
+      // UJ-type JAL instruction
       7'b1101111: begin
         wb.rd = reg_dest;
         wb.we = 1;
