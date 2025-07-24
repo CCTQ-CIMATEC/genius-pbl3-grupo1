@@ -4,7 +4,7 @@ UVM Log Parser - Extracts important information from UVM simulation logs
 Located in bin/ directory, processes xsim.log from build/ directory
 Parses RISC-V test logs and extracts:
 - Test information
-- Instructions generated
+- Instructions generated (including human-readable instruction names)
 - Expected vs Actual comparisons
 - Errors and warnings
 - Test results
@@ -25,6 +25,7 @@ class InstructionInfo:
     """Information about a driven instruction"""
     name: str
     hex_data: str
+    instr_name: str
     timestamp: str
     transaction_id: str
 
@@ -46,7 +47,7 @@ class ComparisonInfo:
 class TestResult:
     """Overall test result information"""
     test_name: str
-    status: str  # PASSED, FAILED, ERROR
+    status: str
     total_time: str
     uvm_info_count: int
     uvm_warning_count: int
@@ -124,24 +125,39 @@ class UVMLogParser:
                     timestamp_match = re.search(r'@ (\d+):', line)
                     timestamp = timestamp_match.group(1) if timestamp_match else "unknown"
                     
-                    # Look for instruction data in following lines
+                    # Look for instruction data and human-readable name in following lines
                     hex_data = "unknown"
                     transaction_id = "unknown"
+                    human_readable_instr = "unknown"
                     
-                    # Scan next 20 lines for instr_data
-                    for j in range(i+1, min(i+21, len(self.lines))):
-                        if 'instr_data' in self.lines[j] and "'h" in self.lines[j]:
-                            hex_match = re.search(r"'h([0-9a-fA-F]+)", self.lines[j])
+                    # Scan next 30 lines for instr_data and instr_name
+                    for j in range(i+1, min(i+31, len(self.lines))):
+                        current_line = self.lines[j]
+                        
+                        # Look for hex data
+                        if 'instr_data' in current_line and "'h" in current_line:
+                            hex_match = re.search(r"'h([0-9a-fA-F]+)", current_line)
                             if hex_match:
                                 hex_data = "0x" + hex_match.group(1)
-                        elif '@' in self.lines[j] and 'req' in self.lines[j]:
-                            trans_match = re.search(r'@(\d+)', self.lines[j])
+                        
+                        # Look for transaction ID
+                        elif '@' in current_line and 'req' in current_line:
+                            trans_match = re.search(r'@(\d+)', current_line)
                             if trans_match:
                                 transaction_id = trans_match.group(1)
+                        
+                        # Look for human-readable instruction name
+                        # Pattern: instr_name string 17 SRAI x26, x15, 27
+                        elif 'instr_name' in current_line and 'string' in current_line:
+                            # Extract everything after the number (instruction text)
+                            instr_match = re.search(r'instr_name\s+string\s+\d+\s+(.+)', current_line.strip())
+                            if instr_match:
+                                human_readable_instr = instr_match.group(1).strip()
                     
                     instructions.append(InstructionInfo(
                         name=instr_name,
                         hex_data=hex_data,
+                        instr_name=human_readable_instr,
                         timestamp=timestamp,
                         transaction_id=transaction_id
                     ))
@@ -369,7 +385,11 @@ def format_output(parsed_data: Dict) -> str:
     output.append("INSTRUCTIONS GENERATED:")
     if instructions:
         for i, instr in enumerate(instructions, 1):
-            output.append(f"  {i}. {instr.name} ({instr.hex_data}) @ {instr.timestamp}ps")
+            # Display both the instruction type and human-readable format
+            instr_display = f"{instr.name} ({instr.hex_data})"
+            if instr.instr_name != "unknown":
+                instr_display += f" - {instr.instr_name}"
+            output.append(f"  {i}. {instr_display} @ {instr.timestamp}ps")
     else:
         output.append("  No instructions found")
     output.append("")
