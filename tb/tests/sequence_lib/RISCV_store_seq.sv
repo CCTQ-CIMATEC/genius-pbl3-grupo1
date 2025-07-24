@@ -29,8 +29,6 @@ virtual task body();
     }) 
     `uvm_fatal(get_type_name(), "Randomization failed!");
     
-  
-
     if (funct3 == 3'b010) begin
       imm[1:0] = 2'b00; // Align to 4 bytes
     end

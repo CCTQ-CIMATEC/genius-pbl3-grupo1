@@ -33,6 +33,7 @@ package RISCV_seq_list;
   `include "RISCV_addi_seq.sv"
   `include "RISCV_ori_seq.sv"
   `include "RISCV_jalr_seq.sv"
+  `include "RISCV_beq_seq.sv"
 
 
 endpackage

@@ -21,6 +21,7 @@ class RISCV_or_seq extends uvm_sequence#(RISCV_transaction);
 
   virtual task body();
     repeat(`NO_OF_TRANSACTIONS) begin
+      
       req = RISCV_transaction::type_id::create("req");
       start_item(req);
 
