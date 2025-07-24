@@ -38,6 +38,7 @@ package RISCV_seq_list;
   `include "RISCV_blt_seq.sv"
   `include "RISCV_bltu_seq.sv"
   `include "RISCV_bge_seq.sv"
+  `include "RISCV_jal_seq.sv"
 
 endpackage
 
