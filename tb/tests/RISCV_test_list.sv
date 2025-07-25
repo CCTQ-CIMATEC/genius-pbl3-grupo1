@@ -20,8 +20,6 @@ package RISCV_test_list;
   `include "RISCV_sub_test.sv"
   `include "RISCV_xor_test.sv"
   `include "RISCV_or_test.sv"
-  `include "RISCV_slt_test.sv"
-  `include "RISCV_addi_test.sv"
   `include "RISCV_ori_test.sv"
   `include "RISCV_jalr_test.sv"
   `include "RISCV_beq_test.sv"
@@ -31,6 +29,24 @@ package RISCV_test_list;
   `include "RISCV_bltu_test.sv"
   `include "RISCV_jal_test.sv"
   `include "RISCV_srai_test.sv"
+  `include "RISCV_slt_test.sv"
+  `include "RISCV_addi_test.sv"
+  `include "RISCV_ori_test.sv"
+  `include "RISCV_sll_test.sv" 
+  `include "RISCV_slli_test.sv" 
+  `include "RISCV_srl_test.sv" 
+  `include "RISCV_slti_test.sv" 
+  `include "RISCV_sltiu_test.sv" 
+  `include "RISCV_sltu_test.sv" 
+  `include "RISCV_srai_test.sv" 
+
+  `include "RISCV_sw_test.sv" 
+  `include "RISCV_sh_test.sv"  
+  `include "RISCV_sb_test.sv"  
+  `include "RISCV_lui_test.sv"
+  `include "RISCV_auipc_test.sv"
+  `include "RISCV_xori_test.sv"
+  `include "RISCV_srli_test.sv"
 
 endpackage 
 
