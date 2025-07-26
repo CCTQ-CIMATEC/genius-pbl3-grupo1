@@ -25,6 +25,11 @@ package RISCV_test_list;
   `include "RISCV_ori_test.sv"
   `include "RISCV_jalr_test.sv"
   `include "RISCV_beq_test.sv"
+  `include "RISCV_lb_test.sv"
+  `include "RISCV_lh_test.sv"
+  `include "RISCV_lw_test.sv"
+  `include "RISCV_lbu_test.sv"
+  `include "RISCV_lhu_test.sv"
 
 endpackage 
 

@@ -34,6 +34,11 @@ package RISCV_seq_list;
   `include "RISCV_ori_seq.sv"
   `include "RISCV_jalr_seq.sv"
   `include "RISCV_beq_seq.sv"
+  `include "RISCV_lb_seq.sv"
+  `include "RISCV_lh_seq.sv"
+  `include "RISCV_lw_seq.sv"
+  `include "RISCV_lbu_seq.sv"
+  `include "RISCV_lhu_seq.sv"
 
 
 endpackage
