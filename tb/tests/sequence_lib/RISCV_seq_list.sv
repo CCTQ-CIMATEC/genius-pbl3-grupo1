@@ -46,7 +46,6 @@ package RISCV_seq_list;
   `include "RISCV_bge_seq.sv"
   `include "RISCV_jal_seq.sv"
   `include "RISCV_srai_seq.sv" 
-
   `include "RISCV_sw_seq.sv" 
   `include "RISCV_sh_seq.sv"  
   `include "RISCV_sb_seq.sv"  

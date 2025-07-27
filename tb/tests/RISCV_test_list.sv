@@ -39,7 +39,6 @@ package RISCV_test_list;
   `include "RISCV_sltiu_test.sv" 
   `include "RISCV_sltu_test.sv" 
   `include "RISCV_srai_test.sv" 
-
   `include "RISCV_sw_test.sv" 
   `include "RISCV_sh_test.sv"  
   `include "RISCV_sb_test.sv"  
