@@ -21,7 +21,7 @@ A simple RISC-V processor implementation with a structured verification environm
 | **Microarchitecture** | `[██████████] 100%` |
 | **RTL Design** | `[█████████░] 90%` |
 | **TB Environment** | `[██████████] 100%` |
-| **Functional Verification** | `[███░░░░░░░] 30%` |
+| **Functional Verification** | `[██████████] 100%` |
 | **RTL Signoff** | `[░░░░░░░░░░] 0%` |
 
 ---
