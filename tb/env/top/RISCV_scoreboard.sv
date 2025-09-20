@@ -1,11 +1,3 @@
-//------------------------------------------------------------------------------
-// Scoreboard module for RISCV
-//------------------------------------------------------------------------------
-// This module verifies transaction responses for the RISCV environment.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
 
 `ifndef RISCV_SCOREBOARD
 `define RISCV_SCOREBOARD
@@ -86,20 +78,21 @@ class RISCV_scoreboard extends uvm_scoreboard;
       `uvm_info(get_full_name(), $sformatf("Expected data = 0x%08x | Actual data = 0x%08x", exp_trans.data_wr, act_trans.data_wr), UVM_LOW);
       `uvm_info(get_full_name(), $sformatf("Expected write enable = %0b | Actual write enable = %0b", exp_trans.data_wr_en_ma, act_trans.data_wr_en_ma), UVM_LOW);
 
+
       if (exp_trans.instr_data !== act_trans.instr_data) begin
-        `uvm_error(get_full_name(), "Instruction MISMATCH");
+        `uvm_fatal(get_full_name(), "Instruction MISMATCH");
         error = 1;
       end
       if (exp_trans.data_addr !== act_trans.data_addr) begin
-        `uvm_error(get_full_name(), "Data address MISMATCH");
+        `uvm_fatal(get_full_name(), "Data address MISMATCH");
         error = 1;
       end
       if (exp_trans.data_wr !== act_trans.data_wr) begin
-        `uvm_error(get_full_name(), "Data write MISMATCH");
+        `uvm_fatal(get_full_name(), "Data write MISMATCH");
         error = 1;
       end
       if (exp_trans.data_wr_en_ma !== act_trans.data_wr_en_ma) begin
-        `uvm_error(get_full_name(), "Data write enable MISMATCH");
+        `uvm_fatal(get_full_name(), "Data write enable MISMATCH");
         error = 1;
       end
     end

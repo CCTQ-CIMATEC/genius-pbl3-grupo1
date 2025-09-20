@@ -1,39 +1,18 @@
-//------------------------------------------------------------------------------
-// UVM agent for RISCV transactions
-//------------------------------------------------------------------------------
-// This agent handles the driver, monitor, and sequencer for RISCV transactions.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
-
-`ifndef RISCV_AGENT 
+`ifndef RISCV_AGENT
 `define RISCV_AGENT
 
 class RISCV_agent extends uvm_agent;
 
-  /*
-   * Declaration of UVC components such as driver, monitor, sequencer, etc.
-   */
-  RISCV_driver    driver;
-  RISCV_sequencer sequencer;
-  RISCV_monitor   monitor;
+    RISCV_driver    driver;
+    RISCV_sequencer sequencer;
+    RISCV_monitor   monitor;
 
-  /*
-   * Declaration of component utils 
-   */
-  `uvm_component_utils(RISCV_agent)
+    `uvm_component_utils(RISCV_agent)
 
-  /*
-   * Constructor
-   */
   function new (string name, uvm_component parent);
-    super.new(name, parent);
+      super.new(name, parent);
   endfunction : new
 
-  /*
-   * Build phase: construct the components such as driver, monitor, sequencer, etc.
-   */
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     driver = RISCV_driver::type_id::create("driver", this);

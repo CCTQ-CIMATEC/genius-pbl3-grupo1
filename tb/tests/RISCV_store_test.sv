@@ -3,6 +3,10 @@
 `ifndef RISCV_STORE_TEST 
 `define RISCV_STORE_TEST
 
+import uvm_pkg::*;
+`include "uvm_macros.svh"
+import RISCV_env_pkg::*;
+
 class RISCV_store_test extends uvm_test;
  
   /*
@@ -10,7 +14,7 @@ class RISCV_store_test extends uvm_test;
    */
   `uvm_component_utils(RISCV_store_test)
  
-  RISCV_environment env;
+  RISCV_env env;
   RISCV_store_seq   seq;
  
   /*
@@ -27,7 +31,7 @@ class RISCV_store_test extends uvm_test;
    */
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    env = RISCV_environment::type_id::create("env", this);
+    env = RISCV_env::type_id::create("env", this);
     seq = RISCV_store_seq::type_id::create("seq");
   endfunction : build_phase
  
@@ -39,20 +43,10 @@ class RISCV_store_test extends uvm_test;
     phase.raise_objection(this);
     seq.start(env.RISCV_agnt.sequencer);
     phase.drop_objection(this);
+   #100;
+  $finish;
   endtask : run_phase
  
 endclass : RISCV_store_test
 
 `endif
-
-
-
-
-
-
-
-
-
-
-
-

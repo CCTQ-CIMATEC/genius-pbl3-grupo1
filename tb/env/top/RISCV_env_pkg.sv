@@ -1,12 +1,3 @@
-//------------------------------------------------------------------------------
-// Package for RISCV environment classes
-//------------------------------------------------------------------------------
-// This package includes the environment classes and declarations for the RISCV verification.
-//
-// Author: Gustavo Santiago
-// Date  : June 2025
-//------------------------------------------------------------------------------
-
 `ifndef RISCV_ENV_PKG
 `define RISCV_ENV_PKG
 
@@ -31,5 +22,3 @@ package RISCV_env_pkg;
 endpackage
 
 `endif
-
-
