@@ -1,5 +1,11 @@
-# RISCV Processor
+# P-RV32I Processor
 A simple RISC-V processor implementation with a structured verification environment.
+
+### Team members:
+- David Machado
+- Glenda Barbosa
+- Ramylla Bezerra
+- Paulo Paixão
 
 ## Source Organization
 - **RTL Design**: Located in the `rtl/` directory.
@@ -13,9 +19,9 @@ A simple RISC-V processor implementation with a structured verification environm
 | :--- | :--- |
 | **Conception** | `[██████████] 100%` |
 | **Microarchitecture** | `[██████████] 100%` |
-| **RTL Design** | `[████████░░] 80%` |
+| **RTL Design** | `[█████████░] 90%` |
 | **TB Environment** | `[██████████] 100%` |
-| **Functional Verification** | `[░░░░░░░░░░] 0%` |
+| **Functional Verification** | `[██████████] 100%` |
 | **RTL Signoff** | `[░░░░░░░░░░] 0%` |
 
 ---
@@ -45,7 +51,7 @@ $ ../bin/xrun.sh -top RISCV_tb_top -vivado "--R"
 #### Open the GUI
 To open the Vivado GUI for debugging:
 ```bash
-$ ../bin/xrun.sh -top RISCV_tb_top --c -vivado "--g"
+$ ../bin/xrun.sh -top testbench_riscv_top --c -vivado "--g"
 ```
 - `--c`: Cleans the build directory before running.
 - `--vivado "--g"`: Opens the simulation in GUI mode.
@@ -86,26 +92,6 @@ Options:
 Use -v "--R" to run all, --v "--g" to gui, and --v "--g -view top_sim.wcfg" to load waveforms
 ```
 
-## Important Information
+## License
 
-1. **Tool Versions**:
-   - Ensure you are using Vivado or Vitis version 2024.1 or later for compatibility with the scripts and UVM libraries.
-
-2. **Directory Structure**:
-   - Maintain the directory structure as provided in the repository to ensure the scripts and source lists function correctly.
-
-3. **Debugging Tips**:
-   - Use the `--vivado "--g"` option to open the GUI for debugging.
-   - Check the `build/` directory for logs and intermediate files if issues arise during simulation.
-
-4. **Extending the Template**:
-   - To add new tests, create sequences in `tb/tests/sequence_lib/` and include them in `tb/tests/RISCV_test_list.sv`.
-   - For additional coverage, extend the coverage model in `tb/env/top/RISCV_coverage.sv`.
-
-5. **Support**:
-   - For questions or issues, contact the maintainer at `gustavosantiago1018@gmail.com`.
-
-6. **License**:
-   - This project is distributed under the BSD license. Refer to the `LICENSE` file for details.
-
-This section provides essential details to ensure smooth usage and extension of the verification template.
+This project is distributed under the BSD license. Refer to the `LICENSE` file for details.

@@ -1,12 +1,3 @@
-//------------------------------------------------------------------------------
-// Package for listing RISCV sequences
-//------------------------------------------------------------------------------
-// This package includes the basic sequence for the RISCV seqbench.
-//
-// Author: Glenda & Thor
-// Date  : July 2025
-//------------------------------------------------------------------------------
-
 `ifndef RISCV_SEQ_LIST 
 `define RISCV_SEQ_LIST
 

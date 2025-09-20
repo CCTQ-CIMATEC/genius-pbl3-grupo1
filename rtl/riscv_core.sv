@@ -2,33 +2,32 @@
     PBL3 - RISC-V Pipelined Processor Core
     
     File name: riscv_core.sv
+    Usage: riscv_top.sv
     
     Objective:
         5-stage pipelined RISC-V processor core datapath.
         Provides interfaces for external instruction and data memories.
  -------------------------------------------------------------------------*/
 
-`timescale 1ns/1ps
-
 module riscv_core #(
     parameter P_DATA_WIDTH = 32,
-    parameter P_ADDR_WIDTH = 10,
+    parameter P_ADDR_WIDTH = 11,
     parameter P_REG_ADDR_WIDTH = 5,
-    parameter P_IMEM_ADDR_WIDTH = 9,
-    parameter P_DMEM_ADDR_WIDTH = 8
+    parameter P_DMEM_ADDR_WIDTH = 11
 )(
     input  logic i_clk,
     input  logic i_rst_n,
     
     // Instruction Memory Interface
-    output logic [P_IMEM_ADDR_WIDTH-1:0]  o_imem_addr,
+    output logic [P_ADDR_WIDTH-1:0]       o_imem_addr,
     input  logic [P_DATA_WIDTH-1:0]       i_imem_rdata,
     
     // Data Memory Interface
     output logic                          o_dmem_we,
     output logic [P_DMEM_ADDR_WIDTH-1:0]  o_dmem_addr,
     output logic [P_DATA_WIDTH-1:0]       o_dmem_wdata,
-    input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata
+    input  logic [P_DATA_WIDTH-1:0]       i_dmem_rdata,
+    output logic [2:0]                    o_dmem_f3
 );
     
     // IF/ID Pipeline Register Signals
@@ -37,38 +36,41 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  if_id_instr;
     
     // ID/EX Pipeline Register Signals
-    logic                     id_ex_regwrite;
-    logic [1:0]               id_ex_resultsrc;
-    logic                     id_ex_memwrite;
-    logic                     id_ex_jump;
-    logic                     id_ex_branch;
-    alu_op_t                  id_ex_aluctrl;
-    logic                     id_ex_alusrc;
-    logic [P_DATA_WIDTH-1:0]  id_ex_rs1_data;
-    logic [P_DATA_WIDTH-1:0]  id_ex_rs2_data;
-    logic [P_DATA_WIDTH-1:0]  id_ex_pc;
-    logic [P_REG_ADDR_WIDTH-1:0] id_ex_rs1_addr;
-    logic [P_REG_ADDR_WIDTH-1:0] id_ex_rs2_addr;
-    logic [P_REG_ADDR_WIDTH-1:0] id_ex_rd_addr;
-    logic [P_DATA_WIDTH-1:0]  id_ex_immext;
-    logic [P_DATA_WIDTH-1:0]  id_ex_pc4;
+    logic                           id_ex_regwrite;
+    logic [1:0]                     id_ex_resultsrc;
+    logic                           id_ex_memwrite;
+    logic                           id_ex_jump;
+    logic                           id_ex_branch;
+    alu_op_t                        id_ex_aluctrl;
+    logic [1:0]                     id_ex_alusrc;
+    logic [2:0]                     id_ex_f3; //NEW FOR SH, SB
+    logic [P_DATA_WIDTH-1:0]        id_ex_rs1_data;
+    logic [P_DATA_WIDTH-1:0]        id_ex_rs2_data;
+    logic [P_ADDR_WIDTH-1:0]        id_ex_pc;
+    logic [P_REG_ADDR_WIDTH-1:0]    id_ex_rs1_addr;
+    logic [P_REG_ADDR_WIDTH-1:0]    id_ex_rs2_addr;
+    logic [P_REG_ADDR_WIDTH-1:0]    id_ex_rd_addr;
+    logic [P_DATA_WIDTH-1:0]        id_ex_immext;
+    logic [P_ADDR_WIDTH-1:0]        id_ex_pc4;
     
     // EX/MEM Pipeline Register Signals
-    logic [P_DATA_WIDTH-1:0]    ex_mem_alu_result;
-    logic [P_DATA_WIDTH-1:0]    ex_mem_write_data;
-    logic                       ex_mem_regwrite;
-    logic                       ex_mem_memwrite;
-    logic [1:0]                 ex_mem_resultsrc;
-    logic [P_REG_ADDR_WIDTH-1:0] ex_mem_rd_addr;
-    logic [P_DATA_WIDTH-1:0]    ex_mem_pc4;
+    logic [P_DATA_WIDTH-1:0]        ex_mem_alu_result;
+    logic [P_DATA_WIDTH-1:0]        ex_mem_write_data;
+    logic                           ex_mem_regwrite;
+    logic                           ex_mem_memwrite;
+    logic [1:0]                     ex_mem_resultsrc;
+    logic [P_REG_ADDR_WIDTH-1:0]    ex_mem_rd_addr;
+    logic [P_ADDR_WIDTH-1:0]        ex_mem_pc4;
+    logic [2:0]                     ex_mem_f3;
     
     // MEM/WB Pipeline Register Signals
-    logic [P_DATA_WIDTH-1:0]  mem_wb_read_data;
-    logic                     mem_wb_regwrite;
-    logic [1:0]               mem_wb_resultsrc;
-    logic [P_REG_ADDR_WIDTH-1:0] mem_wb_rd_addr;
-    logic [P_DATA_WIDTH-1:0]  mem_wb_pc4;
-    logic [P_DATA_WIDTH-1:0]  mem_wb_alu_result;
+    logic [P_DATA_WIDTH-1:0]        mem_wb_read_data;
+    logic                           mem_wb_regwrite;
+    logic [1:0]                     mem_wb_resultsrc;
+    logic [P_REG_ADDR_WIDTH-1:0]    mem_wb_rd_addr;
+    logic [P_ADDR_WIDTH-1:0]        mem_wb_pc4;
+    logic [P_DATA_WIDTH-1:0]        mem_wb_alu_result;
+    logic [2:0]                     mem_wb_f3;
     
     // Writeback Stage Signals
     logic [P_DATA_WIDTH-1:0]  wb_result;
@@ -87,16 +89,10 @@ module riscv_core #(
     logic [P_DATA_WIDTH-1:0]  forward_data_mem;
     logic [P_DATA_WIDTH-1:0]  forward_data_wb;
     
-
-    // Stage Instantiations
-
-    
-    //-------------------------------------------------------------------------
-    // Fetch Stage (with external instruction memory interface)
-    //-------------------------------------------------------------------------
+    //FETCH STAGE
     fetch_stage #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
-        .PC_WIDTH(P_IMEM_ADDR_WIDTH)
+        .PC_WIDTH(P_ADDR_WIDTH)
     ) u_fetch_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
@@ -104,7 +100,7 @@ module riscv_core #(
         .i_stall_d      (stall_d),
         .i_flush_d      (flush_d),
         .i_pcsrc_e      (pcsrc),
-        .i_pctarget_e   (pc_target[P_IMEM_ADDR_WIDTH:0]),
+        .i_pctarget_e   (pc_target[P_ADDR_WIDTH-1:0]),
         // External instruction memory interface
         .o_imem_addr    (o_imem_addr),
         .i_imem_rdata   (i_imem_rdata),
@@ -114,12 +110,11 @@ module riscv_core #(
         .o_instr_d      (if_id_instr)
     );
     
-    //-------------------------------------------------------------------------
-    // Decode Stage
-    //-------------------------------------------------------------------------
+    //DECODE STAGE
     decode_stage #(
         .DATA_WIDTH(P_DATA_WIDTH),
-        .ADDR_WIDTH(P_REG_ADDR_WIDTH)
+        .ADDR_WIDTH(P_REG_ADDR_WIDTH),
+        .PC_WIDTH(P_ADDR_WIDTH)
     ) u_decode_stage (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
@@ -138,6 +133,7 @@ module riscv_core #(
         .o_branch_e     (id_ex_branch),
         .o_aluctrl_e    (id_ex_aluctrl),
         .o_alusrc_e     (id_ex_alusrc),
+        .o_f3_e         (id_ex_f3), // NEW FOR SH,SB
         .o_rs1_data_e   (id_ex_rs1_data),
         .o_rs2_data_e   (id_ex_rs2_data),
         .o_pc_e         (id_ex_pc),
@@ -149,9 +145,8 @@ module riscv_core #(
         .o_pcsrc_e      (pcsrc)
     );
     
-    //-------------------------------------------------------------------------
-    // Execute Stage
-    //-------------------------------------------------------------------------
+
+    //EXECUTE STAGE
     execute_stage #(
         .DATA_WIDTH(P_DATA_WIDTH),
         .ADDR_WIDTH(P_ADDR_WIDTH)
@@ -173,6 +168,7 @@ module riscv_core #(
         .i_regwrite_e   (id_ex_regwrite),
         .i_memwrite_e   (id_ex_memwrite),
         .i_resultsrc_e  (id_ex_resultsrc),
+        .i_f3_e         (id_ex_f3),
         .i_forward_m    (forward_data_mem),
         .i_forward_w    (forward_data_wb),
         .i_forward_a    (forward_a),
@@ -183,57 +179,56 @@ module riscv_core #(
         .o_zero_e       (zero_flag),
         .o_regwrite_m   (ex_mem_regwrite),
         .o_memwrite_m   (ex_mem_memwrite),
+        .o_f3_m  (ex_mem_f3),
         .o_resultsrc_m  (ex_mem_resultsrc),
         .o_rd_addr_m    (ex_mem_rd_addr),
         .o_pc4_m        (ex_mem_pc4)
     );
     
-    //-------------------------------------------------------------------------
-    // Memory Stage (with external data memory interface)
-    //-------------------------------------------------------------------------
+    //MEMORY STAGE
     memory_stage #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
         .P_DMEM_ADDR_WIDTH(P_DMEM_ADDR_WIDTH)
     ) u_memory_stage (
-        .i_clk          (i_clk),
-        .i_rst_n        (i_rst_n),
-        .i_regwrite_m   (ex_mem_regwrite),
-        .i_resultsrc_m  (ex_mem_resultsrc),
-        .i_memwrite_m   (ex_mem_memwrite),
-        .i_alu_result_m (ex_mem_alu_result),
-        .i_write_data_m (ex_mem_write_data),
-        .i_rd_addr_m    (ex_mem_rd_addr),
-        .i_pc4_m        (ex_mem_pc4),
+        .i_clk              (i_clk),
+        .i_rst_n            (i_rst_n),
+        .i_regwrite_m       (ex_mem_regwrite),
+        .i_resultsrc_m      (ex_mem_resultsrc),
+        .i_memwrite_m       (ex_mem_memwrite),
+        .i_alu_result_m     (ex_mem_alu_result),
+        .i_write_data_m     (ex_mem_write_data),
+        .i_rd_addr_m        (ex_mem_rd_addr),
+        .i_pc4_m            (ex_mem_pc4),
+        .i_f3_m             (ex_mem_f3),
         // External data memory interface
-        .o_dmem_we      (o_dmem_we),
-        .o_dmem_addr    (o_dmem_addr),
-        .o_dmem_wdata   (o_dmem_wdata),
-        .i_dmem_rdata   (i_dmem_rdata),
+        .o_dmem_we          (o_dmem_we),
+        .o_dmem_addr        (o_dmem_addr),
+        .o_dmem_wdata       (o_dmem_wdata),
+        .i_dmem_rdata       (i_dmem_rdata),
+        .o_dmem_f3          (o_dmem_f3),
         // Pipeline outputs
-        .o_read_data_w  (mem_wb_read_data),
-        .o_regwrite_w   (mem_wb_regwrite),
-        .o_resultsrc_w  (mem_wb_resultsrc),
-        .o_rd_addr_w    (mem_wb_rd_addr),
-        .o_pc4_w        (mem_wb_pc4),
-        .o_alu_result_w (mem_wb_alu_result)
+        .o_read_data_w      (mem_wb_read_data),
+        .o_regwrite_w       (mem_wb_regwrite),
+        .o_resultsrc_w      (mem_wb_resultsrc),
+        .o_rd_addr_w        (mem_wb_rd_addr),
+        .o_pc4_w            (mem_wb_pc4),
+        .o_alu_result_w     (mem_wb_alu_result),
+        .o_f3_w             (mem_wb_f3)
     );
     
-    //-------------------------------------------------------------------------
-    // Writeback Stage
-    //-------------------------------------------------------------------------
+    //WRITEBACK STAGE
     write_back #(
-        .P_WIDTH(P_DATA_WIDTH)
+        .P_WIDTH(32)
     ) u_write_back (
         .i_alu_result_w (mem_wb_alu_result),
+        .i_f3_w         (mem_wb_f3),
         .i_mem_data_w   (mem_wb_read_data),
         .i_pc_plus_4_w  (mem_wb_pc4),
         .i_sel_w        (mem_wb_resultsrc),
         .o_result_w     (wb_result)
     );
     
-    //-------------------------------------------------------------------------
-    // Hazard Detection Unit
-    //-------------------------------------------------------------------------
+    // HAZARD DETECTION UNIT
     hazard_stage u_hazard_stage (
         .i_clk          (i_clk),
         .if_id_instr    (if_id_instr),
@@ -257,7 +252,6 @@ module riscv_core #(
         .o_forward_b_e  (forward_b)
     );
     
-
     // Forwarding Data Assignment
 
     assign forward_data_mem = ex_mem_alu_result;

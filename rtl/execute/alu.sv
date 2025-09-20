@@ -37,9 +37,9 @@ module alu (
             ALU_EQUAL:   o_result = (i_a == i_b) ? 0 : 1;                   // Equal comparison
             ALU_NEQUAL:  o_result = (i_a != i_b) ? 0 : 1;                   // Not equal comparison
             ALU_GT  :    o_result = ($signed(i_a) >= $signed(i_b)) ? 1 : 0; // Signed Greater/Equal than
-            ALU_UNUSED:  o_result = 32'hDEADBEEF;                           // Unused/Reserved
+            ALU_UNUSED:  o_result = 32'h0;                                  // Unused/Reserved
             ALU_GTU :    o_result = (i_a >= i_b) ? 1 : 0;                   // Unsigned Greater/Equal than
-            default :    o_result = 32'hDEADBEEF;                           // Undefined operation
+            default :    o_result = 32'h0;                                  // Undefined operation
         endcase
         
         o_zero = (o_result == 32'b0);

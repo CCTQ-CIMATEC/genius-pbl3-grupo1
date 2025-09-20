@@ -24,7 +24,7 @@
 
 module fetch_stage #(
     parameter P_DATA_WIDTH = 32,
-    parameter PC_WIDTH = 9
+    parameter PC_WIDTH = 11
 )(
     // Clock and Reset
     input  logic                     i_clk,
@@ -37,29 +37,29 @@ module fetch_stage #(
 
     // PC related
     input  logic                     i_pcsrc_e,
-    input  logic [PC_WIDTH:0]      i_pctarget_e, 
+    input  logic [PC_WIDTH-1:0]      i_pctarget_e, 
 
     // External Instruction Memory Interface
-    output logic [PC_WIDTH:0]      o_imem_addr,
+    output logic [PC_WIDTH-1:0]      o_imem_addr,
     input  logic [P_DATA_WIDTH-1:0]  i_imem_rdata,
 
     // Pipeline Outputs
-    output logic [PC_WIDTH:0]      o_pc_d,
-    output logic [PC_WIDTH:0]      o_pc4_d,
+    output logic [PC_WIDTH-1:0]      o_pc_d,
+    output logic [PC_WIDTH-1:0]      o_pc4_d,
     output logic [P_DATA_WIDTH-1:0]  o_instr_d
 );
 
-    logic [PC_WIDTH:0] l_pc_f, l_pc4_f, l_pcnext_f; 
+    logic [PC_WIDTH-1:0] l_pc_f, l_pc4_f, l_pcnext_f; 
     
     // PC incrementer (PC + 4)
-    adder #(.P_WIDTH(PC_WIDTH)) u_pcadd4 (
+    adder #(.P_WIDTH(PC_WIDTH-1)) u_pcadd4 (
         .i_a (l_pc_f),
-        .i_b ({{(PC_WIDTH-2){1'b0}}, 3'b100}),  // 4 in PC_WIDTH bits            
+        .i_b ({{(PC_WIDTH-3){1'b0}}, 3'b100}),  // 4 in PC_WIDTH bits            
         .o_y (l_pc4_f)
     );
     
     // PC source mux (select: PC+4 or target)
-    mux2 #(.P_WIDTH(PC_WIDTH)) u_pcmux (
+    mux2 #(.P_WIDTH(PC_WIDTH-1)) u_pcmux (
         .i_a   (l_pc4_f),
         .i_b   (i_pctarget_e),
         .i_sel (i_pcsrc_e),
@@ -67,7 +67,7 @@ module fetch_stage #(
     );
 
     // PC register (state element)
-    flopr #(.P_WIDTH(PC_WIDTH)) u_pcreg (
+    flopr #(.P_WIDTH(PC_WIDTH-1)) u_pcreg (
         .i_clk   (i_clk),
         .i_rst_n (i_rst_n),
         .i_en    (!i_stall_f),
